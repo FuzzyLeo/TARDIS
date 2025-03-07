@@ -157,3 +157,20 @@ TARDIS:AddSetting({
     subsection="Effects",
     name="RotorwashEnabled",
 })
+
+
+--------------------------------------------------------------------------------
+-- Rendering
+
+TARDIS:AddSetting({
+    id="enhanced-fading-enabled",
+    type="bool",
+    value=false,
+
+    class="local",
+
+    option=true,
+    section=SETTING_SECTION,
+    subsection="Rendering",
+    name="EnhancedFadingEnabled",
+})

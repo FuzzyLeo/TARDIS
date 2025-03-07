@@ -96,7 +96,8 @@ else
     end)
 
     ENT:AddHook("ShouldVortexIgnoreZ", "outside", function(self)
-        if LocalPlayer():GetTardisData("outside") then
+        local ply=LocalPlayer()
+        if ply:GetTardisData("outside") and ply:GetTardisData("vortex") then
             return true
         end
     end)
