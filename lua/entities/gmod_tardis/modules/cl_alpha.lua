@@ -27,13 +27,16 @@ local function dopredraw(self,part)
     if target~=nil then
         render.OverrideColorWriteEnable(true, false)
         self:DrawModel()
+        render.OverrideColorWriteEnable(false, false)
+
+        render.OverrideColorWriteEnable(true, false)
         for k,v in pairs(self.parts) do
-            if v.ExteriorPart and v~=part then
+            if v.ExteriorPart then
                 v:DrawModel()
             end
         end
         render.OverrideColorWriteEnable(false, false)
-
+        
         render.SetBlend(target)
         if self:CallHook("ShouldVortexIgnoreZ") then
             cam.IgnoreZ(true)
