@@ -25,6 +25,15 @@ end
 local function dopredraw(self,part)
     local target = shouldapply(self,part)
     if target~=nil then
+        render.OverrideColorWriteEnable(true, false)
+        self:DrawModel()
+        for k,v in pairs(self.parts) do
+            if v.ExteriorPart and v~=part then
+                v:DrawModel()
+            end
+        end
+        render.OverrideColorWriteEnable(false, false)
+
         render.SetBlend(target)
         if self:CallHook("ShouldVortexIgnoreZ") then
             cam.IgnoreZ(true)
@@ -34,7 +43,6 @@ end
 
 local function dopostdraw(self,part)
     if shouldapply(self,part)~=nil then
-        render.SetBlend(1)
         cam.IgnoreZ(false)
     end
 end
