@@ -1,6 +1,6 @@
 {
   "Name": "Português (Brasil)",
-  "Author": "covauski3",
+  "Author": "Equipe de desenvolvimento da TARDIS",
   "Phrases": {
     "Artron.Depleted": "Energia artron esgotada",
     "ArtronInhibitor": "Inibidor Artron",
@@ -438,6 +438,9 @@
     "Settings.NoPermissionGlobalSettings": "Você não tem permissão para editar as configurações globais",
     "Settings.Sections.Binds": "Definir teclas",
     "Settings.Sections.Exterior": "Exterior",
+    "Settings.Sections.Exterior.Effects": "Efeitos",
+    "Settings.Sections.Exterior.Effects.RotorwashEnabled": "Ativar rotorwash",
+    "Settings.Sections.Exterior.Effects.RotorwashEnabled.Description": "O efeito rotorwash da TARDIS deve ser ativado ao voar ou teletransportar?",
     "Settings.Sections.Exterior.Light": "Luz externa",
     "Settings.Sections.Exterior.Light.AlwaysOn": "Luz externa acesa por padrão",
     "Settings.Sections.Exterior.Light.AlwaysOn.Description": "A luz externa deve sempre estar acesa a menos que desativada pelo controle?",
@@ -460,6 +463,9 @@
     "Settings.Sections.Exterior.ProjectedLight.EnableColorOverride.Description": "Controla a cor da luz projetada",
     "Settings.Sections.Exterior.ProjectedLight.EnableDistanceOverride": "Ativar Substituição de Distância",
     "Settings.Sections.Exterior.ProjectedLight.EnableDistanceOverride.Description": "Controla a distância da luz projetada",
+    "Settings.Sections.Exterior.Rendering": "Renderização",
+    "Settings.Sections.Exterior.Rendering.EnhancedFadingEnabled": "Desvanecimento aprimorado (experimental)",
+    "Settings.Sections.Exterior.Rendering.EnhancedFadingEnabled.Description": "AVISO: Recurso experimental, isso pode causar problemas de renderização ao visualizar outras entidades/props através do exterior\n\nCorrige problemas de renderização (backface culling) quando o exterior está desvanecendo para dentro ou para fora",
     "Settings.Sections.Global": "Opções de Administrador",
     "Settings.Sections.Global.AdminSecurityBypass": "Imunidade de Segurança do Administrador",
     "Settings.Sections.Global.AdminSecurityBypass.Description": "Administradores podem burlar a segurança isomórfica?",
