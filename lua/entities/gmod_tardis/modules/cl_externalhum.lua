@@ -1,4 +1,6 @@
--- Idle sound
+-- This module handles two separate audio features:
+-- 1. ExternalHum: The humming sound from the exterior shell when powered (using external_hum setting)
+-- 2. LeakedInteriorHums: Interior hum sounds leaking through when doors are open (using interior_hum_leakage setting)
 
 ENT:AddHook("Initialize", "externalhum", function(self)
     -- Initialize the table for leaked interior hum sounds
@@ -32,6 +34,7 @@ ENT:AddHook("ExteriorChanged", "externalhum", function(self)
 end)
 
 -- Function to update the interior hum leakage based on door state
+-- This is separate from the ExternalHum feature and controlled by the interior_hum_leakage setting
 local function UpdateInteriorHumLeakage(self)
     -- Only proceed if we have an interior
     if not IsValid(self.interior) then
@@ -136,7 +139,11 @@ ENT:AddHook("SettingChanged", "externalhum", function(self, id, value)
     end
 end)
 
+-- This Think hook handles two separate audio features:
+-- 1. ExternalHum: The humming sound from the exterior shell when powered (using external_hum setting)
+-- 2. LeakedInteriorHums: Interior hum sounds leaking through when doors are open (using interior_hum_leakage setting)
 ENT:AddHook("Think", "externalhum", function(self)
+    -- Part 1: Handle exterior hum sound
     local hum_sound = self.metadata.Exterior.Sounds.Hum
     if hum_sound then
         if TARDIS:GetSetting("external_hum")
@@ -155,29 +162,6 @@ ENT:AddHook("Think", "externalhum", function(self)
         end
     end
     
-    -- Regularly update the interior hum leakage status in Think for any other state changes
-    UpdateInteriorHumLeakage(self)
-end)
-
-ENT:AddHook("Think", "externalhum", function(self)
-    local hum_sound = self.metadata.Exterior.Sounds.Hum
-    if hum_sound then
-        if TARDIS:GetSetting("external_hum")
-            and TARDIS:GetSetting("sound")
-            and self:GetData("power-state")
-            and not self:GetData("vortex")
-        then
-            if not self.ExternalHum then
-                self.ExternalHum = CreateSound(self, hum_sound.path)
-                self.ExternalHum:Play()
-                self.ExternalHum:ChangeVolume(hum_sound.volume or 1,0)
-            end
-        elseif self.ExternalHum then
-            self.ExternalHum:Stop()
-            self.ExternalHum=nil
-        end
-    end
-    
-    -- Regularly update the interior hum leakage status in Think for any other state changes
+    -- Part 2: Regularly update the interior hum leakage status for when doors open/close
     UpdateInteriorHumLeakage(self)
 end)
