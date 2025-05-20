@@ -60,7 +60,7 @@ ENT:AddHook("PlayerExit", "externalhum", function(self)
     if not TARDIS:GetSetting("interior_hum_leakage") then return end
     local sounds = self.metadata.Interior.Sounds.Idle or self.metadata.Interior.IdleSound
     if not sounds then return end
-    local ratio = CalculateInteriorToExteriorRatio(self)
+    local ratio = self.InteriorToExteriorRatio or 1.0
     local vol_setting = TARDIS:GetSetting("interior_hum_leakage_volume") / 100
     for k, snd in pairs(sounds) do
         local vol = snd.volume or 1
