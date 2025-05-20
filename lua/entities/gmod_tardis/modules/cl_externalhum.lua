@@ -2,48 +2,36 @@
 -- 1. ExternalHum: The humming sound from the exterior shell when powered (using external_hum setting)
 -- 2. LeakedInteriorHums: Interior hum sounds leaking through when doors are open (using interior_hum_leakage setting)
 
--- Calculate the ratio of interior to exterior sound volume for a seamless transition
 local function CalculateInteriorToExteriorRatio(self)
-    -- Only proceed if we have an interior with fallback data
-    if not self.interior or not self.metadata.Interior.Fallback or not self.metadata.Interior.Fallback.pos then
-        return 0.85 -- Default fallback value if we can't calculate
+    -- Use the interior door portal position if available
+    local portal = self.metadata.Interior and self.metadata.Interior.Portal
+    if not portal or not portal.pos then
+        return 1.0
     end
-    
-    -- Get the distance from interior origin (where the sound is played) to the interior fallback position (door)
-    local fallback_pos = self.metadata.Interior.Fallback.pos
-    local distance_to_fallback = fallback_pos:Length() -- Distance from origin (0,0,0) to fallback
-    
-    -- Sound in Source engine attenuates based on distance
-    -- We need to calculate a ratio that makes the exterior sound match what would be heard at the fallback position
-    -- Standard sound level of 75 is approximately 5 meters (265 units)
-    local sound_reference_distance = 265
-    
-    -- Calculate how much the interior sound attenuates at the fallback position
-    -- Sound attenuates inversely with distance, so farther = quieter
-    local ratio
-    
-    if distance_to_fallback <= 1 then
-        -- If almost at origin, maintain 85% for safety
-        ratio = 0.85
-    else
-        -- Calculate ratio based on distance and an adjustment factor
-        -- The closer the fallback is to origin (smaller distance_to_fallback), the higher the ratio should be
-        -- since the interior sound would be louder at fallback position
-        ratio = sound_reference_distance / (distance_to_fallback * 3)
-        
-        -- Clamp to reasonable values (0.3 to 1.0)
-        ratio = math.Clamp(ratio, 0.3, 1.0)
+
+    -- distance from interior origin to door portal
+    local dist = portal.pos:Length()
+    if dist < 1 then
+        -- engine treats anything <1 as 1 to avoid infinities
+        return 1.0
     end
-    
-    return ratio
+
+    local attenuation = 0.8 -- default for sound level 75
+    local maxDistance = attenuation * 1000
+
+    local gain = math.Clamp(1 - (dist / maxDistance), 0, 1)
+    return gain
 end
 
 ENT:AddHook("Initialize", "externalhum", function(self)
-    -- Initialize the table for leaked interior hum sounds
-    self.LeakedInteriorHums = {}
-    
-    -- Initialize with a default ratio
-    self.InteriorToExteriorRatio = 0.85
+    self.LeakedInteriorHums    = {}
+    self.InteriorToExteriorRatio = 1.0
+end)
+
+ENT:AddHook("PostInitialize", "externalhum", function(self)
+    if self.interior and IsValid(self.interior) then
+        self.InteriorToExteriorRatio = CalculateInteriorToExteriorRatio(self)
+    end
 end)
 
 ENT:AddHook("OnRemove", "externalhum", function(self)
@@ -56,14 +44,6 @@ ENT:AddHook("OnRemove", "externalhum", function(self)
             v:Stop()
             self.LeakedInteriorHums[k] = nil
         end
-    end
-end)
-
-ENT:AddHook("PostInitialize", "externalhum", function(self)
-    -- Calculate the interior-to-exterior ratio if interior is available
-    -- This only needs to be done once since the interior doesn't change during use
-    if self.interior and IsValid(self.interior) then
-        self.InteriorToExteriorRatio = CalculateInteriorToExteriorRatio(self)
     end
 end)
 
@@ -83,107 +63,60 @@ end)
 -- Function to update the interior hum leakage based on door state
 -- This is separate from the ExternalHum feature and controlled by the interior_hum_leakage setting
 local function UpdateInteriorHumLeakage(self)
-    -- Only proceed if we have an interior
     if not IsValid(self.interior) then
-        if self.LeakedInteriorHums then
-            for k, v in pairs(self.LeakedInteriorHums) do
-                v:Stop()
-                self.LeakedInteriorHums[k] = nil
-            end
-        end
+        for k, v in pairs(self.LeakedInteriorHums) do v:Stop() end
+        self.LeakedInteriorHums = {}
         return
     end
-    
-    local interior_hum_sounds = {}
-    -- Get the interior hum sounds from metadata
-    if self.metadata.Interior.Sounds and self.metadata.Interior.Sounds.Idle then
-        interior_hum_sounds = self.metadata.Interior.Sounds.Idle
+
+    local sounds = {}
+    if     self.metadata.Interior.Sounds
+       and self.metadata.Interior.Sounds.Idle
+    then
+        sounds = self.metadata.Interior.Sounds.Idle
     elseif self.metadata.Interior.IdleSound then
-        interior_hum_sounds = self.metadata.Interior.IdleSound
+        sounds = self.metadata.Interior.IdleSound
     end
-    
-    -- Calculate volume to match interior sound at doorway
-    -- For a standard 5 meter distance but with stronger falloff
-    local door_sound_level = 100 -- Higher value for faster falloff, still centered ~5 meters
-    local volume_multiplier = TARDIS:GetSetting("interior_hum_leakage_volume") / 100
-    
-    -- Use the dynamically calculated ratio to match the interior sound volume
-    -- This makes transitions between inside/outside seamless when walking through the door
-    local interior_to_exterior_ratio = self.InteriorToExteriorRatio or 0.85
-    
-    if #interior_hum_sounds > 0 then
-        -- Play all idle sounds simultaneously, just like interior does
-        if TARDIS:GetSetting("interior_hum_leakage")
-            and TARDIS:GetSetting("sound")
-            and self:GetData("power-state")
-            and not self:GetData("vortex")
-            and self:DoorOpen(true) -- Only when doors are open
-        then
-            -- Loop through all idle sounds and play them
-            for k, interior_hum_sound in pairs(interior_hum_sounds) do
-                if interior_hum_sound and interior_hum_sound.path then
-                    if not self.LeakedInteriorHums[k] then
-                        self.LeakedInteriorHums[k] = CreateSound(self, interior_hum_sound.path)
-                        self.LeakedInteriorHums[k]:Play()
-                        
-                        -- Limit sound range to about 5 meters
-                        self.LeakedInteriorHums[k]:SetSoundLevel(door_sound_level)
-                        
-                        -- Apply volume settings with interior-to-exterior ratio for matching perceived volume
-                        -- at doorway threshold, considering user's volume preference
-                        local final_volume = (interior_hum_sound.volume or 1) * volume_multiplier * interior_to_exterior_ratio
-                        self.LeakedInteriorHums[k]:ChangeVolume(final_volume, 0)
-                    else
-                        -- Update volume in case setting has changed
-                        local final_volume = (interior_hum_sound.volume or 1) * volume_multiplier * interior_to_exterior_ratio
-                        self.LeakedInteriorHums[k]:ChangeVolume(final_volume, 0)
-                    end
-                end
+
+    local vol_setting = TARDIS:GetSetting("interior_hum_leakage_volume") / 100
+    local ratio = self.InteriorToExteriorRatio or 1.0
+
+    -- Use the exterior portal entity as the sound emitter if available
+    local ext_portal = self.portals and self.portals.exterior
+    local emitter = (IsValid(ext_portal) and ext_portal) or self
+
+    if #sounds > 0
+       and TARDIS:GetSetting("interior_hum_leakage")
+       and TARDIS:GetSetting("sound")
+       and self:GetData("power-state")
+       and not self:GetData("vortex")
+       and self:DoorOpen(true)
+    then
+        for k, snd in pairs(sounds) do
+            if not snd.path then continue end
+            local final_vol = (snd.volume or 1) * vol_setting * ratio
+
+            if not self.LeakedInteriorHums[k] then
+                local chan = CreateSound(emitter, snd.path)
+                chan:Play()
+                chan:ChangeVolume(final_vol, 0)
+                self.LeakedInteriorHums[k] = chan
+            else
+                self.LeakedInteriorHums[k]:ChangeVolume(final_vol, 0)
             end
-            
-            -- Cleanup any sounds that aren't in the current sounds list
-            for k, v in pairs(self.LeakedInteriorHums) do
-                local found = false
-                for i, sound in pairs(interior_hum_sounds) do
-                    if k == i then
-                        found = true
-                        break
-                    end
-                end
-                
-                if not found then
-                    v:Stop()
-                    self.LeakedInteriorHums[k] = nil
-                end
-            end
-        else
-            -- Stop all sounds if conditions aren't met
-            for k, v in pairs(self.LeakedInteriorHums) do
+        end
+        
+        for k, v in pairs(self.LeakedInteriorHums) do
+            if not sounds[k] then
                 v:Stop()
                 self.LeakedInteriorHums[k] = nil
             end
         end
     else
-        -- No idle sounds configured, stop all playing sounds
-        for k, v in pairs(self.LeakedInteriorHums) do
-            v:Stop()
-            self.LeakedInteriorHums[k] = nil
-        end
+        for k, v in pairs(self.LeakedInteriorHums) do v:Stop() end
+        self.LeakedInteriorHums = {}
     end
 end
-
--- Update the interior hum leak whenever doors are toggled
-ENT:AddHook("ToggleDoorReal", "externalhum", function(self, open)
-    UpdateInteriorHumLeakage(self)
-end)
-
--- Update the interior hum leak when settings change
-ENT:AddHook("SettingChanged", "externalhum", function(self, id, value)
-    -- If relevant settings change, update the sound
-    if id == "interior_hum_leakage" or id == "interior_hum_leakage_volume" or id == "sound" then
-        UpdateInteriorHumLeakage(self)
-    end
-end)
 
 -- This Think hook handles two separate audio features:
 -- 1. ExternalHum: The humming sound from the exterior shell when powered (using external_hum setting)
