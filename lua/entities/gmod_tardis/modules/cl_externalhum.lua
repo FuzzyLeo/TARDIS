@@ -47,12 +47,6 @@ ENT:AddHook("ExteriorChanged", "externalhum", function(self)
         self.ExternalHum:Stop()
         self.ExternalHum = nil
     end
-    if self.LeakedInteriorHums then
-        for k, v in pairs(self.LeakedInteriorHums) do
-            v:Stop()
-            self.LeakedInteriorHums[k] = nil
-        end
-    end
 end)
 
 -- Fade out the interior hums to the configured volume when the player exits
