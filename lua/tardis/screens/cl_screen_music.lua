@@ -257,6 +257,7 @@ TARDIS:AddScreen("Music", {id="music", text="Screens.Music", menu=false, order=1
             list_categories:AddLine(cat.name)
         end
         list_categories.loading = false
+        list_categories:SelectFirstItem()
     end, function(error)
         TARDIS:ErrorMessage(LocalPlayer(), "Screens.Music.DefaultLoadError", error)
         list_categories:Clear()
@@ -266,6 +267,7 @@ TARDIS:AddScreen("Music", {id="music", text="Screens.Music", menu=false, order=1
             list_categories:AddLine(cat.name)
         end
         list_categories.loading = false
+        list_categories:SelectFirstItem()
     end)
 
     function list_songs:UpdateCustomSongs()
