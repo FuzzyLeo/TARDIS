@@ -3,48 +3,46 @@
 --Custom music
 
 local custom_music
-local favourites = {}
-local MUSIC_FILE = "tardis2_custom_music.txt"
-local FAVOURITES_FILE = "tardis/favourite_music.txt"
+local favourite_music
+local CUSTOM_MUSIC_FILE = "tardis/custom_music.txt"
+local FAVOURITE_MUSIC_FILE = "tardis/favourite_music.txt"
 
 function TARDIS:LoadCustomMusic()
-    if file.Exists(MUSIC_FILE,"DATA") then
-        custom_music = TARDIS.von.deserialize(file.Read(MUSIC_FILE,"DATA"))
+    if file.Exists(CUSTOM_MUSIC_FILE,"DATA") then
+        custom_music = TARDIS.von.deserialize(file.Read(CUSTOM_MUSIC_FILE,"DATA"))
     else
         custom_music = {}
     end
 end
 
-function TARDIS:LoadFavourites()
-    if file.Exists(FAVOURITES_FILE, "DATA") then
-        favourites = TARDIS.von.deserialize(file.Read(FAVOURITES_FILE, "DATA"))
+function TARDIS:LoadFavouriteMusic()
+    if file.Exists(FAVOURITE_MUSIC_FILE, "DATA") then
+        favourite_music = TARDIS.von.deserialize(file.Read(FAVOURITE_MUSIC_FILE, "DATA"))
     else
-        favourites = {}
+        favourite_music = {}
     end
 end
 
 function TARDIS:SaveCustomMusic()
-    file.Write(MUSIC_FILE, TARDIS.von.serialize(custom_music))
+    file.Write(CUSTOM_MUSIC_FILE, TARDIS.von.serialize(custom_music))
 end
 
-function TARDIS:SaveFavourites()
-    file.Write(FAVOURITES_FILE, TARDIS.von.serialize(favourites))
+function TARDIS:SaveFavouriteMusic()
+    file.Write(FAVOURITE_MUSIC_FILE, TARDIS.von.serialize(favourite_music))
 end
 
 TARDIS:LoadCustomMusic()
-TARDIS:LoadFavourites()
+TARDIS:LoadFavouriteMusic()
 
---[[ TODO: Add back in before release
-TARDIS:AddMigration("music-move", "2023.8.0", function(self)
+TARDIS:AddMigration("music-move", "2025.2.0", function(self)
     if file.Exists("tardis2_custom_music.txt", "DATA") then
-        if file.Exists(MUSIC_FILE, "DATA") then
-            file.Delete(MUSIC_FILE)
+        if file.Exists(CUSTOM_MUSIC_FILE, "DATA") then
+            file.Delete(CUSTOM_MUSIC_FILE)
         end
-        file.Rename("tardis2_custom_music.txt", MUSIC_FILE)
+        file.Rename("tardis2_custom_music.txt", CUSTOM_MUSIC_FILE)
         self:LoadCustomMusic()
     end
 end)
-]]
 
 function TARDIS:AddCustomMusic(name, url)
     if name == nil or name == "" then
@@ -108,7 +106,6 @@ TARDIS:AddScreen("Music", {id="music", text="Screens.Music", menu=false, order=1
     local categories = {}
     local list_categories
     local list_songs
-    local favourites_urls = {}
     local default_song_lookup = {}
 
     if screen.is3D2D then
@@ -181,13 +178,13 @@ TARDIS:AddScreen("Music", {id="music", text="Screens.Music", menu=false, order=1
     remove_custom_button:SetText(TARDIS:GetPhrase("Common.Remove"))
     remove_custom_button:SetFont(TARDIS:GetScreenFont(screen, "Default"))
 
-    local add_fav_button = vgui.Create("DButton", panel)
-    add_fav_button:SetSize(tbW, bT)
-    add_fav_button:SetPos(gap2, 4 * gap2 + 2 * tbT + bT)
-    add_fav_button:SetText(TARDIS:GetPhrase("Common.AddToFavourites"))
-    add_fav_button:SetFont(TARDIS:GetScreenFont(screen, "Default"))
-    add_fav_button:SetEnabled(false)
-    function add_fav_button:DoClick()
+    local add_remove_fav_button = vgui.Create("DButton", panel)
+    add_remove_fav_button:SetSize(tbW, bT)
+    add_remove_fav_button:SetPos(gap2, 4 * gap2 + 2 * tbT + bT)
+    add_remove_fav_button:SetText(TARDIS:GetPhrase("Common.AddToFavourites"))
+    add_remove_fav_button:SetFont(TARDIS:GetScreenFont(screen, "Default"))
+    add_remove_fav_button:SetEnabled(false)
+    function add_remove_fav_button:DoClick()
         local sel_cat = list_categories:GetSelectedLine()
         if not sel_cat then return end
         local cat = categories[sel_cat]
@@ -195,17 +192,17 @@ TARDIS:AddScreen("Music", {id="music", text="Screens.Music", menu=false, order=1
         if not sel_song then return end
         if cat.id == "favourites" then
             -- Remove from favourites
-            table.remove(favourites, sel_song)
-            TARDIS:SaveFavourites()
-            list_songs:UpdateFavouritesSongs()
-            add_fav_button:SetEnabled(false)
+            table.remove(favourite_music, sel_song)
+            TARDIS:SaveFavouriteMusic()
+            list_songs:UpdateFavouriteSongs()
+            add_remove_fav_button:SetEnabled(false)
         elseif cat.id ~= "custom" then
             -- Add to favourites if not already
             local song = cat.songs[sel_song]
-            if song and not table.HasValue(favourites, song.id) then
-                table.insert(favourites, song.id)
-                TARDIS:SaveFavourites()
-                add_fav_button:SetEnabled(false)
+            if song and not table.HasValue(favourite_music, song.id) then
+                table.insert(favourite_music, song.id)
+                TARDIS:SaveFavouriteMusic()
+                add_remove_fav_button:SetEnabled(false)
             end
         end
     end
@@ -234,15 +231,15 @@ TARDIS:AddScreen("Music", {id="music", text="Screens.Music", menu=false, order=1
                 end
             end
             -- Remove any favourites that no longer exist
-            local valid_favourites = {}
-            for _,id in ipairs(favourites) do
+            local valid_favourite_music = {}
+            for _,id in ipairs(favourite_music) do
                 if default_song_lookup[id] then
-                    table.insert(valid_favourites, id)
+                    table.insert(valid_favourite_music, id)
                 end
             end
-            if #valid_favourites ~= #favourites then
-                favourites = valid_favourites
-                TARDIS:SaveFavourites()
+            if #valid_favourite_music ~= #favourite_music then
+                favourite_music = valid_favourite_music
+                TARDIS:SaveFavouriteMusic()
             end
             -- Insert Favourites category at the top
             table.insert(categories, {id = "favourites", name = TARDIS:GetPhrase("Common.Favourites"), songs = {}})
@@ -284,10 +281,10 @@ TARDIS:AddScreen("Music", {id="music", text="Screens.Music", menu=false, order=1
         end
     end
 
-    function list_songs:UpdateFavouritesSongs()
+    function list_songs:UpdateFavouriteSongs()
         self:Clear()
         urls = {}
-        for _,id in ipairs(favourites) do
+        for _,id in ipairs(favourite_music) do
             local entry = default_song_lookup[id]
             if entry then
                 self:AddLine(entry.song.name)
@@ -310,20 +307,20 @@ TARDIS:AddScreen("Music", {id="music", text="Screens.Music", menu=false, order=1
         end
         url = urls[rowIndex]
         if cat.id == "favourites" then
-            add_fav_button:SetEnabled(true)
-            add_fav_button:SetText(TARDIS:GetPhrase("Common.RemoveFromFavourites"))
+            add_remove_fav_button:SetEnabled(true)
+            add_remove_fav_button:SetText(TARDIS:GetPhrase("Common.RemoveFromFavourites"))
         elseif cat.id ~= "custom" then
             local song = cat.songs[rowIndex]
-            if song and not table.HasValue(favourites, song.id) then
-                add_fav_button:SetEnabled(true)
-                add_fav_button:SetText(TARDIS:GetPhrase("Common.AddToFavourites"))
+            if song and not table.HasValue(favourite_music, song.id) then
+                add_remove_fav_button:SetEnabled(true)
+                add_remove_fav_button:SetText(TARDIS:GetPhrase("Common.AddToFavourites"))
             else
-                add_fav_button:SetEnabled(false)
-                add_fav_button:SetText(TARDIS:GetPhrase("Common.AddToFavourites"))
+                add_remove_fav_button:SetEnabled(false)
+                add_remove_fav_button:SetText(TARDIS:GetPhrase("Common.AddToFavourites"))
             end
         else
-            add_fav_button:SetEnabled(false)
-            add_fav_button:SetText(TARDIS:GetPhrase("Common.AddToFavourites"))
+            add_remove_fav_button:SetEnabled(false)
+            add_remove_fav_button:SetText(TARDIS:GetPhrase("Common.AddToFavourites"))
         end
     end
 
@@ -333,7 +330,7 @@ TARDIS:AddScreen("Music", {id="music", text="Screens.Music", menu=false, order=1
         local cat = categories[sel]
         ext:PlayMusic(urls[rowIndex])
         list_songs:ClearSelection()
-        add_fav_button:SetEnabled(false)
+        add_remove_fav_button:SetEnabled(false)
         url = ""
     end
 
@@ -345,23 +342,23 @@ TARDIS:AddScreen("Music", {id="music", text="Screens.Music", menu=false, order=1
         name_bar:SetText("")
         local cat = categories[rowIndex]
         urls = {}
-        add_fav_button:SetEnabled(false)
+        add_remove_fav_button:SetEnabled(false)
         if cat.id == "custom" then
             for _,v in ipairs(custom_music) do list_songs:AddLine(v[1]) table.insert(urls, v[2]) end
             url_bar:SetEnabled(true)
             name_bar:SetEnabled(true)
             save_custom_button:SetEnabled(true)
             remove_custom_button:SetEnabled(true)
-            add_fav_button:SetEnabled(false)
-            add_fav_button:SetText(TARDIS:GetPhrase("Common.AddToFavourites"))
+            add_remove_fav_button:SetEnabled(false)
+            add_remove_fav_button:SetText(TARDIS:GetPhrase("Common.AddToFavourites"))
         elseif cat.id == "favourites" then
-            list_songs:UpdateFavouritesSongs()
+            list_songs:UpdateFavouriteSongs()
             url_bar:SetEnabled(false)
             name_bar:SetEnabled(false)
             save_custom_button:SetEnabled(false)
             remove_custom_button:SetEnabled(false)
-            add_fav_button:SetEnabled(false)
-            add_fav_button:SetText(TARDIS:GetPhrase("Common.RemoveFromFavourites"))
+            add_remove_fav_button:SetEnabled(false)
+            add_remove_fav_button:SetText(TARDIS:GetPhrase("Common.RemoveFromFavourites"))
         else
             for _,song in ipairs(cat.songs or {}) do
                 list_songs:AddLine(song.name)
@@ -371,8 +368,8 @@ TARDIS:AddScreen("Music", {id="music", text="Screens.Music", menu=false, order=1
             name_bar:SetEnabled(false)
             save_custom_button:SetEnabled(false)
             remove_custom_button:SetEnabled(false)
-            add_fav_button:SetEnabled(false)
-            add_fav_button:SetText(TARDIS:GetPhrase("Common.AddToFavourites"))
+            add_remove_fav_button:SetEnabled(false)
+            add_remove_fav_button:SetText(TARDIS:GetPhrase("Common.AddToFavourites"))
         end
     end
 
@@ -439,6 +436,7 @@ TARDIS:AddScreen("Music", {id="music", text="Screens.Music", menu=false, order=1
                 return
             end
             list_songs:ClearSelection()
+            add_remove_fav_button:SetEnabled(false)
             url = ""
             self:SetEnabled(false)
             self.disabled_time = CurTime()

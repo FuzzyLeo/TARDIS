@@ -212,7 +212,7 @@ else
         end
     end
 
-    local BINDS_FILE = "tardis_binds.txt"
+    local BINDS_FILE = "tardis/binds.txt"
 
     function TARDIS:SaveKeyBinds()
         local keys={}
@@ -232,8 +232,7 @@ else
     end
     TARDIS:LoadKeyBinds()
 
-    --[[ TODO: Add back in before release
-    TARDIS:AddMigration("binds-move", "2023.8.0", function(self)
+    TARDIS:AddMigration("binds-move", "2025.2.0", function(self)
         if file.Exists("tardis_binds.txt", "DATA") then
             if file.Exists(BINDS_FILE, "DATA") then
                 file.Delete(BINDS_FILE)
@@ -243,7 +242,6 @@ else
             self:LoadKeyBinds()
         end
     end)
-    ]]
 
     function TARDIS:IsBindDown(id)
         if self.bindkeys[id] then

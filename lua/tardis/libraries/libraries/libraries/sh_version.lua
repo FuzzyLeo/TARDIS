@@ -197,3 +197,7 @@ function TARDIS:RunMigrations()
     
     file.Write(VERSION_FILE, self:GetVersionString())
 end
+
+hook.Add("InitPostEntity", "TARDIS_Migrations", function()
+    TARDIS:RunMigrations()
+end)
