@@ -86,6 +86,7 @@ function ENT:ResolveMusicURL(url)
 end
 
 function ENT:PlayMusic(url,resolved)
+    print("playing song: "..url)
     if not resolved then
         TARDIS:Message(LocalPlayer(), "Music.Loading")
         url=self:ResolveMusicURL(url)

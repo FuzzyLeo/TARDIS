@@ -3,7 +3,9 @@
 --Custom music
 
 local custom_music
+local favourites = {}
 local MUSIC_FILE = "tardis2_custom_music.txt"
+local FAVOURITES_FILE = "tardis/favourite_music.txt"
 
 function TARDIS:LoadCustomMusic()
     if file.Exists(MUSIC_FILE,"DATA") then
@@ -13,11 +15,24 @@ function TARDIS:LoadCustomMusic()
     end
 end
 
-TARDIS:LoadCustomMusic()
+function TARDIS:LoadFavourites()
+    if file.Exists(FAVOURITES_FILE, "DATA") then
+        favourites = TARDIS.von.deserialize(file.Read(FAVOURITES_FILE, "DATA"))
+    else
+        favourites = {}
+    end
+end
 
 function TARDIS:SaveCustomMusic()
     file.Write(MUSIC_FILE, TARDIS.von.serialize(custom_music))
 end
+
+function TARDIS:SaveFavourites()
+    file.Write(FAVOURITES_FILE, TARDIS.von.serialize(favourites))
+end
+
+TARDIS:LoadCustomMusic()
+TARDIS:LoadFavourites()
 
 --[[ TODO: Add back in before release
 TARDIS:AddMigration("music-move", "2023.8.0", function(self)
@@ -90,27 +105,30 @@ TARDIS:AddScreen("Music", {id="music", text="Screens.Music", menu=false, order=1
     background:SetSize(frW, frT)
     local bgcolor = TARDIS:GetScreenGUIColor(screen)
 
-    local list_premade
-    local list_custom
+    local categories = {}
+    local list_categories
+    local list_songs
+    local favourites_urls = {}
+    local default_song_lookup = {}
 
     if screen.is3D2D then
-        list_premade = ListView3D:new(frame,screen,34,bgcolor)
-        list_custom = ListView3D:new(frame,screen,34,bgcolor)
+        list_categories = ListView3D:new(frame,screen,34,bgcolor)
+        list_songs = ListView3D:new(frame,screen,34,bgcolor)
     else
-        list_premade = vgui.Create("DListView",frame)
-        list_custom = vgui.Create("DListView",frame)
+        list_categories = vgui.Create("DListView",frame)
+        list_songs = vgui.Create("DListView",frame)
     end
 
+    list_categories:SetSize(listW, listT)
+    list_categories:SetPos(gap, gap)
+    list_categories:SetSortable(false)
+    list_categories:AddColumn(TARDIS:GetPhrase("Screens.Music.Categories"))
+    list_categories:SetMultiSelect(false)
 
-    list_premade:SetSize(listW, listT)
-    list_premade:SetPos(gap, gap)
-    list_premade:AddColumn(TARDIS:GetPhrase("Screens.Music.DefaultMusic"))
-    list_premade:SetMultiSelect(false)
-
-    list_custom:SetSize(listW, listT)
-    list_custom:SetPos(2 * gap + listW, gap)
-    list_custom:AddColumn(TARDIS:GetPhrase("Screens.Music.CustomMusic"))
-    list_custom:SetMultiSelect(false)
+    list_songs:SetSize(listW, listT)
+    list_songs:SetPos(2 * gap + listW, gap)
+    list_songs:AddColumn(TARDIS:GetPhrase("Screens.Music.Songs"))
+    list_songs:SetMultiSelect(false)
 
     local panel = vgui.Create( "DPanel", frame )
     panel:SetSize(tbW + 2 * gap2, listT)
@@ -137,6 +155,20 @@ TARDIS:AddScreen("Music", {id="music", text="Screens.Music", menu=false, order=1
     play_stop_button:SetText(TARDIS:GetPhrase("Screens.Music.PlayStop"))
     play_stop_button:SetFont(TARDIS:GetScreenFont(screen, "Default"))
 
+    if not screen.is3D2D then
+        local el1,el2 = TARDIS:CreateOptionInterface("music-volume", TARDIS:GetSettingData("music-volume"))
+        local volume_setting = vgui.Create("DPanel",panel)
+        volume_setting:SetPos(gap2, 10 * gap2 + 3 * tbT)
+        volume_setting:SetSize(tbW, el1:GetTall() + el2:GetTall() + 3 * gap2)
+
+        el1:SetParent(volume_setting)
+        el2:SetParent(volume_setting)
+        el2:SetWide(tbW)
+
+        el1:SetPos(gap2, gap2)
+        el2:SetPos(gap2, 2 * gap2 + el1:GetTall())
+    end
+
     local save_custom_button=vgui.Create("DButton", panel)
     save_custom_button:SetSize(bW, bT)
     save_custom_button:SetPos(gap2, 3 * gap2 + 2 * tbT)
@@ -149,18 +181,33 @@ TARDIS:AddScreen("Music", {id="music", text="Screens.Music", menu=false, order=1
     remove_custom_button:SetText(TARDIS:GetPhrase("Common.Remove"))
     remove_custom_button:SetFont(TARDIS:GetScreenFont(screen, "Default"))
 
-    if not screen.is3D2D then
-        local el1,el2 = TARDIS:CreateOptionInterface("music-volume", TARDIS:GetSettingData("music-volume"))
-        local volume_setting = vgui.Create("DPanel",panel)
-        volume_setting:SetPos(gap2, 4 * gap2 + 3 * tbT)
-        volume_setting:SetSize(tbW, el1:GetTall() + el2:GetTall() + 3 * gap2)
-
-        el1:SetParent(volume_setting)
-        el2:SetParent(volume_setting)
-        el2:SetWide(tbW)
-
-        el1:SetPos(gap2, gap2)
-        el2:SetPos(gap2, 2 * gap2 + el1:GetTall())
+    local add_fav_button = vgui.Create("DButton", panel)
+    add_fav_button:SetSize(tbW, bT)
+    add_fav_button:SetPos(gap2, 4 * gap2 + 2 * tbT + bT)
+    add_fav_button:SetText(TARDIS:GetPhrase("Common.AddToFavourites"))
+    add_fav_button:SetFont(TARDIS:GetScreenFont(screen, "Default"))
+    add_fav_button:SetEnabled(false)
+    function add_fav_button:DoClick()
+        local sel_cat = list_categories:GetSelectedLine()
+        if not sel_cat then return end
+        local cat = categories[sel_cat]
+        local sel_song = list_songs:GetSelectedLine()
+        if not sel_song then return end
+        if cat.id == "favourites" then
+            -- Remove from favourites
+            table.remove(favourites, sel_song)
+            TARDIS:SaveFavourites()
+            list_songs:UpdateFavouritesSongs()
+            add_fav_button:SetEnabled(false)
+        elseif cat.id ~= "custom" then
+            -- Add to favourites if not already
+            local song = cat.songs[sel_song]
+            if song and not table.HasValue(favourites, song.id) then
+                table.insert(favourites, song.id)
+                TARDIS:SaveFavourites()
+                add_fav_button:SetEnabled(false)
+            end
+        end
     end
 
 --------------------------------------------------------------------------------
@@ -168,89 +215,167 @@ TARDIS:AddScreen("Music", {id="music", text="Screens.Music", menu=false, order=1
 --------------------------------------------------------------------------------
     local url = ""
     local default_music = {}
+    local urls = {}
 
-    list_premade:AddLine(TARDIS:GetPhrase("Common.Loading"))
-    list_premade.loading = true
+    list_categories:AddLine(TARDIS:GetPhrase("Common.Loading"))
+    list_categories.loading = true
 
-    http.Fetch("https://cdn.mattjeanes.com/tardis/music.json", function(body)
+    http.Fetch("https://cdn.mattjeanes.com/tardis/songs.json", function(body)
+        if not list_categories then return end
         default_music = util.JSONToTable(body)
-        list_premade:Clear()
-        if default_music == nil then
-            default_music = {}
-            TARDIS:ErrorMessage(LocalPlayer(), "Screens.Music.DefaultLoadError", "Screens.Music.UnableToDecodeList")
-            list_premade:AddLine(TARDIS:GetPhrase("Screens.Music.DefaultLoadError", "Screens.Music.UnableToDecodeList"))
-        else
-            for k,v in pairs(default_music) do
-                list_premade:AddLine(v[1])
+        list_categories:Clear()
+        categories = {}
+        default_song_lookup = {}
+        if default_music ~= nil then
+            -- Build lookup for song id -> song
+            for _,catObj in ipairs(default_music) do
+                for _,song in ipairs(catObj.songs) do
+                    default_song_lookup[song.id] = {cat=catObj, song=song}
+                end
             end
-            list_premade.loading = false
+            -- Remove any favourites that no longer exist
+            local valid_favourites = {}
+            for _,id in ipairs(favourites) do
+                if default_song_lookup[id] then
+                    table.insert(valid_favourites, id)
+                end
+            end
+            if #valid_favourites ~= #favourites then
+                favourites = valid_favourites
+                TARDIS:SaveFavourites()
+            end
+            -- Insert Favourites category at the top
+            table.insert(categories, {id = "favourites", name = TARDIS:GetPhrase("Common.Favourites"), songs = {}})
+            for _,catObj in ipairs(default_music) do
+                table.insert(categories, catObj)
+            end
+        else
+            TARDIS:ErrorMessage(LocalPlayer(), "Screens.Music.DefaultLoadError", "Screens.Music.DefaultLoadError.InvalidJson")
         end
+        table.insert(categories, {id = "custom", name = TARDIS:GetPhrase("Screens.Music.CustomMusic"), songs = {}})
+        for _,cat in ipairs(categories) do
+            list_categories:AddLine(cat.name)
+        end
+        list_categories.loading = false
     end, function(error)
         TARDIS:ErrorMessage(LocalPlayer(), "Screens.Music.DefaultLoadError", error)
-        list_premade:Clear()
-        list_premade:AddLine(TARDIS:GetPhrase("Screens.Music.DefaultLoadError", "Screens.Music.UnableToDecodeList"))
+        list_categories:Clear()
+        categories = {}
+        table.insert(categories, {id = "custom", name = TARDIS:GetPhrase("Screens.Music.CustomMusic"), songs = {}})
+        for _,cat in ipairs(categories) do
+            list_categories:AddLine(cat.name)
+        end
+        list_categories.loading = false
     end)
 
-    function list_custom:UpdateAll()
+    function list_songs:UpdateCustomSongs()
+        local sel = list_categories:GetSelectedLine()
+        if not sel then return end
+        if categories[sel].id ~= "custom" then
+            return
+        end
         self:Clear()
-        if url_bar ~= nil then
-            for k,v in pairs(custom_music) do
-                self:AddLine(v[1])
-            end
+        urls = {}
+        for k,v in pairs(custom_music) do
+            self:AddLine(v[1])
+            table.insert(urls, v[2])
         end
     end
 
-    list_custom:UpdateAll()
+    function list_songs:UpdateFavouritesSongs()
+        self:Clear()
+        urls = {}
+        for _,id in ipairs(favourites) do
+            local entry = default_song_lookup[id]
+            if entry then
+                self:AddLine(entry.song.name)
+                table.insert(urls, "https://cdn.mattjeanes.com/tardis/"..entry.song.id..".mp3")
+            end
+        end
+    end
 
 --------------------------------------------------------------------------------
 -- Selecting the rows
 --------------------------------------------------------------------------------
 
-    function list_custom:OnRowSelected(rowIndex,row)
-        list_premade:ClearSelection()
-        url_bar:SetText(custom_music[rowIndex][2])
-        name_bar:SetText(custom_music[rowIndex][1])
-        url_bar:SetTextColor(Color(0,0,0))
-        name_bar:SetTextColor(Color(0,0,0))
+    function list_songs:OnRowSelected(rowIndex,row)
+        local sel = list_categories:GetSelectedLine()
+        if not sel then return end
+        local cat = categories[sel]
+        if cat.id == "custom" then
+            url_bar:SetText(custom_music[rowIndex][2])
+            name_bar:SetText(custom_music[rowIndex][1])
+        end
+        url = urls[rowIndex]
+        if cat.id == "favourites" then
+            add_fav_button:SetEnabled(true)
+            add_fav_button:SetText(TARDIS:GetPhrase("Common.RemoveFromFavourites"))
+        elseif cat.id ~= "custom" then
+            local song = cat.songs[rowIndex]
+            if song and not table.HasValue(favourites, song.id) then
+                add_fav_button:SetEnabled(true)
+                add_fav_button:SetText(TARDIS:GetPhrase("Common.AddToFavourites"))
+            else
+                add_fav_button:SetEnabled(false)
+                add_fav_button:SetText(TARDIS:GetPhrase("Common.AddToFavourites"))
+            end
+        else
+            add_fav_button:SetEnabled(false)
+            add_fav_button:SetText(TARDIS:GetPhrase("Common.AddToFavourites"))
+        end
     end
 
-    function list_custom:DoDoubleClick(rowIndex, row)
-        ext:PlayMusic(custom_music[rowIndex][2])
-        list_custom:ClearSelection()
+    function list_songs:DoDoubleClick(rowIndex,row)
+        local sel = list_categories:GetSelectedLine()
+        if not sel then return end
+        local cat = categories[sel]
+        ext:PlayMusic(urls[rowIndex])
+        list_songs:ClearSelection()
+        add_fav_button:SetEnabled(false)
+        url = ""
     end
 
-    function list_premade:OnRowSelected(rowIndex, row)
-        if list_premade.loading then return end
-        list_custom:ClearSelection()
-        url = "https://cdn.mattjeanes.com/tardis/" .. default_music[rowIndex][2] ..".mp3"
-        url_bar:SetTextColor(Color(139,139,139))
-        name_bar:SetTextColor(Color(139,139,139))
+    function list_categories:OnRowSelected(rowIndex,row)
+        if list_categories.loading then return end
+        list_songs:Clear()
+        url = ""
+        url_bar:SetText("")
+        name_bar:SetText("")
+        local cat = categories[rowIndex]
+        urls = {}
+        add_fav_button:SetEnabled(false)
+        if cat.id == "custom" then
+            for _,v in ipairs(custom_music) do list_songs:AddLine(v[1]) table.insert(urls, v[2]) end
+            url_bar:SetEnabled(true)
+            name_bar:SetEnabled(true)
+            save_custom_button:SetEnabled(true)
+            remove_custom_button:SetEnabled(true)
+            add_fav_button:SetEnabled(false)
+            add_fav_button:SetText(TARDIS:GetPhrase("Common.AddToFavourites"))
+        elseif cat.id == "favourites" then
+            list_songs:UpdateFavouritesSongs()
+            url_bar:SetEnabled(false)
+            name_bar:SetEnabled(false)
+            save_custom_button:SetEnabled(false)
+            remove_custom_button:SetEnabled(false)
+            add_fav_button:SetEnabled(false)
+            add_fav_button:SetText(TARDIS:GetPhrase("Common.RemoveFromFavourites"))
+        else
+            for _,song in ipairs(cat.songs or {}) do
+                list_songs:AddLine(song.name)
+                table.insert(urls, "https://cdn.mattjeanes.com/tardis/"..song.id..".mp3")
+            end
+            url_bar:SetEnabled(false)
+            name_bar:SetEnabled(false)
+            save_custom_button:SetEnabled(false)
+            remove_custom_button:SetEnabled(false)
+            add_fav_button:SetEnabled(false)
+            add_fav_button:SetText(TARDIS:GetPhrase("Common.AddToFavourites"))
+        end
     end
 
-    function list_premade:DoDoubleClick(rowIndex, row)
-        if list_premade.loading then return end
-        ext:PlayMusic("https://cdn.mattjeanes.com/tardis/" .. default_music[rowIndex][2] ..".mp3")
-        list_premade:ClearSelection()
-    end
-
-    local function highlight_custom()
-        url_bar:SetTextColor(Color(0,0,0))
-        name_bar:SetTextColor(Color(0,0,0))
-        list_premade:ClearSelection()
-        list_custom:ClearSelection()
-    end
-
-    function url_bar:OnGetFocus()
-        highlight_custom()
-    end
-    function url_bar:OnValueChange()
-        highlight_custom()
-    end
-    function name_bar:OnGetFocus()
-        highlight_custom()
-    end
-    function name_bar:OnValueChange()
-        highlight_custom()
+    function list_categories:DoDoubleClick(rowIndex,row)
+        -- no-op: use right list for song selection
     end
 
 --------------------------------------------------------------------------------
@@ -260,22 +385,18 @@ TARDIS:AddScreen("Music", {id="music", text="Screens.Music", menu=false, order=1
     function name_bar:OnEnter()
         if screen.is3D2D then return end
         TARDIS:AddCustomMusic(name_bar:GetText(), url_bar:GetText())
-        list_custom:UpdateAll()
+        list_songs:UpdateCustomSongs()
     end
 
     function save_custom_button:DoClick()
         TARDIS:AddCustomMusic(name_bar:GetText(), url_bar:GetText())
-        list_custom:UpdateAll()
+        list_songs:UpdateCustomSongs()
     end
 
     function remove_custom_button:DoClick()
-        local line = list_custom:GetSelectedLine()
+        local line = list_songs:GetSelectedLine()
         if not line then
-            if list_premade:GetSelectedLine() then
-                TARDIS:ErrorMessage(LocalPlayer(), "Screens.Music.CannotRemoveDefault")
-            else
-                TARDIS:ErrorMessage(LocalPlayer(), "Screens.Music.DeleteNoSelection")
-            end
+            TARDIS:ErrorMessage(LocalPlayer(), "Screens.Music.DeleteNoSelection")
             return
         end
 
@@ -284,7 +405,7 @@ TARDIS:AddScreen("Music", {id="music", text="Screens.Music", menu=false, order=1
                     TARDIS:GetPhrase("Common.Yes"),
                     function()
                         TARDIS:RemoveCustomMusic(line)
-                        list_custom:UpdateAll()
+                        list_songs:UpdateCustomSongs()
                     end,
                     TARDIS:GetPhrase("Common.No"),
                     function()
@@ -304,12 +425,10 @@ TARDIS:AddScreen("Music", {id="music", text="Screens.Music", menu=false, order=1
     end
 
     function play_stop_button:DoClick()
-        if IsValid(ext.music) and ext.music:GetState()==GMOD_CHANNEL_PLAYING
-            and not (list_premade:GetSelectedLine() or list_custom:GetSelectedLine())
-        then
+        if IsValid(ext.music) and ext.music:GetState()==GMOD_CHANNEL_PLAYING and not list_songs:GetSelectedLine() then
             ext:StopMusic(true)
         else
-            if list_premade:GetSelectedLine() then
+            if url~=nil and url~="" then
                 ext:PlayMusic(url)
             elseif string.len(url_bar:GetValue())>0 then
                 ext:PlayMusic(url_bar:GetValue())
@@ -317,12 +436,13 @@ TARDIS:AddScreen("Music", {id="music", text="Screens.Music", menu=false, order=1
                 TARDIS:ErrorMessage(LocalPlayer(), "Screens.Music.NoChoice")
                 return
             end
-            list_premade:ClearSelection()
-            list_custom:ClearSelection()
+            list_songs:ClearSelection()
+            url = ""
             self:SetEnabled(false)
             self.disabled_time = CurTime()
         end
     end
+
     function play_stop_button:Think()
         if self.disabled_time and CurTime() - self.disabled_time > 3 then
             self.disabled_time = nil

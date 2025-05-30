@@ -8,8 +8,8 @@ When making changes to language strings:
 
 1. **Never edit the Lua language files directly** in `lua/tardis/languages/*.lua` - these are auto-generated.
 2. Always make changes to the JSON source files in `i18n/languages/*.json`.
-3. When adding new strings, make sure to provide proper translations for all language files - never use placeholders.
-4. After updating the source files, run the script to generate the Lua files:
+3. Only edit the English source file `i18n/languages/en.json` directly.
+4. After updating the source file, run the script to generate the Lua files:
    ```
    pwsh -File ./generate-languages.ps1
    ```

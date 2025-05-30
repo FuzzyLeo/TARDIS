@@ -359,15 +359,16 @@ if CLIENT then
             end
         end
 
-        local favorite = dmenu:AddOption(TARDIS:GetPhrase("Spawnmenu.AddToFavourites"), function(self)
+        local favorite = dmenu:AddOption("", function(self)
             TARDIS.Spawnmenu.DoToggleFavorite(obj)
         end)
 
         local fav = TARDIS:IsFavoriteInt(obj.spawnname, LocalPlayer())
         local fav_icon = fav and "heart_delete.png" or "heart_add.png"
-        local fav_text = fav and "Spawnmenu.RemoveFromFavourites" or "Spawnmenu.AddToFavourites"
+        local fav_text = fav and "Common.RemoveFromFavourites" or "Common.AddToFavourites"
+        fav_text = TARDIS:GetPhrase(fav_text) .. " (" .. string.lower(TARDIS:GetPhrase("Spawnmenu.ReloadRequired")) .. ")"
         favorite:SetIcon("icon16/" .. fav_icon)
-        favorite:SetText(TARDIS:GetPhrase(fav_text))
+        favorite:SetText(fav_text)
 
         TARDIS.Spawnmenu.AddChameleonSetting(dmenu, obj.spawnname)
         TARDIS.Spawnmenu.AddSettings(dmenu, obj.spawnname)
