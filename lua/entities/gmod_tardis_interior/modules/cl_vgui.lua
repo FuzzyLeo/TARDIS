@@ -35,7 +35,7 @@ tbl.Init = function(self,...)
     old.Init(self,...)
     self.OldOnMousePressed = self.OnMousePressed
     self.OnMousePressed = function(self,key)
-        if self.is3D2D then
+        if self.is3D2D and self:IsEnabled() then
             RequestInput(self)
         end
         self:OldOnMousePressed(key)

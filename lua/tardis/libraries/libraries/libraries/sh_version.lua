@@ -36,16 +36,8 @@ end
 local VERSION_FILE = "tardis/version" .. (SERVER and "_sv" or "_cl") .. ".txt"
 local VERSION_LAST_USED_FILE = "tardis/version_lastused" .. (SERVER and "_sv" or "_cl") .. ".txt"
 
-local function get_previous_version()
-    return get_version_from_file(VERSION_FILE)
-end
-
-local function get_last_used_version()
-    return get_version_from_file(VERSION_LAST_USED_FILE)
-end
-
-TARDIS.PreviousVersion = TARDIS.PreviousVersion or get_previous_version()
-TARDIS.LastUsedVersion = TARDIS.LastUsedVersion or get_last_used_version()
+TARDIS.PreviousVersion = TARDIS.PreviousVersion or get_version_from_file(VERSION_FILE)
+TARDIS.LastUsedVersion = TARDIS.LastUsedVersion or get_version_from_file(VERSION_LAST_USED_FILE)
 
 function TARDIS:GetVersion()
     return self.Version
@@ -75,6 +67,12 @@ function TARDIS:IsNewVersion()
         return false
     end
     return self:IsVersionHigherThan(self.LastUsedVersion)
+end
+
+function TARDIS:IsNewInstall()
+    return self.PreviousVersion.Major == 0
+        and self.PreviousVersion.Minor == 0
+        and self.PreviousVersion.Patch == 0
 end
 
 function TARDIS:GetVersionString(version)
@@ -174,11 +172,10 @@ end
 function TARDIS:RunMigrations()
     local versions = table.GetKeys(self.Migrations)
     
-    if #versions > 0 then
+    if #versions > 0 and not self:IsNewInstall() then
         local filteredVersions = {}
-        local previousVersion = get_previous_version()
         for _, version in ipairs(versions) do
-            if self:IsVersionHigherThan(previousVersion, version) then
+            if self:IsVersionHigherThan(self.PreviousVersion, version) then
                 table.insert(filteredVersions, version)
             end
         end
@@ -197,3 +194,7 @@ function TARDIS:RunMigrations()
     
     file.Write(VERSION_FILE, self:GetVersionString())
 end
+
+hook.Add("InitPostEntity", "TARDIS_Migrations", function()
+    TARDIS:RunMigrations()
+end)

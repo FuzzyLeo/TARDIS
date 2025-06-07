@@ -269,6 +269,11 @@ end
 function ListView3D:AddColumn(name)
 
 end
+
+function ListView3D:SetSortable(b)
+    -- sorting is neither required nor implemented
+end
+
 function ListView3D:SetMultiSelect(b)
     -- multiselect is neither required nor implemented
 end
