@@ -61,7 +61,7 @@ local function get_release_notes(version, newVersion)
     local function onfailure(reason)
         print("Failed to retrieve TARDIS release notes for " .. version .. ": " .. reason)
     end
-    http.Fetch("https://api.github.com/repos/MattJeanes/TARDIS/releases/tags/" .. version, onsuccess, onfailure, headers)
+    http.Fetch("https://api.github.com/repos/AmyJeanes/TARDIS/releases/tags/" .. version, onsuccess, onfailure, headers)
 end
 
 ENT:AddHook("NewVersion", "version", function(self, newVersion, newVersionStr, oldVersion, oldVersionStr)
