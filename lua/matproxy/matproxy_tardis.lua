@@ -137,3 +137,126 @@ matproxy.Add({
         mat:SetVector(self.ResultTo, col)
     end
 })
+
+matproxy.Add({
+    name = "TARDIS_Interior_Color1",
+
+    init = function(self, mat, values)
+        self.ResultTo = values.resultvar
+    end,
+
+    bind = function(self, mat, ent)
+        if not IsValid(ent) or not ent.TardisPart then return end
+        if not ent.interior then return end
+
+        local col = ent.interior.metadata.Interior.MatProxy.Color1
+
+
+        col = Color(col.r, col.g, col.b):ToVector()
+
+
+
+        mat:SetVector( self.ResultTo, col);
+    end
+})
+
+matproxy.Add({
+    name = "TARDIS_Interior_Color2",
+
+    init = function(self, mat, values)
+        self.ResultTo = values.resultvar
+    end,
+
+    bind = function(self, mat, ent)
+        if not IsValid(ent) or not ent.TardisPart then return end
+        if not ent.interior then return end
+
+        local col = ent.interior.metadata.Interior.MatProxy.Color2
+
+
+        col = Color(col.r, col.g, col.b):ToVector()
+
+
+
+        mat:SetVector( self.ResultTo, col);
+    end
+})
+
+matproxy.Add({
+    name = "TARDIS_Interior_Color3",
+
+    init = function(self, mat, values)
+        self.ResultTo = values.resultvar
+    end,
+
+    bind = function(self, mat, ent)
+        if not IsValid(ent) or not ent.TardisPart then return end
+        if not ent.interior then return end
+
+        local col = ent.interior.metadata.Interior.MatProxy.Color3
+
+
+        col = Color(col.r, col.g, col.b):ToVector()
+
+
+
+        mat:SetVector( self.ResultTo, col);
+    end
+})
+
+local function matproxy_tardis_warning_init(self, mat, values)
+    self.ResultTo = values.resultvar
+    self.on_var = values.onvar
+    self.off_var = values.offvar
+end
+
+local function matproxy_tardis_warning_bind(self, mat, ent)
+    if not IsValid(ent) or not IsValid(ent.exterior) or not ent.TardisPart then return end
+
+    local var = ent.exterior:GetWarning() and self.on_var or self.off_var
+    if not var then return end
+
+    local value = mat:GetVector(var)
+
+    if var ~= self.last_var or value ~= self.last_value then
+        self.last_var = var
+        self.last_value = value
+        mat:SetVector(self.ResultTo, value)
+    end
+
+end
+
+matproxy.Add({
+    name = "TARDIS_Warning",
+    init = matproxy_tardis_warning_init,
+    bind = matproxy_tardis_warning_bind,
+})
+
+
+local function matproxy_tardis_HDR_init(self, mat, values)
+    self.ResultTo = values.resultvar
+    self.on_var = values.onvar
+    self.off_var = values.offvar
+end
+
+local function matproxy_tardis_HDR_bind(self, mat, ent)
+    if not IsValid(ent) or not IsValid(ent.exterior) or not ent.TardisPart then return end
+
+    local var = render.GetHDREnabled() and self.on_var or self.off_var
+    if not var then return end
+
+    local value = mat:GetVector(var)
+
+    if var ~= self.last_var or value ~= self.last_value then
+        self.last_var = var
+        self.last_value = value
+        mat:SetVector(self.ResultTo, value)
+    end
+
+end
+
+matproxy.Add({
+    name = "TARDIS_HDR_State",
+    init = matproxy_tardis_HDR_init,
+    bind = matproxy_tardis_HDR_bind,
+})
