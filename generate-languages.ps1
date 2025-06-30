@@ -69,9 +69,12 @@ Get-ChildItem $sourceLanguageFolder | ForEach-Object {
     }
 
     $sortedPhrases = [ordered]@{}
+    $phrasesToRemove = @()
     $language.Phrases.Keys | Where-Object { -not $originLanguage.Phrases.Contains($_) } | ForEach-Object {
         Write-Warning "Removing orphaned phrase $_ from language $code"
+        $phrasesToRemove += $_
     }
+    $phrasesToRemove | ForEach-Object { $language.Phrases.Remove($_) }
     $originLanguage.Phrases.Keys | Sort-Object | ForEach-Object {
         $key = $_
         if ($language.Phrases.Contains($key) -and -not [string]::IsNullOrWhiteSpace($language.Phrases[$key])) {
