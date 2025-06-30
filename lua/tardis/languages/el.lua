@@ -175,6 +175,7 @@ T.Phrases = {
     ["Controls.Flight.Status"] = "Λειτουργία πτήσης",
     ["Controls.Flight.Tip"] = "Λειτουργία πτήσης",
     ["Controls.FlightlessFlight"] = "(\"\")",
+    ["Controls.FlightlessFlight.FailedToggle"] = "Αποτυχία εναλλαγής πτήσης χωρίς δυνατότητα απογείωσης",
     ["Controls.FlightlessFlight.Status"] = "Téra-vil nélét",
     ["Controls.FlightlessFlight.Tip"] = "lam nolwo",
     ["Controls.Float"] = "Αντιβαρύτητα",
