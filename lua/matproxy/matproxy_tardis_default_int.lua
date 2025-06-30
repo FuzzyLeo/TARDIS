@@ -77,17 +77,12 @@ matproxy.Add({
     bind = function(self, mat, ent)
         if not IsValid(ent) or not IsValid(ent.interior) or not ent.TardisPart then return end
 
-        local time = ent.interior:GetData("default_telepathic_activation")
+        local time = ent:GetData("destination_last_toggle")
         local timediff = time and (RealTime() - time)
-
-        if time == nil then
-            time = LocalPlayer():GetTardisData("destination_last_exit")
-            timediff = time and (CurTime() - time)
-        end
 
         if time then
             timediff = math.Clamp(math.abs(timediff), 0, 1)
-            mat:SetFloat(self.ResultTo, 0.7 * (1 - timediff))
+            mat:SetFloat(self.ResultTo, 3 * (1 - timediff))
             return
         end
 

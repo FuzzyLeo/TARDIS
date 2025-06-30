@@ -1,3 +1,5 @@
+-- Default
+
 local T = {}
 
 T.Base = "base"
@@ -9,8 +11,16 @@ T.Versions = {
     randomize = false,
     other = {
         {
+            id = "default_capaldi",
+            name = "Interiors.Default.Versions.Capaldi",
+        },
+        {
             id = "default_cl",
             name = "Interiors.Default.Versions.ClassicDoors",
+        },
+        {
+            id = "default_capaldi_cl",
+            name = "Interiors.Default.Versions.Capaldi.ClassicDoors",
         },
     },
 }
@@ -354,7 +364,6 @@ T.Interior = {
         default_key = "toggle_console",
         default_sonic_charger = "sonic_dispenser",
         default_spin_crank = "hads",
-        default_small_switch_17 = "toggle_doorframe_light",
         default_small_switch_18 = "exterior_light",
         default_handle1 = "flightlessflight",
         default_handle2 = "flight",
@@ -478,6 +487,17 @@ T.Interior = {
         {pos = Vector(-101.11, -110.17, 126.19), right = true, down = true, part = "default_side_speakers", },
         {pos = Vector(334.946, -34.611, 40.627), text = "Never Gonna Give You Up!\nNever Gonna Let You Down!"}
     },
+
+    TextureSets = {
+        ["normal"] = {
+            prefix = "models/molda/toyota_int/",
+            { "default_telepathic", 0, "telepathics" }
+        },
+        ["off"] = {
+            prefix = "models/molda/toyota_int/",
+            { "default_telepathic", 0, "telepathics_off" }
+        },
+    },
 }
 
 T.Exterior = {
@@ -494,6 +514,20 @@ T.Timings = {
 }
 
 T.CustomHooks = {
+    power = {
+        exthooks = {
+            ["PowerToggled"] = true,
+        },
+        func = function(ext, int, on)
+            if CLIENT then return end
+            print(on)
+            if on then
+                int:ApplyTextureSet("normal")
+            else
+                int:ApplyTextureSet("off")
+            end
+        end
+    },
     screen_disable = {
         inthooks = {
             ["ShouldNotDrawScreen"] = true,
@@ -557,16 +591,6 @@ T.CustomControls = {
         screen_button = false,
         tip_text = "CustomControls.Default.ToggleScreen.2.Tip",
     },
-
-    toggle_doorframe_light = {
-        int_func=function(self,ply,part)
-            local doorframe = self:GetPart("default_doorframe")
-            doorframe:SetBodygroup(1,part:GetOn() and 0 or 1)
-        end,
-        power_independent = false,
-        screen_button = false,
-        tip_text = nil, -- let this one be an easter-egg-ish feature for now
-    },
 }
 
 T.CustomSettings = {
@@ -606,6 +630,7 @@ T.CustomSettings = {
 
 T.Templates = {
     default_exterior = { override = true, },
+    default_smith = {},
     default_lamps = {
         override = true,
         condition = function(id, ply, ent)
@@ -626,7 +651,7 @@ T.Templates = {
             return (setting_val ~= "dynamic")
         end,
     },
-    default_color_update = {},
+    default_color_update_smith = {},
 
     default_small_version = {
         override = true,
@@ -662,10 +687,50 @@ T.TemplatesMergeOrder = {
 
 TARDIS:AddInterior(T)
 
+-- Capaldi
 
+local T = {}
 
+T.Base = "default"
+T.Name = "Interiors.Default"
+T.ID = "default_capaldi"
+T.IsVersionOf = "default"
 
+T.Templates = {
+    default_smith = false,
+    default_color_update_smith = false,
+    default_capaldi = {},
+    default_color_update_capaldi = {},
+}
 
+T.Interior = {
+    TextureSets = {
+        ["normal"] = {
+            prefix = "models/molda/toyota_int/",
+            { "default_telepathic", 0, "telepathics2" }
+        },
+        ["off"] = {
+            prefix = "models/molda/toyota_int/",
+            { "default_telepathic", 0, "telepathics_off" }
+        },
+    }
+}
+
+T.CustomHooks = {
+    capaldi_textures = {
+        inthooks = {
+            ["Initialize"] = true,
+        },
+        func = function(ext, int)
+            if CLIENT then return end
+            int:ApplyTextureSet("normal")
+        end,
+    },
+}
+
+TARDIS:AddInterior(T)
+
+-- Default (classic doors)
 
 local T = {}
 
@@ -767,5 +832,13 @@ T.CustomHooks = {
         end,
     },
 }
+
+TARDIS:AddInterior(T)
+
+-- Capaldi (classic doors)
+
+T.Base = "default_capaldi"
+T.Name = "Interiors.Default"
+T.ID = "default_capaldi_cl"
 
 TARDIS:AddInterior(T)

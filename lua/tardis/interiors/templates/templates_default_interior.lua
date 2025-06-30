@@ -145,7 +145,7 @@ local function change_light_color(lt, col)
     end
 end
 
-local function set_interior_color(int, k)
+local function set_interior_color_smith(int, k)
     if not int.light_data then return end
 
     local p = 1 - k
@@ -166,14 +166,14 @@ local function set_interior_color(int, k)
     local console_col = Color(240 + 15 * k, 240 + 15 * k, 200 + 55 * p)
     change_light_color(int.light_data.extra.console_white, console_col)
 
-    -- Color(255,255,255) ... Color(255,255,220)
-    local floor_lights_col = Color(255, 255, 220 + 20 * p)
+    -- Color(255,255,200) ... Color(255,255,220)
+    local floor_lights_col = Color(255, 255, 200 + 20 * p)
     int:SetData("default_int_floor_lights_color", floor_lights_col)
 
     int:SetData("default_int_color_set_mult", k)
 end
 
-TARDIS:AddInteriorTemplate("default_color_update", {
+TARDIS:AddInteriorTemplate("default_color_update_smith", {
     CustomHooks = {
         int_color_update = {
             inthooks = { ["Think"] = true },
@@ -184,13 +184,58 @@ TARDIS:AddInteriorTemplate("default_color_update", {
                 if not k then return end
 
                 if k ~= int:GetData("default_int_color_set_mult") then
-                    set_interior_color(int, k)
+                    set_interior_color_smith(int, k)
                 end
             end,
         },
     },
 })
 
+local function set_interior_color_capaldi(int, k)
+    if not int.light_data then return end
+
+    local p = 1 - k
+
+    -- Color(255,50,0) ... Color(255,80,0)
+    local col = Color(255, 50 + 30 * k, 0)
+
+    int:SetData("default_int_env_color", col)
+
+    change_light_color(int.light_data.main, col)
+    change_light_color(int.light_data.extra.console_bottom, col)
+
+    -- Color(150,50,0) ... Color(150,80,0)
+    local rotor_col = Color(150, 50 + 30 * k, 0)
+    int:SetData("default_int_rotor_color", rotor_col)
+
+    -- Color(240,240,255) ... Color(255,255,200)
+    local console_col = Color(240 + 15 * k, 240 + 15 * k, 200 + 55 * p)
+    change_light_color(int.light_data.extra.console_white, console_col)
+
+    -- Color(255,255,200) ... Color(255,255,220)
+    local floor_lights_col = Color(255, 255, 200 + 20 * p)
+    int:SetData("default_int_floor_lights_color", floor_lights_col)
+
+    int:SetData("default_int_color_set_mult", k)
+end
+
+TARDIS:AddInteriorTemplate("default_color_update_capaldi", {
+    CustomHooks = {
+        int_color_update = {
+            inthooks = { ["Think"] = true },
+            func = function(ext,int,frame_time)
+                if SERVER or not IsValid(int) then return end
+
+                local k = int:GetData("default_int_color_mult")
+                if not k then return end
+
+                if k ~= int:GetData("default_int_color_set_mult") then
+                    set_interior_color_capaldi(int, k)
+                end
+            end,
+        },
+    },
+})
 
 TARDIS:AddInteriorTemplate("default_small_version", {
     Interior = {
@@ -259,6 +304,57 @@ TARDIS:AddInteriorTemplate("default_screens_on", {
     Interior = {
         Parts = {
             default_flat_switch_1 = { EnabledOnStart = true, },
+        },
+    },
+})
+
+TARDIS:AddInteriorTemplate("default_smith", {
+    CustomHooks = {
+        init = {
+            inthooks = {
+                ["Initialize"] = true,
+            },
+            func = function(ext,int,id)
+                if CLIENT then return end
+                local monitor_1 = int:GetPart("default_monitor_1")
+                local monitor_2 = int:GetPart("default_monitor_2")
+                if IsValid(monitor_1) and IsValid(monitor_2) then
+                    monitor_2:SetBodygroup(0, 1)
+                    monitor_1:SetBodygroup(0, 1)
+                end
+            end,
+        },
+    },
+})
+
+TARDIS:AddInteriorTemplate("default_capaldi", {
+    CustomHooks = {
+        init = {
+            inthooks = {
+                ["Initialize"] = true,
+            },
+            func = function(ext,int,id)
+                if CLIENT then return end
+                local console = int:GetPart("default_console")
+                if IsValid(console) then
+                    console:SetBodygroup(2, 1) -- Phone port
+                    console:SetBodygroup(5, 1) -- Siege panel
+                end
+                local doorframe = int:GetPart("default_doorframe")
+                if IsValid(doorframe) then
+                    doorframe:SetBodygroup(1, 1) -- Doorframe light
+                end
+                local monitor_1 = int:GetPart("default_monitor_1")
+                local monitor_2 = int:GetPart("default_monitor_2")
+                if IsValid(monitor_1) and IsValid(monitor_2) then
+                    monitor_2:SetBodygroup(0, 2) -- Screen
+                    monitor_1:SetBodygroup(0, 2) -- Screen
+                end
+                local rotor = int:GetPart("default_rotor")
+                if IsValid(rotor) then
+                    rotor:SetBodygroup(2, 3) -- Neon
+                end
+            end,
         },
     },
 })

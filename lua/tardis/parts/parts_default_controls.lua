@@ -104,13 +104,11 @@ function PART:Use(ply)
     if last_d_exit and self.Control == "destination" and CurTime() - last_d_exit < 1 then return end
 
     if CLIENT then
-        self:SetData("default_telepathic_activation", RealTime() + 1)
+        self:SetData("destination_last_toggle", RealTime(), true)
     end
 
     if SERVER then
         TARDIS:Control(self.Control, ply, self)
-    else
-        self:SetData("default_telepathic_activation", nil)
     end
 end
 
