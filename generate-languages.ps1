@@ -25,7 +25,6 @@ function Get-AITranslation {
 
     $prompt = "Translate the following phrase to $LanguageCode language: `"$Phrase`". " +
     "Ensure the translation is accurate and idiomatic. " +
-    "If you cannot translate it, return an empty string. " +
     "Do not include any additional text or explanations."
 
     $body = @{
