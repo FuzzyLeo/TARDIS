@@ -356,8 +356,9 @@ T.Interior = {
         default_spin_crank = "hads",
         default_small_switch_17 = "toggle_doorframe_light",
         default_small_switch_18 = "exterior_light",
+        default_handle1 = "flightlessflight",
+        default_handle2 = "flight",
 
-        default_spin_b_1 = "flight",
         default_spin_b_2 = "float",
         default_spin_b_3 = "physlock",
         default_spin_b_4 = "spin_cycle",

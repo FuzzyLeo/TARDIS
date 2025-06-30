@@ -14,7 +14,7 @@ if SERVER then
     ENT:AddHook("PhysicsCollide", "falling", function(self, data, collider)
 
         if self:IsVerticalLanding(data) then
-            if self:CallHook("ShouldNotPlayLandingSound") ~= true and data.OurOldVelocity.z < -100 then
+            if (self:CallHook("ShouldNotPlayLandingSound") ~= true or self:CallHook("ShouldPlayLandingSound")) and data.OurOldVelocity.z < -100 then
                 self:SendMessage((data.OurOldVelocity.z < -1500) and "fall_crashing_sound" or "fall_landing_sound")
             end
 
@@ -28,7 +28,7 @@ if SERVER then
 
     ENT:AddHook("PhysicsUpdate", "falling", function(self,ph)
 
-        local free_movement = not self:GetData("float") and not self:GetData("flight") and not self:IsPlayerHolding()
+        local free_movement = self:CallHook("ShouldNotAllowFalling") ~= true or self:CallHook("ShouldAllowFalling")
         free_movement = free_movement and ph:IsGravityEnabled() and self:IsAlive()
 
         self:SetData("free_movement", free_movement, true)
@@ -101,6 +101,12 @@ if SERVER then
                 self:CancelTimer("vertbrakes")
             end
             reduce_movement()
+        end
+    end)
+
+    ENT:AddHook("ShouldNotAllowFalling", "falling", function(self)
+        if self:IsPlayerHolding() then
+            return true
         end
     end)
 else

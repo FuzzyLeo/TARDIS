@@ -173,6 +173,12 @@ if SERVER then
         end
     end)
 
+    ENT:AddHook("ShouldNotAllowFalling", "flight", function(self)
+        if self:GetData("flight") then
+            return true
+        end
+    end)
+
     ENT:AddHook("ThirdPerson", "flight", function(self,ply,enabled)
         if enabled then
             if IsValid(self.pilot) then
@@ -226,7 +232,7 @@ if SERVER then
     end)
 
     ENT:AddHook("PhysicsUpdate", "flight", function(self,ph)
-        if self:GetData("flight") then
+        if self:GetData("flight") and not self:CallHook("ShouldTurnOffFlightPhysics") then
             local phm=FrameTime()*66
 
             local up=self:GetUp()
