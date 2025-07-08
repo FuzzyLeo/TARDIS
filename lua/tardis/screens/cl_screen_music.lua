@@ -218,7 +218,7 @@ TARDIS:AddScreen("Music", {id="music", text="Screens.Music", menu=false, order=1
     list_categories:AddLine(TARDIS:GetPhrase("Common.Loading"))
     list_categories.loading = true
 
-    http.Fetch("https://cdn.mattjeanes.com/tardis/songs.json", function(body)
+    http.Fetch("https://cdn.amyjeanes.com/tardis/songs.json", function(body)
         if not list_categories then return end
         default_music = util.JSONToTable(body)
         list_categories:Clear()
@@ -289,7 +289,7 @@ TARDIS:AddScreen("Music", {id="music", text="Screens.Music", menu=false, order=1
             local entry = default_song_lookup[id]
             if entry then
                 self:AddLine(entry.song.name)
-                table.insert(urls, "https://cdn.mattjeanes.com/tardis/"..entry.song.id..".mp3")
+                table.insert(urls, "https://cdn.amyjeanes.com/tardis/"..entry.song.id..".mp3")
             end
         end
     end
@@ -363,7 +363,7 @@ TARDIS:AddScreen("Music", {id="music", text="Screens.Music", menu=false, order=1
         else
             for _,song in ipairs(cat.songs or {}) do
                 list_songs:AddLine(song.name)
-                table.insert(urls, "https://cdn.mattjeanes.com/tardis/"..song.id..".mp3")
+                table.insert(urls, "https://cdn.amyjeanes.com/tardis/"..song.id..".mp3")
             end
             url_bar:SetEnabled(false)
             name_bar:SetEnabled(false)

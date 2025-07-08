@@ -1,7 +1,6 @@
 -- TARDIS Interior
 
 ENT.Base="gmod_door_interior"
-ENT.Author="Dr. Matt"
 ENT.TardisInterior=true
 ENT.Exterior="gmod_tardis"
 

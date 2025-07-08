@@ -10,7 +10,6 @@ local function loadskin()
     SKIN = {}
 
     SKIN.PrintName          = "TARDIS"
-    SKIN.Author             = "Dr. Matt"
     SKIN.DermaVersion       = 1
     SKIN.GwenTexture        = Material( "gwenskin/tardis.png" )
 

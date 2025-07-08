@@ -4,7 +4,6 @@ ENT.Base="gmod_door_exterior"
 ENT.Spawnable=false
 ENT.PrintName="TARDIS"
 ENT.Category="Doctor Who - TARDIS"
-ENT.Author="Dr. Matt"
 ENT.TardisExterior=true
 ENT.Interior="gmod_tardis_interior"
 

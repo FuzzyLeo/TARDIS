@@ -5,7 +5,6 @@ else
     ENT.Base            = "base_gmodentity"
 end
 ENT.PrintName       = "TARDIS Part"
-ENT.Author          = "Dr. Matt"
 ENT.Spawnable       = false
 ENT.AdminSpawnable  = false
 ENT.Category        = "Doctor Who"
