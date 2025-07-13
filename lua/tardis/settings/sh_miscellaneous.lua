@@ -126,7 +126,7 @@ TARDIS:AddSetting({
 TARDIS:AddSetting({
     id="teleport_warning_infinite",
     type="bool",
-    value=false,
+    value=true,
     class="networked",
     option=true,
     section=SETTING_SECTION,

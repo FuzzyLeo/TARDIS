@@ -117,6 +117,11 @@ else
         self.interior:StopSound(int.mat or ext.mat)
         self.interior:StopSound(int.fullflight or ext.fullflight)
         self.interior:StopSound(int.fullflight_damaged or ext.fullflight_damaged)
+
+        if self.interior.dematfailsound then
+            self.interior.dematfailsound:Stop()
+            self.interior.dematfailsound = nil
+        end
     end
 
     ENT:OnMessage("interrupt-teleport", function(self, data, ply)

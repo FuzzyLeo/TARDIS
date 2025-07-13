@@ -126,8 +126,6 @@ if SERVER then
     function ENT:EngineReleaseDemat(pos, ang, callback)
         if not self:GetData("failing-demat", false) then return end
 
-        self:SetData("failing-demat", false, true)
-
         if self:CallHook("ShouldFailDemat", false) == true then
             if not self:IsLowHealth() then
                 self:ForceDemat(pos, ang, callback)
@@ -143,7 +141,6 @@ if SERVER then
     ENT:AddHook("ToggleDoor", "failing-demat", function(self,open)
         if self:GetData("failing-demat", false) then
             if not open then
-                self:SetData("failing-demat", false, true)
                 self:Demat(nil, nil, nil, false)
             end
         end
@@ -159,7 +156,7 @@ if SERVER then
     end)
 
     ENT:AddHook("DematStart", "failing-demat", function(self, pos, ang, callback, force)
-        self:SetData("failing-demat", false, true)
+        self:FailDematStop()
     end)
 
     ENT:AddHook("PreMatStart", "failing-mat", function(self, pos, ang, callback, ignore_fail_mat)
@@ -170,10 +167,17 @@ else -- CLIENT
     ENT:OnMessage("failed-demat", function(self, data, ply)
         self:CallCommonHook("DematFailed")
         if TARDIS:GetSetting("teleport-sound") and TARDIS:GetSetting("sound") then
+            local infinite = TARDIS:GetSetting("teleport_warning_infinite", self)
             local ext = self.metadata.Exterior.Sounds.Teleport
             local int = self.metadata.Interior.Sounds.Teleport
             self:EmitSound(ext.demat_fail)
-            self.interior:EmitSound(int.demat_fail or ext.demat_fail)
+            if infinite then
+                self.interior.dematfailsound = CreateSound(self.interior, int.demat_fail_loop)
+                self.interior.dematfailsound:SetSoundLevel(90)
+                self.interior.dematfailsound:Play()
+            else
+                self.interior:EmitSound(int.demat_fail or ext.demat_fail)
+            end
         end
         if LocalPlayer():GetTardisData("exterior") == self then
             util.ScreenShake(self.interior:GetPos(), 2.5, 100, 3, 300)
@@ -195,6 +199,24 @@ else -- CLIENT
 
     ENT:OnMessage("engine-release-explode", function(self, data, ply)
         self:InteriorExplosion()
+    end)
+
+    ENT:AddHook("DematFailStopped", "failing-demat", function(self)
+        if self.interior.dematfailsound then
+            self.interior.dematfailsound:Stop()
+            self.interior.dematfailsound = nil
+            local teleport = self:GetData("teleport", false)
+            if not teleport then
+                self.interior:EmitSound(self.metadata.Interior.Sounds.Teleport.demat_fail_loop_stop)
+            end
+        end
+    end)
+
+    ENT:AddHook("OnRemove", "failing-demat", function(self)
+        if self.interior.dematfailsound then
+            self.interior.dematfailsound:Stop()
+            self.interior.dematfailsound = nil
+        end
     end)
 end
 

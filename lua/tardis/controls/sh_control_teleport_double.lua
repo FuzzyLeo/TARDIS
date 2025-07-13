@@ -15,9 +15,15 @@ TARDIS:AddControl({
 
         if on then
             self:CancelTimer("teleport_double_fail_mat_stop")
-            self:Timer("teleport_double_fail_demat_stop", 2, function()
+            local infinite = TARDIS:GetSetting("teleport_warning_infinite", self)
+            if not infinite then
+                local time = self.metadata.Timings.DematFail
+                self:Timer("teleport_double_fail_demat_stop", time, function()
+                    self:FailDematStop()
+                end)
+            else
                 self:FailDematStop()
-            end)
+            end
         else
             self:CancelTimer("teleport_double_fail_demat_stop")
             self:Timer("teleport_double_fail_mat_stop", 2, function()
