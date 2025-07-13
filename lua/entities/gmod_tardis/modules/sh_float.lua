@@ -103,8 +103,14 @@ if SERVER then
         end
     end)
 
-    ENT:AddHook("PhysicsUpdate", "float", function(self,ph)
+    ENT:AddHook("ShouldNotAllowFalling", "float", function(self)
         if self:GetData("float") then
+            return true
+        end
+    end)
+
+    ENT:AddHook("PhysicsUpdate", "float", function(self,ph)
+        if self:GetData("float") and not self:CallHook("ShouldTurnOffFloatPhysics") then
             if ph:IsGravityEnabled() then
                 ph:AddVelocity(Vector(0,0,9.0135))
             end

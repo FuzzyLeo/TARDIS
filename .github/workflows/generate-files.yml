@@ -7,12 +7,16 @@ on:
     paths:
     - i18n/languages/*.json
     - version.json
+    - generate-languages.ps1
+    - .github/workflows/generate-files.yml
   push:
     branches:
     - dev
     paths:
     - i18n/languages/*.json
     - version.json
+    - generate-languages.ps1
+    - .github/workflows/generate-files.yml
 
   workflow_dispatch:
 
@@ -37,12 +41,14 @@ jobs:
       - name: Generate Languages
         run: ./generate-languages.ps1
         shell: pwsh
+        env:
+          TARDIS_OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
 
       - name: Generate Version
         run: ./generate-version.ps1
         shell: pwsh
 
       - name: Git Auto Commit
-        uses: stefanzweifel/git-auto-commit-action@b863ae1933cb653a53c021fe36dbb774e1fb9403 # v5
+        uses: stefanzweifel/git-auto-commit-action@778341af668090896ca464160c2def5d1d1a3eb0 # v6
         with:
           commit_message: "Update Generated Files"

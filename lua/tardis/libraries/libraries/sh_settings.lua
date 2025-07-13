@@ -217,7 +217,7 @@ function TARDIS:SaveSettings()
         local settings={}
         for k,v in pairs(settings_table) do
             local data = self.SettingsData[k]
-            if data and data.value ~= v then
+            if data and (data.value ~= v or type(v) == "table") then
                 settings[k] = v
             end
         end

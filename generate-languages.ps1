@@ -7,9 +7,64 @@ $targetLanguageFolder | Get-ChildItem | Remove-Item
 
 $originLanguage = Get-Content -Raw (Join-Path $sourceLanguageFolder "en.json") | ConvertFrom-Json -AsHashtable
 
+function Get-AITranslation {
+    param (
+        [Parameter(Mandatory = $true)]
+        [string]$LanguageName,
+        [Parameter(Mandatory = $true)]
+        [string]$LanguageCode,
+        [Parameter(Mandatory = $true)]
+        [string]$Phrase
+    )
+
+    $openAIKey = $env:TARDIS_OPENAI_API_KEY
+    if (-not $openAIKey) {
+        Write-Host "Skipping AI translation for $LanguageCode as TARDIS_OPENAI_API_KEY is not set."
+        return [string]::Empty
+    }
+
+    Write-Host "Retrieving AI translation for ${LanguageCode}: $Phrase"
+
+    $prompt = "Translate the following phrase from English to $LanguageName ($LanguageCode) language: `"$Phrase`". " +
+    "Ensure the translation is accurate and idiomatic. " +
+    "If you cannot translate it, return an empty string. " +
+    "Do not include any additional text or explanations. " +
+    "Do not return the original phrase in English, only the translated phrase. " +
+    "Punctuation and capitalization should match the original phrase. " +
+    "Variable replacement characters e.g. %s must be maintained. " +
+    "Do not put a full stop at the end of your response unless the original phrase had one. "
+
+    $body = @{
+        model = "gpt-4.1"
+        input = @(
+            @{
+                role    = "user"
+                content = @(
+                    @{ type = "input_text"; text = $prompt }
+                )
+            }
+        )
+    } | ConvertTo-Json -Depth 10
+
+    $response = Invoke-RestMethod `
+        -Uri "https://api.openai.com/v1/responses" `
+        -Headers @{ "Authorization" = "Bearer $openAIKey"; "Content-Type" = "application/json" } `
+        -Method Post -Body $body
+
+    $result = $response.output.content.text
+
+    if (-not $result) {
+        Write-Warning "AI translation for $LanguageCode returned an empty result"
+        return [string]::Empty
+    }
+
+    return $response.output.content.text
+}
+
 Get-ChildItem $sourceLanguageFolder | ForEach-Object {
     $code = $_.BaseName
     $language = Get-Content -Raw $_.FullName | ConvertFrom-Json -AsHashtable
+    $name = $language.Name
 
     if (-not $language) {
         $language = @{}
@@ -28,17 +83,20 @@ Get-ChildItem $sourceLanguageFolder | ForEach-Object {
     }
 
     $sortedPhrases = [ordered]@{}
+    $phrasesToRemove = @()
     $language.Phrases.Keys | Where-Object { -not $originLanguage.Phrases.Contains($_) } | ForEach-Object {
         Write-Warning "Removing orphaned phrase $_ from language $code"
+        $phrasesToRemove += $_
     }
+    $phrasesToRemove | ForEach-Object { $language.Phrases.Remove($_) }
     $originLanguage.Phrases.Keys | Sort-Object | ForEach-Object {
         $key = $_
-        if ($language.Phrases.Contains($key)) {
+        if ($language.Phrases.Contains($key) -and -not [string]::IsNullOrWhiteSpace($language.Phrases[$key])) {
             $phrase = $language.Phrases[$key]
         }
         else {
-            Write-Host "Adding placeholder for missing phrase $key in language $code"
-            $phrase = [string]::Empty
+            $phrase = Get-AITranslation -LanguageName $name -LanguageCode $code -Phrase $originLanguage.Phrases[$key]
+            $language.Phrases[$key] = $phrase
         }
         $sortedPhrases[$key] = $phrase
     }

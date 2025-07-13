@@ -1,3 +1,5 @@
+-- Default
+
 local T = {}
 
 T.Base = "base"
@@ -9,8 +11,16 @@ T.Versions = {
     randomize = false,
     other = {
         {
+            id = "default_capaldi",
+            name = "Interiors.Default.Versions.Capaldi",
+        },
+        {
             id = "default_cl",
             name = "Interiors.Default.Versions.ClassicDoors",
+        },
+        {
+            id = "default_capaldi_cl",
+            name = "Interiors.Default.Versions.Capaldi.ClassicDoors",
         },
     },
 }
@@ -125,7 +135,7 @@ T.Interior = {
     Scanners = {
         {
             part = "default_console_scanner",
-            mat = "models/cem/toyota_contr/screen",
+            mat = "models/molda/toyota_int/scanner",
             width = 1024,
             height = 1024,
             ang = Angle(0,0,0),
@@ -178,7 +188,6 @@ T.Interior = {
         default_floor = {},
         default_entry = {},
         default_walls = {},
-        default_roof = {},
         default_pillars = {},
         default_rings = {},
         default_side_panels = {},
@@ -200,7 +209,7 @@ T.Interior = {
         default_gears2 = {},
         default_gears3 = {},
 
-        default_handbrake = {},
+        default_handbrake = { pos = Vector(0,0,-0.1) },
         default_keyboard = {},
         default_telepathic = {},
         default_throttle = {},
@@ -323,7 +332,7 @@ T.Interior = {
 
         default_rotor_ring = {},
 
-        default_rotor = {},
+        default_rotor = { pos = Vector(0,0,-0.07) },
         default_corridors = { ang = Angle(0,90,0), },
         default_intdoors = { pos = Vector(73.559, -417.853, 47.506), ang = Angle(0,10,0), },
 
@@ -335,14 +344,13 @@ T.Interior = {
         default_handbrake  = "handbrake",
         default_side_lever1 = "engine_release",
         default_side_speakers = "music",
-        default_telepathic  = "destination",
-        default_console_scanner = "thirdperson_careful",
-        default_balls  = "thirdperson",
+        default_telepathic  = "thirdperson",
+        default_console_scanner = "destination",
         default_keyboard  = "coordinates",
         default_crank4 = "repair",
         default_crank2  = "power",
         default_crank3  = "redecorate",
-        default_side_lever2 = "physlock",
+        default_side_lever2 = "engine_release",
         default_crank = "random_coords",
         default_buttons = "isomorphic",
         default_fiddle1  = "door",
@@ -355,10 +363,10 @@ T.Interior = {
         default_key = "toggle_console",
         default_sonic_charger = "sonic_dispenser",
         default_spin_crank = "hads",
-        default_small_switch_17 = "toggle_doorframe_light",
         default_small_switch_18 = "exterior_light",
+        default_handle1 = "flightlessflight",
+        default_handle2 = "flight",
 
-        default_spin_b_1 = "flight",
         default_spin_b_2 = "float",
         default_spin_b_3 = "physlock",
         default_spin_b_4 = "spin_cycle",
@@ -383,7 +391,7 @@ T.Interior = {
         default_side_lever2 = {pos = Vector(-59.115, -151.548, 126.17), right = true, down = false, },
         default_telepathic = {pos = Vector(19.919, 35.908, 130.754), right = true, down = false, },
         default_keyboard = {pos = Vector(20.64, -39.63, 129.29), right = true, down = true, },
-        default_crank4 = {pos = Vector(-34.917, -29.135, 132.425), right = true, down = true, },
+        default_crank4 = {pos = Vector(-34.917, -29.135, 132.425), right = true, down = false, },
         default_toggles = {pos = Vector(39.523, 0.016, 133.705), right = true, down = false, },
         default_buttons = {pos = Vector(10.193, -49.502, 128.582), right = true, down = true,  },
         default_switch2 = {pos = Vector(-35.645, 12.629, 135.094), right = true, down = true,  },
@@ -468,6 +476,7 @@ T.Interior = {
         default_colored_lever_3 = { pos = Vector(31.37, -0.02, 134.47), right = true, down = true, },
         default_colored_lever_4 = { pos = Vector(31.12, 3.29, 135.1), right = true, down = true, },
         default_colored_lever_5 = { pos = Vector(31.09, 6.44, 135.21), right = true, down = true, },
+        default_console_scanner = { pos =  Vector(-16.476, 35.491, 133.121), right = false, down = false, },
     },
 
     CustomTips = {
@@ -475,10 +484,17 @@ T.Interior = {
         {pos = Vector(130.65, 71.77, 125.87), right = true, down = true, part = "default_side_speakers", },
         {pos = Vector(-38.64, -144.1, 125.97), right = true, down = true, part = "default_side_speakers", },
         {pos = Vector(-101.11, -110.17, 126.19), right = true, down = true, part = "default_side_speakers", },
-        {pos = Vector(-35.68, 28.74, 131.96), right = true, down = false, part = "default_balls", },
-        {pos = Vector(-6.69, 45.46, 131.72), right = false, down = false, part = "default_balls", },
+    },
 
-        {pos = Vector(334.946, -34.611, 40.627), text = "Never Gonna Give You Up!\nNever Gonna Let You Down!"}
+    TextureSets = {
+        ["normal"] = {
+            prefix = "models/molda/toyota_int/",
+            { "default_telepathic", 0, "telepathics" }
+        },
+        ["off"] = {
+            prefix = "models/molda/toyota_int/",
+            { "default_telepathic", 0, "telepathics_off" }
+        },
     },
 }
 
@@ -487,6 +503,13 @@ T.Exterior = {
         Spawn = "drmatt/tardis/repairfinish.wav",
         Delete = "p00gie/tardis/tardis_delete.wav",
     },
+    Parts = {
+        vortex = {
+            matrixScale = Vector(0.25, 1, 1),
+            ang = Angle(180, 0, 0),
+            scale = 5
+        },
+    }
 }
 
 T.Timings = {
@@ -496,6 +519,19 @@ T.Timings = {
 }
 
 T.CustomHooks = {
+    power = {
+        exthooks = {
+            ["PowerToggled"] = true,
+        },
+        func = function(ext, int, on)
+            if CLIENT then return end
+            if on then
+                int:ApplyTextureSet("normal")
+            else
+                int:ApplyTextureSet("off")
+            end
+        end
+    },
     screen_disable = {
         inthooks = {
             ["ShouldNotDrawScreen"] = true,
@@ -559,16 +595,6 @@ T.CustomControls = {
         screen_button = false,
         tip_text = "CustomControls.Default.ToggleScreen.2.Tip",
     },
-
-    toggle_doorframe_light = {
-        int_func=function(self,ply,part)
-            local doorframe = self:GetPart("default_doorframe")
-            doorframe:SetBodygroup(1,part:GetOn() and 0 or 1)
-        end,
-        power_independent = false,
-        screen_button = false,
-        tip_text = nil, -- let this one be an easter-egg-ish feature for now
-    },
 }
 
 T.CustomSettings = {
@@ -608,6 +634,7 @@ T.CustomSettings = {
 
 T.Templates = {
     default_exterior = { override = true, },
+    default_smith = {},
     default_lamps = {
         override = true,
         condition = function(id, ply, ent)
@@ -628,7 +655,7 @@ T.Templates = {
             return (setting_val ~= "dynamic")
         end,
     },
-    default_color_update = {},
+    default_color_update_smith = {},
 
     default_small_version = {
         override = true,
@@ -664,10 +691,131 @@ T.TemplatesMergeOrder = {
 
 TARDIS:AddInterior(T)
 
+-- Capaldi
 
+local T = {}
 
+T.Base = "default"
+T.Name = "Interiors.Default"
+T.ID = "default_capaldi"
+T.IsVersionOf = "default"
 
+T.Templates = {
+    default_smith = false,
+    default_color_update_smith = false,
+    default_capaldi = {},
+    default_color_update_capaldi = {},
+}
 
+T.Interior = {
+    TextureSets = {
+        ["normal"] = {
+            prefix = "models/molda/toyota_int/",
+            { "default_telepathic", 0, "telepathics2" },
+            { "default_rotor", 10, "neon_out_capaldi" },
+            { "default_rotor", 11, "neon_mid_capaldi" },
+            { "default_rotor", 12, "neon_in_capaldi" },
+            { "default_rotor_small", 8, "neon_out_capaldi" },
+            { "default_rotor_small", 9, "neon_mid_capaldi" },
+            { "default_rotor_small", 10, "neon_in_capaldi" },
+            { "default_console", 6, "gearsglow_capaldi" },
+            { "default_floor", 0, "rails_capaldi" },
+            { "default_floor", 4, "floornew_capaldi" },
+            { "default_floor", 3, "floornew2_capaldi" },
+            { "self", 0, "floornew_capaldi" },
+            { "self", 5, "floornew2_capaldi" },
+            { "default_corridors", 5, "floornew_capaldi" },
+            { "default_corridors_small", 6, "floornew_capaldi" },
+            { "default_pillars", 0, "bluepaint_capaldi" },
+            { "default_floor", 1, "bluepaint_capaldi" },
+            { "default_walls", 0, "bluepaint_capaldi" },
+            { "default_side_panels", 1, "bluepaint_capaldi" },
+            { "default_chairs", 1, "bluepaint_capaldi" },
+            { "self", 14, "bluepaint_capaldi" },
+            { "default_intdoors", 0, "portalsnew_capaldi" },
+            { "default_intdoors", 1, "portalsnew2_capaldi" },
+            { "default_intdoors_static", 0, "portalsnew_capaldi" },
+            { "default_intdoors_static", 1, "portalsnew2_capaldi" },
+            { "self", 2, "portalsnew_capaldi" },
+            { "self", 4, "portalsnew2_capaldi" },
+            { "default_corridors", 0, "portalsnew_capaldi" },
+            { "default_corridors", 1, "portalsnew2_capaldi" },
+            { "default_corridors_small", 3, "portalsnew_capaldi" },
+            { "default_corridors_small", 4, "portalsnew2_capaldi" },
+        },
+        ["off"] = {
+            prefix = "models/molda/toyota_int/",
+            { "default_telepathic", 0, "telepathics_off" },
+        },
+    },
+    Parts = {
+        default_books = {},
+        default_floor = {
+            model = "models/molda/toyota_int/floorcapaldi.mdl",
+        },
+    },
+    Light = {
+        color = Color(255, 20, 0),
+    },
+    Lights={
+        console_white = {
+            color = Color(255,50,0),
+            warn_color = Color(255,143,143),
+            off_color = Color(74,142,187),
+            off_brightness = 0.025,
+            warn_brightness = 0.25,
+        },
+        console_bottom = {
+            color = Color(255, 50, 0),
+            warn_color = Color(255, 50, 0),
+            nopower = false,
+        },
+    },
+}
+
+T.Exterior = {
+    Parts = {
+        vortex = {
+            model = "models/doctorwho1200/toyota/2014timevortex.mdl",
+        },
+    }
+}
+
+T.CustomHooks = {
+    capaldi_textures = {
+        inthooks = {
+            ["Initialize"] = true,
+        },
+        func = function(ext, int)
+            if CLIENT then return end
+            int:ApplyTextureSet("normal")
+        end,
+    },
+    capaldi_power = {
+        exthooks = {
+            ["PowerToggled"] = true,
+        },
+        func = function(ext, int, on)
+            if CLIENT or not IsValid(int) then return end
+            local rotor = int:GetPart("default_rotor")
+            if on then
+                if IsValid(rotor) then
+                    rotor:SetBodygroup(1, 3) -- Base
+                    rotor:SetBodygroup(2, 3) -- Neon
+                end
+            else
+                if IsValid(rotor) then
+                    rotor:SetBodygroup(1, 2) -- Base
+                    rotor:SetBodygroup(2, 5) -- Neon
+                end
+            end
+        end
+    }
+}
+
+TARDIS:AddInterior(T)
+
+-- Default (classic doors)
 
 local T = {}
 
@@ -769,5 +917,13 @@ T.CustomHooks = {
         end,
     },
 }
+
+TARDIS:AddInterior(T)
+
+-- Capaldi (classic doors)
+
+T.Base = "default_capaldi"
+T.Name = "Interiors.Default"
+T.ID = "default_capaldi_cl"
 
 TARDIS:AddInterior(T)

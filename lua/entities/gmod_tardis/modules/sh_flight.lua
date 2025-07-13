@@ -173,6 +173,12 @@ if SERVER then
         end
     end)
 
+    ENT:AddHook("ShouldNotAllowFalling", "flight", function(self)
+        if self:GetData("flight") then
+            return true
+        end
+    end)
+
     ENT:AddHook("ThirdPerson", "flight", function(self,ply,enabled)
         if enabled then
             if IsValid(self.pilot) then
@@ -226,7 +232,7 @@ if SERVER then
     end)
 
     ENT:AddHook("PhysicsUpdate", "flight", function(self,ph)
-        if self:GetData("flight") then
+        if self:GetData("flight") and not self:CallHook("ShouldTurnOffFlightPhysics") then
             local phm=FrameTime()*66
 
             local up=self:GetUp()
@@ -606,7 +612,17 @@ else
                     local doppler = (pos:Distance(spos+e:GetVelocity())-pos:Distance(spos+self:GetVelocity()))/200
                     self.flightsound:ChangePitch(math.Clamp(95+p+doppler,80,120),0.1)
                 end
-                self.flightsound:ChangeVolume(0.75)
+
+                local vol = 0.75
+                if self:GetData("premat-start") then
+                    local tp_metadata = self.metadata.Exterior.Teleport
+                    local timerdelay = (self:GetFastRemat() and tp_metadata.PrematDelayFast or tp_metadata.PrematDelay)
+                    local timeleft = math.Clamp(timerdelay - (CurTime() - self:GetData("premat-start")), 0, timerdelay)
+                    local norm = timeleft / timerdelay
+                    local volscale = norm ^ 2
+                    vol = vol * volscale
+                end
+                self.flightsound:ChangeVolume(vol)
 
                 if IsFlightSoundWrong(self) then
                     self.flightsound:Stop()

@@ -53,6 +53,7 @@ else
 
         local shouldon=self:CallHook("ShouldTurnOnLight")
         local shouldpulse=self:CallHook("ShouldPulseLight")
+        local shouldnotpulse=self:CallHook("ShouldNotPulseLight")
         local shouldoff=self:CallHook("ShouldTurnOffLight")
 
         if shouldon and (not shouldoff) then
@@ -65,7 +66,7 @@ else
             end
             if self.lightpixvis and (not wp.drawing) and (halo.RenderedEntity()~=self) then
                 local pos=self:LocalToWorld(light.pos)
-                local alpha = shouldpulse and (math.sin(CurTime() * 3.7) + 0.2) * (255 / 4) + (255 / 2) - 70 or 100
+                local alpha = (shouldpulse and not shouldnotpulse) and (math.sin(CurTime() * 3.7) + 0.2) * (255 / 4) + (255 / 2) - 70 or 100
                 render.SetMaterial(mat)
                 local fallback=false
 
@@ -92,8 +93,9 @@ else
         local shouldon=self:CallHook("ShouldTurnOnLight")
         local shouldoff=self:CallHook("ShouldTurnOffLight")
         local shouldpulse=self:CallHook("ShouldPulseLight")
+        local shouldnotpulse=self:CallHook("ShouldNotPulseLight")
 
-        local mult = shouldpulse and (1 + 0.1 * math.sin(CurTime() * 3.7)) or 1
+        local mult = (shouldpulse and not shouldnotpulse) and (1 + 0.1 * math.sin(CurTime() * 3.7)) or 1
 
         if shouldon and (not shouldoff) then
             local col = light.color

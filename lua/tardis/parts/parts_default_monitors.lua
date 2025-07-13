@@ -30,8 +30,6 @@ function PART:Initialize(ply)
     if self.ScreenID then
         self.data_screen_enabled = "default_screen_enabled_" .. self.ScreenID
     end
-
-    self:SetBodygroup(0, 1)
 end
 
 -- Getting other monitor and parts

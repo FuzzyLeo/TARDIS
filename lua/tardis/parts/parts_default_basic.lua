@@ -37,13 +37,6 @@ PART.ShouldTakeDamage = true
 TARDIS:AddPart(PART)
 
 local PART={}
-PART.ID = "default_roof"
-PART.Model = "models/molda/toyota_int/roof.mdl"
-PART.AutoSetup = true
-PART.ShouldTakeDamage = true
-TARDIS:AddPart(PART)
-
-local PART={}
 PART.ID = "default_rings"
 PART.Model = "models/molda/toyota_int/rings.mdl"
 PART.AutoSetup = true
@@ -150,7 +143,7 @@ PART.AutoSetup = true
 PART.Animate = true
 PART.Collision = true
 PART.ShouldTakeDamage = true
-PART.AnimateSpeed = 1
+PART.AnimateSpeed = 0.8
 PART.Sound = "p00gie/tardis/default/intdoors_open.ogg"
 
 if SERVER then
@@ -183,12 +176,9 @@ TARDIS:AddPart(PART)
 PART.ID = "default_top_doors_1"
 PART.Model = "models/molda/toyota_int/slidedoors1.mdl"
 PART.ShouldTakeDamage = true
-PART.Sound = nil
-PART.SoundOn = "p00gie/tardis/default/topdoor_open.ogg"
-PART.SoundOff = "p00gie/tardis/default/topdoor_close.ogg"
+PART.Sound = "p00gie/tardis/default/intdoors_open.ogg"
 PART.AnimateSpeed = 0.8
 TARDIS:AddPart(PART)
-
 
 PART.ID = "default_top_doors_2"
 PART.ShouldTakeDamage = true
@@ -197,8 +187,7 @@ TARDIS:AddPart(PART)
 PART.Use = nil
 PART.Animate = false
 PART.AnimateSpeed = nil
-PART.SoundOn = nil
-PART.SoundOff = nil
+PART.Sound = nil
 PART.SoundPos = nil
 
 PART.ID = "default_intdoors_static"
@@ -221,10 +210,6 @@ PART.ClientThinkOverride = true
 PART.ShouldTakeDamage = true
 PART.Animate = true
 
-function PART:Initialize()
-    self:SetBodygroup(3,1)
-end
-
 PART.AnimateOptions = {
     Type = "travel",
     Speed = 0.075,
@@ -245,10 +230,26 @@ PART.ExtraAnimations = {
 
 TARDIS:AddPart(PART)
 
+PART.ID = "default_rotor_small"
+PART.Model = "models/molda/toyota_int/rotor_small.mdl"
+
+TARDIS:AddPart(PART)
+
 local PART={}
 PART.ID = "default_corridors"
 PART.Model = "models/molda/toyota_int/corridor_version2.mdl"
 PART.AutoSetup = true
 PART.Collision = true
 PART.ShouldTakeDamage = true
+TARDIS:AddPart(PART)
+
+PART.ID = "default_corridors_small"
+PART.Model = "models/molda/toyota_int/corridor_version3.mdl"
+TARDIS:AddPart(PART)
+
+local PART = {}
+PART.ID = "default_books"
+PART.Model = "models/molda/toyota_int/books.mdl"
+PART.AutoSetup = true
+PART.Collision = true
 TARDIS:AddPart(PART)

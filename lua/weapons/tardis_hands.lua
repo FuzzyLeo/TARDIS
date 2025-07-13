@@ -3,7 +3,6 @@ SWEP.Slot = 0
 SWEP.SlotPos = 0
 SWEP.DrawAmmo = false
 SWEP.DrawCrosshair = false
-SWEP.Author = "Dr. Matt"
 
 SWEP.Weight = 0
 SWEP.AutoSwitchTo = false
