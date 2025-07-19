@@ -9,6 +9,8 @@
 	"$envmap" "models/molda/toyota_int/environment"
 	"$envmaptint" "[0.1 0.3 0.3]"
 
+	"$bumpmap" "models/molda/toyota_int/details_bump"
+
 	"$nodecal" "1"
 	"$nocull" "0"
 
