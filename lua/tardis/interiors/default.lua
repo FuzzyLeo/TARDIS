@@ -497,6 +497,10 @@ T.Interior = {
             prefix = "models/molda/toyota_int/",
             { "default_telepathic", 0, "telepathics_warning" }
         },
+        ["warning_handbrake"] = {
+            prefix = "models/molda/toyota_int/",
+            { "default_telepathic", 0, "telepathics_warning_handbrake" }
+        },
         ["off"] = {
             prefix = "models/molda/toyota_int/",
             { "default_telepathic", 0, "telepathics_off" }
@@ -529,6 +533,7 @@ T.CustomHooks = {
         exthooks = {
             ["PowerToggled"] = true,
             ["WarningToggled"] = true,
+            ["HandbrakeToggled"] = true,
         },
         func = function(ext, int)
             if CLIENT then return end
@@ -537,7 +542,11 @@ T.CustomHooks = {
                 return
             end
             if ext:GetWarning() then
-                int:ApplyTextureSet("warning")
+                if ext:GetHandbrake() then
+                    int:ApplyTextureSet("warning_handbrake")
+                else
+                    int:ApplyTextureSet("warning")
+                end
             else
                 int:ApplyTextureSet("normal")
             end
