@@ -147,6 +147,7 @@ matproxy.Add({
 
     bind = function(self, mat, ent)
         if not IsValid(ent) or not ent.TardisPart then return end
+        if not ent.interior then return end
         if not ent.interior.metadata.Interior.MatProxy then
             local col = Color(255, 255, 255)
 
@@ -178,6 +179,7 @@ matproxy.Add({
 
     bind = function(self, mat, ent)
         if not IsValid(ent) or not ent.TardisPart then return end
+        if not ent.interior then return end
         if not ent.interior.metadata.Interior.MatProxy then
             local col = Color(255, 255, 255)
 
@@ -208,6 +210,7 @@ matproxy.Add({
 
     bind = function(self, mat, ent)
         if not IsValid(ent) or not ent.TardisPart then return end
+        if not ent.interior then return end
         if not ent.interior.metadata.Interior.MatProxy then
             local col = Color(255, 255, 255)
 
@@ -218,6 +221,7 @@ matproxy.Add({
 
             mat:SetVector( self.ResultTo, col);
         return end
+
 
         local col = ent.interior.metadata.Interior.MatProxy.Color3
 
