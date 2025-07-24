@@ -149,20 +149,19 @@ matproxy.Add({
     end,
 
     bind = function(self, mat, ent)
-        if not IsValid(ent) or not ent.TardisPart then return end
-        if not ent.interior then return end
-        if not ent.interior.metadata.Interior.MatProxy then
+        if not IsValid(ent) then return end
+        if ent.interior then
+            ent = ent.interior
+        end
+        if ent.exterior then
+            if ent.metadata.Interior.MatProxy then
+                local col = ent.metadata.Interior.MatProxy.Color2
+                col = Color(col.r, col.g, col.b):ToVector()
+                mat:SetVector( self.ResultTo, col)
+            end
+        else
             mat:SetVector( self.ResultTo, fallbackcol);
-        return end
-
-        local col = ent.interior.metadata.Interior.MatProxy.Color1
-
-
-        col = Color(col.r, col.g, col.b):ToVector()
-
-
-
-        mat:SetVector( self.ResultTo, col);
+        end
     end
 })
 
@@ -174,19 +173,19 @@ matproxy.Add({
     end,
 
     bind = function(self, mat, ent)
-        if not IsValid(ent) or not ent.TardisPart then return end
-        if not ent.interior then return end
-        if not ent.interior.metadata.Interior.MatProxy then
+        if not IsValid(ent) then return end
+        if ent.interior then
+            ent = ent.interior
+        end
+        if ent.exterior then
+            if ent.metadata.Interior.MatProxy then
+                local col = ent.metadata.Interior.MatProxy.Color2
+                col = Color(col.r, col.g, col.b):ToVector()
+                mat:SetVector( self.ResultTo, col)
+            end
+        else
             mat:SetVector( self.ResultTo, fallbackcol);
-        return end
-
-        local col = ent.interior.metadata.Interior.MatProxy.Color2
-
-        col = Color(col.r, col.g, col.b):ToVector()
-
-
-
-        mat:SetVector( self.ResultTo, col);
+        end
     end
 })
 
@@ -198,21 +197,19 @@ matproxy.Add({
     end,
 
     bind = function(self, mat, ent)
-        if not IsValid(ent) or not ent.TardisPart then return end
-        if not ent.interior then return end
-        if not ent.interior.metadata.Interior.MatProxy then
+        if not IsValid(ent) then return end
+        if ent.interior then
+            ent = ent.interior
+        end
+        if ent.exterior then
+            if ent.metadata.Interior.MatProxy then
+                local col = ent.metadata.Interior.MatProxy.Color3
+                col = Color(col.r, col.g, col.b):ToVector()
+                mat:SetVector( self.ResultTo, col)
+            end
+        else
             mat:SetVector( self.ResultTo, fallbackcol);
-        return end
-
-
-        local col = ent.interior.metadata.Interior.MatProxy.Color3
-
-
-        col = Color(col.r, col.g, col.b):ToVector()
-
-
-
-        mat:SetVector( self.ResultTo, col);
+        end
     end
 })
 
