@@ -163,7 +163,7 @@ matproxy.Add({
         end
         if ent.exterior then
             if ent.metadata.Interior.MatProxy then
-                local col = ent.metadata.Interior.MatProxy.Color2
+                local col = ent.metadata.Interior.MatProxy.Color1
                 col = Color(col.r, col.g, col.b):ToVector()
                 mat:SetVector( self.ResultTo, col)
             end
