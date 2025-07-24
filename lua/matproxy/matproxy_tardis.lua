@@ -138,6 +138,9 @@ matproxy.Add({
     end
 })
 
+local fallbackcol = Color(255, 255, 255)
+fallbackcol = Color(fallbackcol.r, fallbackcol.g, fallbackcol.b):ToVector()
+
 matproxy.Add({
     name = "TARDIS_Interior_Color1",
 
@@ -149,14 +152,7 @@ matproxy.Add({
         if not IsValid(ent) or not ent.TardisPart then return end
         if not ent.interior then return end
         if not ent.interior.metadata.Interior.MatProxy then
-            local col = Color(255, 255, 255)
-
-
-            col = Color(col.r, col.g, col.b):ToVector()
-
-
-
-            mat:SetVector( self.ResultTo, col);
+            mat:SetVector( self.ResultTo, fallbackcol);
         return end
 
         local col = ent.interior.metadata.Interior.MatProxy.Color1
@@ -181,14 +177,7 @@ matproxy.Add({
         if not IsValid(ent) or not ent.TardisPart then return end
         if not ent.interior then return end
         if not ent.interior.metadata.Interior.MatProxy then
-            local col = Color(255, 255, 255)
-
-
-            col = Color(col.r, col.g, col.b):ToVector()
-
-
-
-            mat:SetVector( self.ResultTo, col);
+            mat:SetVector( self.ResultTo, fallbackcol);
         return end
 
         local col = ent.interior.metadata.Interior.MatProxy.Color2
@@ -212,14 +201,7 @@ matproxy.Add({
         if not IsValid(ent) or not ent.TardisPart then return end
         if not ent.interior then return end
         if not ent.interior.metadata.Interior.MatProxy then
-            local col = Color(255, 255, 255)
-
-
-            col = Color(col.r, col.g, col.b):ToVector()
-
-
-
-            mat:SetVector( self.ResultTo, col);
+            mat:SetVector( self.ResultTo, fallbackcol);
         return end
 
 
