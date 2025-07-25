@@ -1,3 +1,6 @@
+local fallbackcol = Color(255, 255, 255)
+fallbackcol = Color(fallbackcol.r, fallbackcol.g, fallbackcol.b):ToVector()
+
 matproxy.Add({
     name = "TARDIS_State_Texture",
 
@@ -90,19 +93,26 @@ local function matproxy_tardis_power_init(self, mat, values)
 end
 
 local function matproxy_tardis_power_bind(self, mat, ent)
-    if not IsValid(ent) or not IsValid(ent.exterior) or not ent.TardisPart then return end
+    if not IsValid(ent) then return end
 
-    local var = ent.exterior:GetPower() and self.on_var or self.off_var
-    if not var then return end
-
-    local value = mat:GetVector(var)
-
-    if var ~= self.last_var or value ~= self.last_value then
-        self.last_var = var
-        self.last_value = value
-        mat:SetVector(self.ResultTo, value)
+    if ent.interior then
+        ent = ent.interior
     end
 
+    if ent.exterior then
+        local var = ent.exterior:GetPower() and self.on_var or self.off_var
+        if not var then return end
+
+        local value = mat:GetVector(var)
+
+        if var ~= self.last_var or value ~= self.last_value then
+            self.last_var = var
+            self.last_value = value
+            mat:SetVector(self.ResultTo, value)
+        end
+    else
+        mat:SetVector(self.ResultTo, fallbackcol)
+    end
 end
 
 matproxy.Add({
@@ -146,17 +156,19 @@ matproxy.Add({
     end,
 
     bind = function(self, mat, ent)
-        if not IsValid(ent) or not ent.TardisPart then return end
-        if not ent.interior then return end
-
-        local col = ent.interior.metadata.Interior.MatProxy.Color1
-
-
-        col = Color(col.r, col.g, col.b):ToVector()
-
-
-
-        mat:SetVector( self.ResultTo, col);
+        if not IsValid(ent) then return end
+        if ent.interior then
+            ent = ent.interior
+        end
+        if ent.exterior then
+            if ent.metadata.Interior.MatProxy then
+                local col = ent.metadata.Interior.MatProxy.Color1
+                col = Color(col.r, col.g, col.b):ToVector()
+                mat:SetVector(self.ResultTo, col)
+            end
+        else
+            mat:SetVector(self.ResultTo, fallbackcol);
+        end
     end
 })
 
@@ -168,17 +180,19 @@ matproxy.Add({
     end,
 
     bind = function(self, mat, ent)
-        if not IsValid(ent) or not ent.TardisPart then return end
-        if not ent.interior then return end
-
-        local col = ent.interior.metadata.Interior.MatProxy.Color2
-
-
-        col = Color(col.r, col.g, col.b):ToVector()
-
-
-
-        mat:SetVector( self.ResultTo, col);
+        if not IsValid(ent) then return end
+        if ent.interior then
+            ent = ent.interior
+        end
+        if ent.exterior then
+            if ent.metadata.Interior.MatProxy then
+                local col = ent.metadata.Interior.MatProxy.Color2
+                col = Color(col.r, col.g, col.b):ToVector()
+                mat:SetVector(self.ResultTo, col)
+            end
+        else
+            mat:SetVector(self.ResultTo, fallbackcol);
+        end
     end
 })
 
@@ -190,17 +204,19 @@ matproxy.Add({
     end,
 
     bind = function(self, mat, ent)
-        if not IsValid(ent) or not ent.TardisPart then return end
-        if not ent.interior then return end
-
-        local col = ent.interior.metadata.Interior.MatProxy.Color3
-
-
-        col = Color(col.r, col.g, col.b):ToVector()
-
-
-
-        mat:SetVector( self.ResultTo, col);
+        if not IsValid(ent) then return end
+        if ent.interior then
+            ent = ent.interior
+        end
+        if ent.exterior then
+            if ent.metadata.Interior.MatProxy then
+                local col = ent.metadata.Interior.MatProxy.Color3
+                col = Color(col.r, col.g, col.b):ToVector()
+                mat:SetVector(self.ResultTo, col)
+            end
+        else
+            mat:SetVector(self.ResultTo, fallbackcol);
+        end
     end
 })
 
@@ -211,17 +227,25 @@ local function matproxy_tardis_warning_init(self, mat, values)
 end
 
 local function matproxy_tardis_warning_bind(self, mat, ent)
-    if not IsValid(ent) or not IsValid(ent.exterior) or not ent.TardisPart then return end
+    if not IsValid(ent) then return end
 
-    local var = ent.exterior:GetWarning() and self.on_var or self.off_var
-    if not var then return end
+    if ent.interior then
+        ent = ent.interior
+    end
 
-    local value = mat:GetVector(var)
+    if ent.exterior then
+        local var = ent.exterior:GetWarning() and self.on_var or self.off_var
+        if not var then return end
 
-    if var ~= self.last_var or value ~= self.last_value then
-        self.last_var = var
-        self.last_value = value
-        mat:SetVector(self.ResultTo, value)
+        local value = mat:GetVector(var)
+
+        if var ~= self.last_var or value ~= self.last_value then
+            self.last_var = var
+            self.last_value = value
+            mat:SetVector(self.ResultTo, value)
+        end
+    else
+        mat:SetVector(self.ResultTo, fallbackcol)
     end
 
 end
