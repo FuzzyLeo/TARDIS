@@ -300,7 +300,7 @@ matproxy.Add({
                     vortexcol = ent.metadata.Interior.MatProxy.VortexColor
                 end
             end
-            vortexcol = Color(vortexcol.r, vortexcol.g, vortexcol.b):ToVector()
+            vortexcol = (Color(vortexcol.r, vortexcol.g, vortexcol.b):ToVector()*2.5)
             ent = ent.exterior
             local col = render.ComputeLighting((ent:GetPos()+Vector(0, 0, 80)),ent:GetForward()) -- Gets the lighting from the perspective of the doors
             if ent:GetData("teleport") or ent:GetData("vortex") then
