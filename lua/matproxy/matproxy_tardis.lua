@@ -303,9 +303,11 @@ matproxy.Add({
             vortexcol = Color(vortexcol.r, vortexcol.g, vortexcol.b):ToVector()
             ent = ent.exterior
             local col = render.ComputeLighting((ent:GetPos()+Vector(0, 0, 80)),ent:GetForward()) -- Gets the position just above the tardis origin just in case it spawns slightly in the ground
-            local ExteriorAlpha = (ent:GetData("alpha",255)/255)
-            local ExteriorAlphaInvert = ((ExteriorAlpha - 1)*-1)
-            col = ((col*ExteriorAlpha) + (vortexcol*ExteriorAlphaInvert)) -- Essentially calculates how dematerialised it is and fades the colour accordingly
+            if ent:GetData("teleport") or ent:GetData("vortex") then
+                local ExteriorAlpha = (ent:GetData("alpha",255)/255)
+                local ExteriorAlphaInvert = ((ExteriorAlpha - 1)*-1)
+                col = ((col*ExteriorAlpha) + (vortexcol*ExteriorAlphaInvert)) -- Essentially calculates how dematerialised it is and fades the colour accordingly
+            end
             mat:SetVector(self.ResultTo, col)
         else
             mat:SetVector(self.ResultTo, fallbackcol);
