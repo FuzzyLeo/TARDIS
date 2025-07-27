@@ -304,9 +304,9 @@ matproxy.Add({
             ent = ent.exterior
             local col = render.ComputeLighting((ent:GetPos()+Vector(0, 0, 80)),ent:GetForward()) -- Gets the lighting from the perspective of the doors
             if ent:GetData("teleport") or ent:GetData("vortex") then
-                local ExteriorAlpha = (ent:GetData("alpha",255)/255)
-                local ExteriorAlphaInvert = ((ExteriorAlpha - 1)*-1)
-                col = ((col*ExteriorAlpha) + (vortexcol*ExteriorAlphaInvert)) -- Essentially calculates how dematerialised it is and fades the colour accordingly
+                local exterioralpha = (ent:GetData("alpha",255)/255)
+                local exterioralphainvert = ((exterioralpha - 1)*-1)
+                col = ((col*exterioralpha) + (vortexcol*exterioralphainvert)) -- Essentially calculates how dematerialised it is and fades the colour accordingly
             end
             mat:SetVector(self.ResultTo, col)
         else
