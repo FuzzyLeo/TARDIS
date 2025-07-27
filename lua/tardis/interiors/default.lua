@@ -523,7 +523,7 @@ T.Exterior = {
 }
 
 T.Timings = {
-    DematAbortState = 3,
+    DematAbortState = 3.2,
     TakeOffState = 3,
     ParkingState = 3.2,
 }
