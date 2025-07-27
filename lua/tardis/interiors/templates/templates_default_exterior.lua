@@ -48,10 +48,10 @@ local E = {
     Light = {
         enabled = true,
         pos = Vector(0,0,122),
-        color = Color(160,190,255),
+        color = Color(255,231,95),
         dynamicpos = Vector(0,0,130),
-        dynamicbrightness = 3,
-        dynamicsize = 500,
+        dynamicbrightness = 2.5,
+        dynamicsize = 200,
         warncolor = Color(190,170,170),
     },
     Teleport = {

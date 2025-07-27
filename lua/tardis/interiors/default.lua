@@ -530,7 +530,6 @@ T.Exterior = {
             scale = 5
         },
     },
-
     TextureSets = {
         ["exttextures_altsmith"] = {
             prefix = "models/vtalanov98/toyota_ext/",
