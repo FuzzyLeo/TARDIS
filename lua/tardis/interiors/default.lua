@@ -505,6 +505,16 @@ T.Interior = {
             prefix = "models/molda/toyota_int/",
             { "default_telepathic", 0, "telepathics_off" }
         },
+        ["exttextures_altsmith"] = {
+            prefix = "models/vtalanov98/toyota_ext/",
+            { "door", 0, "exterior_2013" },
+            { "default_doorframe", 1, "exterior_2013" }
+        },
+        ["exttextures_altcapaldi"] = {
+            prefix = "models/vtalanov98/toyota_ext/",
+            { "door", 0, "exterior_2017" },
+            { "default_doorframe", 1, "exterior_2017" }
+        },
     },
 }
 
@@ -519,7 +529,20 @@ T.Exterior = {
             ang = Angle(180, 0, 0),
             scale = 5
         },
-    }
+    },
+
+    TextureSets = {
+        ["exttextures_altsmith"] = {
+            prefix = "models/vtalanov98/toyota_ext/",
+            { "self", 0, "exterior_2013" },
+            { "door", 0, "exterior_2013" }
+        },
+        ["exttextures_altcapaldi"] = {
+            prefix = "models/vtalanov98/toyota_ext/",
+            { "self", 0, "exterior_2017" },
+            { "door", 0, "exterior_2017" }
+        },
+    },
 }
 
 T.Timings = {
@@ -583,6 +606,29 @@ T.CustomHooks = {
             end
         end,
     },
+    exttextures = {
+        exthooks = {
+            ["PostInitialize"] = true
+        },
+        inthooks = {
+            ["PostInitialize"] = true
+        },
+        func = function(ext, int)
+            if CLIENT then return end
+            local setting_val = TARDIS:GetCustomSetting(ext.metadata.ID, "exterior_textures", ext)
+            if setting_val == "altsmith" then
+                ext:ApplyTextureSet("exttextures_altsmith")
+                if IsValid(int) then
+                    int:ApplyTextureSet("exttextures_altsmith")
+                end
+            elseif setting_val == "altcapaldi" then
+                ext:ApplyTextureSet("exttextures_altcapaldi")
+                if IsValid(int) then
+                    int:ApplyTextureSet("exttextures_altcapaldi")
+                end
+            end
+        end,
+    }
 }
 
 
@@ -628,6 +674,16 @@ T.CustomSettings = {
             ["green"] = "Interiors.Default.CustomSettings.Color.Green",
             ["turquoise"] = "Interiors.Default.CustomSettings.Color.Turquoise",
             ["random"] = "Interiors.Default.CustomSettings.Color.Random",
+        },
+    },
+    exterior_textures = {
+        text = "Interiors.Default.CustomSettings.ExteriorTextures",
+        value_type = "list",
+        value = "default",
+        options = {
+            ["default"] = "Interiors.Default.CustomSettings.ExteriorTextures.Default",
+            ["altsmith"] = "Interiors.Default.CustomSettings.ExteriorTextures.AlternativeSmith",
+            ["altcapaldi"] = "Interiors.Default.CustomSettings.ExteriorTextures.AlternativeCapaldi",
         },
     },
     lamps = {
