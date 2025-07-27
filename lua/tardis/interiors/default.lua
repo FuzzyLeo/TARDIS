@@ -505,15 +505,15 @@ T.Interior = {
             prefix = "models/molda/toyota_int/",
             { "default_telepathic", 0, "telepathics_off" }
         },
-        ["exttextures_altsmith"] = {
-            prefix = "models/vtalanov98/toyota_ext/",
-            { "door", 0, "exterior_2013" },
-            { "default_doorframe", 1, "exterior_2013" }
-        },
-        ["exttextures_altcapaldi"] = {
+        ["exttextures_capaldi"] = {
             prefix = "models/vtalanov98/toyota_ext/",
             { "door", 0, "exterior_2017" },
             { "default_doorframe", 1, "exterior_2017" }
+        },
+        ["exttextures_original"] = {
+            prefix = "models/vtalanov98/toyota_ext/",
+            { "door", 0, "exterior_original" },
+            { "default_doorframe", 1, "exterior_original" }
         },
     },
 }
@@ -531,15 +531,15 @@ T.Exterior = {
         },
     },
     TextureSets = {
-        ["exttextures_altsmith"] = {
-            prefix = "models/vtalanov98/toyota_ext/",
-            { "self", 0, "exterior_2013" },
-            { "door", 0, "exterior_2013" }
-        },
-        ["exttextures_altcapaldi"] = {
+        ["exttextures_capaldi"] = {
             prefix = "models/vtalanov98/toyota_ext/",
             { "self", 0, "exterior_2017" },
             { "door", 0, "exterior_2017" }
+        },
+        ["exttextures_original"] = {
+            prefix = "models/vtalanov98/toyota_ext/",
+            { "self", 0, "exterior_original" },
+            { "door", 0, "exterior_original" }
         },
     },
 }
@@ -615,15 +615,15 @@ T.CustomHooks = {
         func = function(ext, int)
             if CLIENT then return end
             local setting_val = TARDIS:GetCustomSetting(ext.metadata.ID, "exterior_textures", ext)
-            if setting_val == "altsmith" then
-                ext:ApplyTextureSet("exttextures_altsmith")
+            if setting_val == "capaldi" then
+                ext:ApplyTextureSet("exttextures_capaldi")
                 if IsValid(int) then
-                    int:ApplyTextureSet("exttextures_altsmith")
+                    int:ApplyTextureSet("exttextures_capaldi")
                 end
-            elseif setting_val == "altcapaldi" then
-                ext:ApplyTextureSet("exttextures_altcapaldi")
+            elseif setting_val == "original" then
+                ext:ApplyTextureSet("exttextures_original")
                 if IsValid(int) then
-                    int:ApplyTextureSet("exttextures_altcapaldi")
+                    int:ApplyTextureSet("exttextures_original")
                 end
             end
         end,
@@ -678,11 +678,11 @@ T.CustomSettings = {
     exterior_textures = {
         text = "Interiors.Default.CustomSettings.ExteriorTextures",
         value_type = "list",
-        value = "default",
+        value = "smith",
         options = {
-            ["default"] = "Interiors.Default.CustomSettings.ExteriorTextures.Default",
-            ["altsmith"] = "Interiors.Default.CustomSettings.ExteriorTextures.AlternativeSmith",
-            ["altcapaldi"] = "Interiors.Default.CustomSettings.ExteriorTextures.AlternativeCapaldi",
+            ["smith"] = "Interiors.Default.CustomSettings.ExteriorTextures.Smith",
+            ["capaldi"] = "Interiors.Default.CustomSettings.ExteriorTextures.Capaldi",
+            ["original"] = "Interiors.Default.CustomSettings.ExteriorTextures.Original",
         },
     },
     lamps = {
