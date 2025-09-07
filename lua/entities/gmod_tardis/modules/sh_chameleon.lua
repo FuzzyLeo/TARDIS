@@ -30,7 +30,18 @@ if SERVER then
 
         self:ChangeExterior(default_ext, false)
     end)
+
+    ENT:OnMessage("exterior_metadata_update", function(self,data,ply)
+        local id = self:GetData("chameleon_current_exterior")
+        if id then
+            self:SendMessage("exterior_metadata_update", {id})
+        end
+    end)
 else
+    ENT:AddHook("PostInitialize", "chameleon", function(self)
+        self:SendMessage("exterior_metadata_update")
+    end)
+
     ENT:OnMessage("exterior_changed", function(self,data,ply)
         self:CallHook("ExteriorChanged", data[1])
     end)
