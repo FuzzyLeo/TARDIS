@@ -90,6 +90,9 @@ local function matproxy_tardis_power_init(self, mat, values)
     self.ResultTo = values.resultvar
     self.on_var = values.onvar
     self.off_var = values.offvar
+    self.last_value = mat:GetVector(values.onvar)
+    self.TransitionSpeedOn = values.transitionspeedon or 0
+    self.TransitionSpeedOff = values.transitionspeedoff or 0
 end
 
 local function matproxy_tardis_power_bind(self, mat, ent)
@@ -100,12 +103,24 @@ local function matproxy_tardis_power_bind(self, mat, ent)
     end
 
     if ent.exterior then
-        local var = ent.exterior:GetPower() and self.on_var or self.off_var
+        local on = ent.exterior:GetPower()
+        local var = on and self.on_var or self.off_var
         if not var then return end
 
         local value = mat:GetVector(var)
 
         if var ~= self.last_var or value ~= self.last_value then
+             -- Smoothly transition the color
+            local transition_speed = on and self.TransitionSpeedOn or self.TransitionSpeedOff
+            if transition_speed > 0 then
+                local dir  = value - self.last_value
+                local dist = dir:Length()
+                if dist > 1e-6 then -- Avoids floating point errors
+                    local step = math.min(dist, transition_speed * FrameTime())
+                    value = self.last_value + dir:GetNormalized() * step
+                end
+            end
+
             self.last_var = var
             self.last_value = value
             mat:SetVector(self.ResultTo, value)
