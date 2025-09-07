@@ -425,6 +425,10 @@ else
     end)
 end
 
+function ENT:GetTeleport()
+    return self:GetData("teleport", false)
+end
+
 function ENT:SetStepDelay()
     local demat=self:GetData("demat")
     local fast=self:GetFastRemat()
