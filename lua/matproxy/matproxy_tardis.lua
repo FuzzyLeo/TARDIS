@@ -136,7 +136,6 @@ local function matproxy_tardis_power_bind(self, mat, ent)
                     local step = math.min(dist, transition_speed * FrameTime())
                     value = dynvars.LastValue + dir:GetNormalized() * step
                 end
-                print("TARDIS_Power transitioning", dynvars.LastValue, "->", value)
             end
 
             dynvars.LastVar = var
