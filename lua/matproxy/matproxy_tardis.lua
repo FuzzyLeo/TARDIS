@@ -126,19 +126,23 @@ local function matproxy_tardis_power_bind(self, mat, ent)
         local value = mat:GetVector(var)
 
         local dynvars = getdynamicproxyvars(ext, mat, self.name, { LastValue = self.LastValue })
-            -- Smoothly transition the color
-        local transition_speed = on and self.TransitionSpeedOn or self.TransitionSpeedOff
-        if transition_speed > 0 then
-            local dir = value - dynvars.LastValue
-            local dist = dir:Length()
-            if dist > 1e-6 then -- Avoids floating point errors
-                local step = math.min(dist, transition_speed * FrameTime())
-                value = dynvars.LastValue + dir:GetNormalized() * step
+        if var ~= self.last_var or value ~= self.last_value then
+             -- Smoothly transition the color
+            local transition_speed = on and self.TransitionSpeedOn or self.TransitionSpeedOff
+            if transition_speed > 0 then
+                local dir = value - dynvars.LastValue
+                local dist = dir:Length()
+                if dist > 1e-6 then -- Avoids floating point errors
+                    local step = math.min(dist, transition_speed * FrameTime())
+                    value = dynvars.LastValue + dir:GetNormalized() * step
+                end
             end
-        end
 
-        dynvars.LastValue = value
-        mat:SetVector(self.ResultTo, value)
+            self.last_var = var
+            self.last_value = value
+            dynvars.LastValue = value
+            mat:SetVector(self.ResultTo, value)
+        end
     end
 end
 
@@ -266,7 +270,12 @@ local function matproxy_tardis_warning_bind(self, mat, ent)
         if not var then return end
 
         local value = mat:GetVector(var)
-        mat:SetVector(self.ResultTo, value)
+
+        if var ~= self.last_var or value ~= self.last_value then
+            self.last_var = var
+            self.last_value = value
+            mat:SetVector(self.ResultTo, value)
+        end
     end
 
 end
