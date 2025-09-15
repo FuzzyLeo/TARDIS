@@ -159,7 +159,7 @@ TARDIS:AddSetting({
 })
 
 TARDIS:AddSetting({
-    id="extwarningsmoke-enabled",
+    id="extsmoke-enabled",
     type="bool",
     value=true,
 
@@ -168,7 +168,7 @@ TARDIS:AddSetting({
     option=true,
     section=SETTING_SECTION,
     subsection="Effects",
-    name="WarningSmokeEnabled",
+    name="SmokeEnabled",
 })
 
 --------------------------------------------------------------------------------

@@ -464,6 +464,8 @@
     "Settings.Sections.Exterior.Effects": "Efekty",
     "Settings.Sections.Exterior.Effects.RotorwashEnabled": "Povolit rotorwash",
     "Settings.Sections.Exterior.Effects.RotorwashEnabled.Description": "Měl by být efekt rotorwash TARDIS povolen při letu nebo teleportaci?",
+    "Settings.Sections.Exterior.Effects.SmokeEnabled": "Povolit kouř při poškození",
+    "Settings.Sections.Exterior.Effects.SmokeEnabled.Description": "Měl by být efekt kouře na exteriéru TARDIS povolen při poškození?",
     "Settings.Sections.Exterior.Light": "Vnější světlo",
     "Settings.Sections.Exterior.Light.AlwaysOn": "Vnější světlo vždy zapnuto",
     "Settings.Sections.Exterior.Light.AlwaysOn.Description": "Mělo by být vnější světlo vždy rozsvíceno, pokud není vypnuto ovládacím prvkem?",

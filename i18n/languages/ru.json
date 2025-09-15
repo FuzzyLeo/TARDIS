@@ -464,6 +464,8 @@
     "Settings.Sections.Exterior.Effects": "Эффекты",
     "Settings.Sections.Exterior.Effects.RotorwashEnabled": "Включить rotorwash",
     "Settings.Sections.Exterior.Effects.RotorwashEnabled.Description": "Следует ли включить эффект rotorwash TARDIS при полете или телепортации?",
+    "Settings.Sections.Exterior.Effects.SmokeEnabled": "Включать дым при повреждении",
+    "Settings.Sections.Exterior.Effects.SmokeEnabled.Description": "Следует ли включать эффект дыма на внешней стороне ТАРДИС при повреждении?",
     "Settings.Sections.Exterior.Light": "Лампа экстерьера",
     "Settings.Sections.Exterior.Light.AlwaysOn": "Внешний свет по умолчанию",
     "Settings.Sections.Exterior.Light.AlwaysOn.Description": "Следует ли всегда освещать внешний свет, если он не отключен регулятором?",

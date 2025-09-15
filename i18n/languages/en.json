@@ -464,6 +464,8 @@
     "Settings.Sections.Exterior.Effects": "Effects",
     "Settings.Sections.Exterior.Effects.RotorwashEnabled": "Enable rotorwash",
     "Settings.Sections.Exterior.Effects.RotorwashEnabled.Description": "Should the TARDIS rotorwash effect be enabled when in flight or teleporting?",
+    "Settings.Sections.Exterior.Effects.SmokeEnabled": "Enable smoke when damaged",
+    "Settings.Sections.Exterior.Effects.SmokeEnabled.Description": "Should the TARDIS exterior smoke effect be enabled when damaged?",
     "Settings.Sections.Exterior.Light": "Exterior light",
     "Settings.Sections.Exterior.Light.AlwaysOn": "Exterior light on by default",
     "Settings.Sections.Exterior.Light.AlwaysOn.Description": "Should the exterior light always be lit unless disabled by a control?",
