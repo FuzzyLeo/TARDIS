@@ -205,6 +205,7 @@ PART.ID = "default_rotor"
 PART.Model = "models/molda/toyota_int/rotor.mdl"
 PART.AutoSetup = true
 PART.Collision = true
+PART.UseTransparencyFix = true
 PART.ClientThinkOverride = true
 PART.ShouldTakeDamage = true
 PART.Animate = true
