@@ -4,7 +4,7 @@ local use_enhanced_fade_cache = {}
 
 function ENT:GetAlpha()
     local alpha = self:GetData("alpha",255)/255
-    if self:GetData("vortexalpha",0)>alpha and TARDIS:GetExteriorEnt()==self then
+    if self:GetData("vortexalpha",0)>alpha and TARDIS:GetExteriorEnt()==self and LocalPlayer():GetTardisData("outside") then
         return self:GetData("vortexalpha",0),true
     end
     if self:GetData("vortex") then
