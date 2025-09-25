@@ -8,6 +8,7 @@ ENT.PrintName       = "TARDIS Part"
 ENT.Spawnable       = false
 ENT.AdminSpawnable  = false
 ENT.Category        = "Doctor Who"
+ENT.RenderGroup     = RENDERGROUP_OPAQUE
 ENT.TardisPart      = true
 ENT.AllowedProperties = {
     ["skin"] = true,
