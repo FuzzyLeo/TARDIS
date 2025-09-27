@@ -57,7 +57,7 @@ end
 
 ENT:AddHook("PreOnRemove","seats",function(self)
     if self.seats then
-        for k,_ in pairs(self.exterior.occupants) do
+        for k,_ in pairs(self.occupants) do
             local veh = k:GetVehicle()
             if IsValid(veh) and veh.TardisPart then
                 k:ExitVehicle()
