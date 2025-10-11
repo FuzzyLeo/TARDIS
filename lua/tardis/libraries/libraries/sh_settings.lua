@@ -60,6 +60,7 @@ end
 
 function TARDIS:SetSetting(id, value, ignore_convar)
     local data = self.SettingsData[id]
+    local old_value
     if not data then error("Requested setting " .. id .. " does not exist") end
 
     if value ~= nil and data.type == "integer" then
@@ -81,6 +82,8 @@ function TARDIS:SetSetting(id, value, ignore_convar)
 
     if SERVER then
         if data.class == "global" then
+            old_value = self.GlobalSettings[id]
+            if old_value == value then return value end
             self.GlobalSettings[id]=value
 
             if data.convar and not ignore_convar then
@@ -100,10 +103,16 @@ function TARDIS:SetSetting(id, value, ignore_convar)
         end
     else
         if data.class == "networked" then
+            old_value = self.NetworkedSettings[id]
+            if old_value == value then return value end
             self.NetworkedSettings[id]=value
         elseif data.class == "local" then
+            old_value = self.LocalSettings[id]
+            if old_value == value then return value end
             self.LocalSettings[id]=value
         elseif data.class == "global" then
+            old_value = self.GlobalSettings[id]
+            if old_value == value then return value end
             TARDIS:GlobalSettingChange(id, value)
         else
             error("Setting " .. id .. " is being set clientside, but has unsupported class")
@@ -116,7 +125,7 @@ function TARDIS:SetSetting(id, value, ignore_convar)
         self:SendSetting(id, value)
     end
 
-    self:OnSettingChanged(id, value)
+    self:OnSettingChanged(id, value, old_value)
 
     return value
 end
@@ -375,8 +384,9 @@ else
         if mode then
             local id = net.ReadString()
             local value = net.ReadType()
+            local old_value = TARDIS.ClientSettings[ply][id]
             TARDIS.ClientSettings[ply][id]=value
-            TARDIS:OnSettingChanged(id, value, ply)
+            TARDIS:OnSettingChanged(id, value, old_value, ply)
         else
             TARDIS.ClientSettings[ply]=TARDIS.von.deserialize(net.ReadString())
         end
@@ -387,8 +397,9 @@ else
         if mode then
             local id = net.ReadString()
             local value = net.ReadType()
+            local old_value = TARDIS.GlobalSettings[id]
             TARDIS.GlobalSettings[id]=value
-            TARDIS:OnSettingChanged(id, value)
+            TARDIS:OnSettingChanged(id, value, old_value)
         else
             table.Merge(TARDIS.GlobalSettings,TARDIS.von.deserialize(net.ReadString()))
         end
@@ -426,11 +437,11 @@ function TARDIS:SendSettings(ply)
     end
 end
 
-function TARDIS:OnSettingChanged(id,value,ply)
-    hook.Call("TARDIS_SettingChanged", GAMEMODE, id, value, ply)
+function TARDIS:OnSettingChanged(id,value,old_value,ply)
+    hook.Call("TARDIS_SettingChanged", GAMEMODE, id, value, old_value, ply)
     for k,v in pairs(ents.FindByClass("gmod_tardis")) do
         if v.CallCommonHook then
-            v:CallCommonHook("SettingChanged", id, value)
+            v:CallCommonHook("SettingChanged", id, value, old_value, ply)
         end
     end
 end

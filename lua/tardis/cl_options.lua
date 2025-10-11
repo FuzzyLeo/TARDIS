@@ -150,8 +150,15 @@ function TARDIS:CreateOptionInterface(id, data)
             elem2:SetText(elem2:GetOptionTextByData(setting))
         end
 
-
-
+    elseif data.type=="button" then
+        elem = vgui.Create("DButton")
+        elem:SetText(text)
+        elem.DoClick = function(self)
+            if data.func then
+                data.func(TARDIS)
+            end
+        end
+        elem.RefreshVal = function(self) end
     else
         elem = vgui.Create("DLabel")
     end

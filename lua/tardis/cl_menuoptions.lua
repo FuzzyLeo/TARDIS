@@ -1,3 +1,25 @@
+TARDIS.SpawnmenuOptionsSectionElements = TARDIS.SpawnmenuOptionsSectionElements or {}
+
+function TARDIS:ReloadSpawnmenuOptionElements(section)
+    if not section then
+        for k,_ in pairs(self.SpawnmenuOptionsSectionElements) do
+            self:ReloadSpawnmenuOptionElements(k)
+        end
+        return true
+    else
+        if self.SpawnmenuOptionsSectionElements[section] then
+            for k,v in ipairs(self.SpawnmenuOptionsSectionElements[section]) do
+                if v.RefreshVal then
+                    v:RefreshVal()
+                end
+            end
+            return true
+        else
+            return false
+        end
+    end
+end
+
 hook.Add("PopulateToolMenu", "TARDIS2-PopulateToolMenu", function()
     -- Options
     local options={}
@@ -16,14 +38,28 @@ hook.Add("PopulateToolMenu", "TARDIS2-PopulateToolMenu", function()
         end
     end
 
+    for k,v in pairs(TARDIS:GetButtonOptions()) do
+        table.insert(options,{v.id, v, (v.subsection or " ") .. v.name})
+        if v.section and not table.HasValue(sections,v.section) then
+            table.insert(sections, v.section)
+        end
+        if v.section and v.subsection then
+            subsections[v.section] = subsections[v.section] or {}
+            subsections[v.section][v.subsection] = true
+        end
+    end
+
     table.SortByMember(options, 3, true)
     table.SortByMember(sections, 1, true)
+
+    TARDIS.SpawnmenuOptionsSectionElements = {}
 
     for k,section in ipairs(sections) do
         local section_id = "TARDIS2_Options_" .. section
         local section_text = " " .. TARDIS:GetPhrase("Settings.Sections."..section)
 
         local section_elements = {}
+        TARDIS.SpawnmenuOptionsSectionElements[section] = section_elements
 
         spawnmenu.AddToolMenuOption("Options", TARDIS:GetPhrase("Common.TARDIS"), section_id, section_text, "", "", function(panel)
             for a,b in ipairs(options) do

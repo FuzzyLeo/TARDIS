@@ -190,7 +190,7 @@ function TARDIS:UpdateLanguage()
     end
 end
 
-hook.Add("TARDIS_SettingChanged", "TARDIS_LanguageSettingChanged", function(id, value, ply)
+hook.Add("TARDIS_SettingChanged", "TARDIS_LanguageSettingChanged", function(id, value, old_value, ply)
     if id == "language" then
         TARDIS:UpdateLanguage()
     end

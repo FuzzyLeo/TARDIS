@@ -28,13 +28,13 @@ TARDIS:AddSetting({
     value=1,
     sort=false,
     get_values_func = function()
-        local prefix = "Settings.Sections.Misc.Events.Types."
+        local event = TARDIS:GetPhrase("Events.Event.Lower")
         return {
-            { prefix.."Disabled", 0 },
-            { prefix.."Automatic", 1 },
-            -- { prefix.."AprilFools", 2 },
-            -- { prefix.."Halloween", 3 },
-            -- { prefix.."Christmas", 4 },
+            { "Common.Disabled", TARDIS_EVENTS_DISABLED },
+            { "Common.Automatic", TARDIS_EVENTS_AUTO },
+            -- { TARDIS:GetEventName(TARDIS_EVENTS_APRIL_FOOLS) .. " " .. event, TARDIS_EVENTS_APRIL_FOOLS },
+            { TARDIS:GetEventName(TARDIS_EVENTS_HALLOWEEN) .. " " .. event, TARDIS_EVENTS_HALLOWEEN },
+            -- { TARDIS:GetEventName(TARDIS_EVENTS_CHRISTMAS) .. " " .. event, TARDIS_EVENTS_CHRISTMAS },
         }
     end,
 
@@ -43,6 +43,17 @@ TARDIS:AddSetting({
     option=true,
     section=SETTING_SECTION,
     name="Events",
+})
+
+TARDIS:AddButtonOption({
+    id="events_skip",
+
+    func=function(self)
+        self:SkipEvent()
+    end,
+
+    section=SETTING_SECTION,
+    name="Events.SkipCurrent",
 })
 
 TARDIS:AddSetting({
