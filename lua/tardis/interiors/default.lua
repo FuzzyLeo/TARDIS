@@ -545,6 +545,9 @@ T.Exterior = {
             { "door", 0, "exterior_original" }
         },
     },
+    LockedDoor = {
+        AnimEnabled = true
+    }
 }
 
 T.Timings = {

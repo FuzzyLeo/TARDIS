@@ -292,7 +292,7 @@ else
 
     function ENT:DoorOpen(real)
         local door=self:GetPart("door")
-        if real and IsValid(door) then
+        if real and IsValid(door) and not self:Locked() then
             return door.DoorPos ~= 0
         else
             return self:GetData("doorstate",false)

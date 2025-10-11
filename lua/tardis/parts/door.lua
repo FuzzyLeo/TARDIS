@@ -52,8 +52,18 @@ if SERVER then
             if IsValid(a) and a:IsPlayer() then
                 if self.exterior:CallHook("LockedUse",a)==nil then
                     TARDIS:Message(a, "Parts.Door.Locked")
+                    self.exterior:SendMessage("lockattempted", {a})
                 end
                 self:EmitSound(self.exterior.metadata.Exterior.Sounds.Door.locked)
+                local otherdoor
+                if self.ExteriorPart and IsValid(self.interior) then
+                    otherdoor = self.interior:GetPart("door")
+                elseif self.InteriorPart then
+                    otherdoor = self.exterior:GetPart("door")
+                end
+                if IsValid(otherdoor) then
+                    otherdoor:EmitSound(self.exterior.metadata.Exterior.Sounds.Door.locked)
+                end
             end
         else
             if self:GetData("legacy_door_type") and a:KeyDown(IN_WALK) then
@@ -105,9 +115,24 @@ else
 
     function PART:Think()
         if self.ExteriorPart then
-            self.DoorTarget=self.exterior.DoorOverride or (self:GetData("doorstatereal",false) and 1 or 0)
-
             local animtime = self.exterior.metadata.Exterior.DoorAnimationTime
+            local lockeddoor = self.exterior.metadata.Exterior.LockedDoor
+            if self:GetData("locked") and lockeddoor.AnimEnabled then
+                if self.LockedAnim then
+                    if self.DoorPos>=lockeddoor.AnimPos then
+                        self.LockedAnim=false
+                        self.DoorTarget=0
+                    else
+                        self.DoorTarget=lockeddoor.AnimPos
+                    end
+                else
+                    self.DoorTarget=0
+                end
+                local animpos = math.abs(lockeddoor.AnimPos or 0)
+                animtime = lockeddoor.AnimTime / (2 * animpos)
+            else
+                self.DoorTarget=self.exterior.DoorOverride or (self:GetData("doorstatereal",false) and 1 or 0)
+            end
 
             -- Have to spam it otherwise it glitches out (http://facepunch.com/showthread.php?t=1414695)
             self.DoorPos = self.exterior.DoorOverride or
