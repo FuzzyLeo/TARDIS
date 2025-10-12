@@ -307,6 +307,7 @@
     "Events.ConfirmDisable.All": "Anallu pob digwyddiad",
     "Events.ConfirmDisable.Current": "Hepgorru’r digwyddiad presennol",
     "Events.Event.Lower": "digwyddiad",
+    "Events.NotifyEvent": "Mae’r digwyddiad %s yn weithredol, ewch i osodiadau TARDIS -> %s i’w hepgor neu ei newid",
     "Events.SkipFailed": "Methoddwyd methu hepgor digwyddiad: %s",
     "Events.SkipFailed.AlreadySkipped": "Mae'r digwyddiad %s wedi cael ei hepgor eisoes ar gyfer eleni.",
     "Events.SkipFailed.Disabled": "Mae digwyddiadau wedi'u analluogi",

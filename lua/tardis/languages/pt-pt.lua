@@ -310,6 +310,7 @@ T.Phrases = {
     ["Events.ConfirmDisable.All"] = "Desativar todos os eventos",
     ["Events.ConfirmDisable.Current"] = "Saltar evento atual",
     ["Events.Event.Lower"] = "evento",
+    ["Events.NotifyEvent"] = "O evento %s está ativo, visite as definições da TARDIS -> %s para o ignorar ou alterar.",
     ["Events.SkipFailed"] = "Falha ao ignorar o evento: %s",
     ["Events.SkipFailed.AlreadySkipped"] = "O evento %s já foi ignorado este ano.",
     ["Events.SkipFailed.Disabled"] = "Os eventos estão desativados.",

@@ -310,6 +310,7 @@ T.Phrases = {
     ["Events.ConfirmDisable.All"] = "Отключить все события",
     ["Events.ConfirmDisable.Current"] = "Пропустить текущее событие",
     ["Events.Event.Lower"] = "событие",
+    ["Events.NotifyEvent"] = "Событие %s активно, перейдите в настройки TARDIS -> %s, чтобы пропустить или изменить его.",
     ["Events.SkipFailed"] = "Не удалось пропустить событие: %s",
     ["Events.SkipFailed.AlreadySkipped"] = "Событие %s уже было пропущено в этом году.",
     ["Events.SkipFailed.Disabled"] = "События отключены",

@@ -310,6 +310,7 @@ T.Phrases = {
     ["Events.ConfirmDisable.All"] = "Tüm etkinlikleri devre dışı bırak",
     ["Events.ConfirmDisable.Current"] = "Mevcut olayı atla",
     ["Events.Event.Lower"] = "etkinlik",
+    ["Events.NotifyEvent"] = "\"%s etkinliği aktif, atlamak veya değiştirmek için TARDIS -> %s ayarlarını ziyaret edin\"",
     ["Events.SkipFailed"] = "Etkinlik atlanamadı: %s",
     ["Events.SkipFailed.AlreadySkipped"] = "\"%s etkinliği bu yıl için zaten atlandı\"",
     ["Events.SkipFailed.Disabled"] = "Etkinlikler devre dışı",

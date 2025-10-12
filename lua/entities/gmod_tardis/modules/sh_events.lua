@@ -16,6 +16,18 @@ function ENT:GetEvent()
     return self:GetData("event")
 end
 
+function ENT:NotifyEvent(event)
+    if not event then event = self:GetEvent() end
+    if not event then return end
+    local ply = self:GetCreator()
+    if CLIENT and LocalPlayer() ~= ply then return end
+    if SERVER then
+        self:SendMessage("events-notify", {event}, ply)
+    elseif CLIENT and LocalPlayer() == ply then
+        TARDIS:NotifyEvent(event)
+    end
+end
+
 if SERVER then
     ENT:AddHook("Initialize", "halloween", function(self)
         local event = TARDIS:GetCurrentEvent(self)
@@ -27,6 +39,9 @@ if SERVER then
         elseif event == TARDIS_EVENTS_CHRISTMAS then
             self:SetData("events-christmas", true, true)
         end
-        print("Set event data to", event)
+    end)
+else
+    ENT:OnMessage("events-notify", function(self, data, ply)
+        self:NotifyEvent(data[1])
     end)
 end

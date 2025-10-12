@@ -307,6 +307,7 @@
     "Events.ConfirmDisable.All": "停用所有事件",
     "Events.ConfirmDisable.Current": "跳過目前事件",
     "Events.Event.Lower": "事件",
+    "Events.NotifyEvent": "「%s」事件目前正在進行中，請前往 TARDIS -> %s 設定以跳過或更改。",
     "Events.SkipFailed": "無法跳過事件：%s",
     "Events.SkipFailed.AlreadySkipped": "今年的 %s 活動已經被跳過",
     "Events.SkipFailed.Disabled": "事件已停用",

@@ -307,6 +307,7 @@
     "Events.ConfirmDisable.All": "Alle Ereignisse deaktivieren",
     "Events.ConfirmDisable.Current": "Aktuelles Ereignis überspringen",
     "Events.Event.Lower": "Ereignis",
+    "Events.NotifyEvent": "Das %s-Ereignis ist aktiv, besuche die TARDIS -> %s-Einstellungen, um es zu überspringen oder zu ändern.",
     "Events.SkipFailed": "Das Überspringen des Ereignisses ist fehlgeschlagen: %s",
     "Events.SkipFailed.AlreadySkipped": "Die Veranstaltung %s wurde für dieses Jahr bereits übersprungen.",
     "Events.SkipFailed.Disabled": "Ereignisse sind deaktiviert",

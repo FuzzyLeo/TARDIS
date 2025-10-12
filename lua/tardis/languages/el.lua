@@ -310,6 +310,7 @@ T.Phrases = {
     ["Events.ConfirmDisable.All"] = "Απενεργοποιήστε όλα τα συμβάντα",
     ["Events.ConfirmDisable.Current"] = "Παράλειψη τρέχοντος γεγονότος",
     ["Events.Event.Lower"] = "εκδήλωση",
+    ["Events.NotifyEvent"] = "Η εκδήλωση %s είναι ενεργή, επισκεφτείτε τις ρυθμίσεις του TARDIS -> %s για να την παραλείψετε ή να την αλλάξετε",
     ["Events.SkipFailed"] = "Αποτυχία παράλειψης συμβάντος: %s",
     ["Events.SkipFailed.AlreadySkipped"] = "Η εκδήλωση %s έχει ήδη παραλειφθεί για φέτος",
     ["Events.SkipFailed.Disabled"] = "Οι εκδηλώσεις είναι απενεργοποιημένες.",

@@ -307,6 +307,7 @@
     "Events.ConfirmDisable.All": "Desactivar todos los eventos",
     "Events.ConfirmDisable.Current": "Omitir evento actual",
     "Events.Event.Lower": "evento",
+    "Events.NotifyEvent": "El evento %s está activo, visita la configuración de TARDIS -> %s para omitirlo o cambiarlo",
     "Events.SkipFailed": "No se pudo omitir el evento: %s",
     "Events.SkipFailed.AlreadySkipped": "El evento %s ya se ha omitido este año.",
     "Events.SkipFailed.Disabled": "Los eventos están deshabilitados",

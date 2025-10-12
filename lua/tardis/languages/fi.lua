@@ -310,6 +310,7 @@ T.Phrases = {
     ["Events.ConfirmDisable.All"] = "Poista kaikki tapahtumat käytöstä",
     ["Events.ConfirmDisable.Current"] = "Ohita nykyinen tapahtuma",
     ["Events.Event.Lower"] = "tapahtuma",
+    ["Events.NotifyEvent"] = "Tapahtuma %s on aktiivinen, siirry TARDIS -> %s asetuksiin ohittaaksesi tai vaihtaaksesi sen.",
     ["Events.SkipFailed"] = "Tapahtuman ohittaminen epäonnistui: %s",
     ["Events.SkipFailed.AlreadySkipped"] = "Tämän vuoden %s-tapahtuma on jo ohitettu",
     ["Events.SkipFailed.Disabled"] = "Tapahtumat on poissa käytöstä",

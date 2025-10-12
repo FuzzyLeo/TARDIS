@@ -310,6 +310,7 @@ T.Phrases = {
     ["Events.ConfirmDisable.All"] = "禁用所有事件",
     ["Events.ConfirmDisable.Current"] = "跳过当前事件",
     ["Events.Event.Lower"] = "事件",
+    ["Events.NotifyEvent"] = "\"%s\"事件正在进行中，请前往TARDIS->%s设置以跳过或更改该事件",
     ["Events.SkipFailed"] = "跳过事件失败：%s",
     ["Events.SkipFailed.AlreadySkipped"] = "今年的%s活动已经被跳过。",
     ["Events.SkipFailed.Disabled"] = "事件已禁用",
