@@ -367,6 +367,7 @@ T.Phrases = {
     ["Interiors.Default.CustomSettings.Lamps.Off"] = "Analluogwyd",
     ["Interiors.Default.CustomSettings.ScreensOff"] = "Sgrin wedi'i analluogi wrth silio",
     ["Interiors.Default.CustomSettings.SmallVersion"] = "Tu mewn bach (llai o goridorau)",
+    ["Interiors.Default.CustomSettings.StudioSetCeiling"] = "Nenfwd studio set",
     ["Interiors.Default.Versions.Capaldi"] = "Capaldi",
     ["Interiors.Default.Versions.Capaldi.ClassicDoors"] = "Capaldi (fersiwn drysau clasurol)",
     ["Interiors.Default.Versions.ClassicDoors"] = "Smith (fersiwn drysau clasurol)",

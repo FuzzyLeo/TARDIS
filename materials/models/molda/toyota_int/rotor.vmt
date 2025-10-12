@@ -15,6 +15,10 @@
 
 	$envmaptint_mult "0.4"
 	$envmaptint_color "[0 0.4 0.5]"
+
+	"$selfillummask" "models/molda/toyota_int/rotor_emit"
+	"$selfillum" 1
+
 	Proxies {
 		TARDIS_DefaultInt_EnvColor {
 			resultVar	$envmaptint_color

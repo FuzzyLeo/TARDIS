@@ -367,6 +367,7 @@ T.Phrases = {
     ["Interiors.Default.CustomSettings.Lamps.Off"] = "Pois päältä",
     ["Interiors.Default.CustomSettings.ScreensOff"] = "Näyttö pois päältä käynnistyksessä",
     ["Interiors.Default.CustomSettings.SmallVersion"] = "Pieni sisätila (vähemmän käytäviä)",
+    ["Interiors.Default.CustomSettings.StudioSetCeiling"] = "Studiolavasteen katto",
     ["Interiors.Default.Versions.Capaldi"] = "Capaldi",
     ["Interiors.Default.Versions.Capaldi.ClassicDoors"] = "Capaldi (klassisten ovien versio)",
     ["Interiors.Default.Versions.ClassicDoors"] = "Smith (klassisten ovien versio)",

@@ -367,6 +367,7 @@ T.Phrases = {
     ["Interiors.Default.CustomSettings.Lamps.Off"] = "Behinderte",
     ["Interiors.Default.CustomSettings.ScreensOff"] = "Bildschirm beim Spawnen deaktiviert",
     ["Interiors.Default.CustomSettings.SmallVersion"] = "Kleiner Innenraum (weniger Flure)",
+    ["Interiors.Default.CustomSettings.StudioSetCeiling"] = "Studio-Set-Decke",
     ["Interiors.Default.Versions.Capaldi"] = "Capaldi",
     ["Interiors.Default.Versions.Capaldi.ClassicDoors"] = "Capaldi (klassische Türen-Version)",
     ["Interiors.Default.Versions.ClassicDoors"] = "Smith (klassische Türen-Version)",

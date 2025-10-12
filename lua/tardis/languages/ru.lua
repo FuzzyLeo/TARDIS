@@ -367,6 +367,7 @@ T.Phrases = {
     ["Interiors.Default.CustomSettings.Lamps.Off"] = "Выключены",
     ["Interiors.Default.CustomSettings.ScreensOff"] = "Экран отключен по умолчанию",
     ["Interiors.Default.CustomSettings.SmallVersion"] = "Небольшой интерьер (без коридоров)",
+    ["Interiors.Default.CustomSettings.StudioSetCeiling"] = "Потолок студийной площадки",
     ["Interiors.Default.Versions.Capaldi"] = "Capaldi",
     ["Interiors.Default.Versions.Capaldi.ClassicDoors"] = "Capaldi (версия с классическими дверями)",
     ["Interiors.Default.Versions.ClassicDoors"] = "Smith (версия с классическими дверями)",

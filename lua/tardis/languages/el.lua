@@ -367,6 +367,7 @@ T.Phrases = {
     ["Interiors.Default.CustomSettings.Lamps.Off"] = "Ανενεργό",
     ["Interiors.Default.CustomSettings.ScreensOff"] = "Απενεργοποιημένη οθόνη κατά την δημιουργία",
     ["Interiors.Default.CustomSettings.SmallVersion"] = "Μικρό εσωτερικό (λιγότεροι διάδρομοι)",
+    ["Interiors.Default.CustomSettings.StudioSetCeiling"] = "Οροφή σκηνικού στούντιο",
     ["Interiors.Default.Versions.Capaldi"] = "Capaldi",
     ["Interiors.Default.Versions.Capaldi.ClassicDoors"] = "Capaldi (κλασική έκδοση θυρών)",
     ["Interiors.Default.Versions.ClassicDoors"] = "Smith (κλασική έκδοση θυρών)",

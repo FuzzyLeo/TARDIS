@@ -367,6 +367,7 @@ T.Phrases = {
     ["Interiors.Default.CustomSettings.Lamps.Off"] = "Desativado",
     ["Interiors.Default.CustomSettings.ScreensOff"] = "Tela desativada ao criar",
     ["Interiors.Default.CustomSettings.SmallVersion"] = "Interior pequeno (menos corredores)",
+    ["Interiors.Default.CustomSettings.StudioSetCeiling"] = "Teto do estúdio de gravação",
     ["Interiors.Default.Versions.Capaldi"] = "Capaldi",
     ["Interiors.Default.Versions.Capaldi.ClassicDoors"] = "Capaldi (versão de portas clássicas)",
     ["Interiors.Default.Versions.ClassicDoors"] = "Smith (versão de portas clássicas)",

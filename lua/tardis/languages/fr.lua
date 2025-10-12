@@ -367,6 +367,7 @@ T.Phrases = {
     ["Interiors.Default.CustomSettings.Lamps.Off"] = "Désactivées",
     ["Interiors.Default.CustomSettings.ScreensOff"] = "Écran désactivé à l'apparition",
     ["Interiors.Default.CustomSettings.SmallVersion"] = "Petit intérieur (moins de couloirs)",
+    ["Interiors.Default.CustomSettings.StudioSetCeiling"] = "Plafond de plateau de studio",
     ["Interiors.Default.Versions.Capaldi"] = "Capaldi",
     ["Interiors.Default.Versions.Capaldi.ClassicDoors"] = "Capaldi (version portes classiques)",
     ["Interiors.Default.Versions.ClassicDoors"] = "Smith (version portes classiques)",

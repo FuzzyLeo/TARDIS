@@ -219,7 +219,7 @@ T.Interior = {
         default_side_lever1 = { pos = Vector(100.487, 114.569, 126.76), },
         default_side_lever2 = { pos = Vector(-55.242, -142.028, 126.76), },
         default_side_dial = {},
-        default_side_speakers = {},
+        default_side_speakers = { ang = Angle(0,90,0), },
         default_throttle_lights = {},
 
         default_bouncy_lever = { pos = Vector(37.6148, 12.5797, 134.562), },
@@ -334,7 +334,8 @@ T.Interior = {
 
         default_rotor_ring = {},
 
-        default_rotor = { pos = Vector(0,0,-0.07) },
+        default_rotor = { pos = Vector(0,0,-0.07), ang = Angle(0,180,0) },
+        default_transparent = {},
         default_corridors = { ang = Angle(0,90,0), },
         default_intdoors = { pos = Vector(73.559, -417.853, 47.506), ang = Angle(0,10,0), },
 
@@ -702,6 +703,11 @@ T.CustomSettings = {
         value_type = "bool",
         value = false,
     },
+    studio_set_ceiling = {
+        text = "Interiors.Default.CustomSettings.StudioSetCeiling",
+        value_type = "bool",
+        value = false,
+    },
     screens_off = {
         text = "Interiors.Default.CustomSettings.ScreensOff",
         value_type = "bool",
@@ -743,6 +749,12 @@ T.Templates = {
         override = true,
         condition = function(id, ply, ent)
             return TARDIS:GetCustomSetting(id, "small_version", ply)
+        end,
+    },
+    default_studio_set_ceiling = {
+        override = true,
+        condition = function(id, ply, ent)
+            return TARDIS:GetCustomSetting(id, "studio_set_ceiling", ply)
         end,
     },
     default_screens_off = {
@@ -794,12 +806,10 @@ T.Interior = {
         ["normal"] = {
             prefix = "models/molda/toyota_int/",
             { "default_telepathic", 0, "telepathics" },
-            { "default_rotor", 10, "neon_out_capaldi" },
-            { "default_rotor", 11, "neon_mid_capaldi" },
-            { "default_rotor", 12, "neon_in_capaldi" },
-            { "default_rotor_small", 8, "neon_out_capaldi" },
-            { "default_rotor_small", 9, "neon_mid_capaldi" },
-            { "default_rotor_small", 10, "neon_in_capaldi" },
+            { "default_rotor", 4, "neon_mid_capaldi" },
+            { "default_rotor", 5, "neon_in_capaldi" },
+            { "default_transparent", 0, "glass_capaldi" },
+            { "default_transparent", 4, "neon_out_capaldi" },
             { "default_console", 6, "gearsglow_capaldi" },
             { "default_floor", 0, "rails_capaldi" },
             { "default_floor", 4, "floornew_capaldi" },
@@ -843,14 +853,14 @@ T.Interior = {
         console_white = {
             color = Color(255,50,0),
             warn_color = Color(255,143,143),
-            off_color = Color(74,142,187),
-            off_brightness = 0.025,
+            off_color = Color(187,142,74),
+            off_brightness = 0.1,
             warn_brightness = 0.25,
         },
         console_bottom = {
             color = Color(255, 50, 0),
             warn_color = Color(255, 50, 0),
-            nopower = false,
+            off_color = Color(255, 50, 0),
         },
     },
 }
@@ -872,26 +882,6 @@ T.CustomHooks = {
             if CLIENT then return end
             int:ApplyTextureSet("normal")
         end,
-    },
-    capaldi_power = {
-        exthooks = {
-            ["PowerToggled"] = true,
-        },
-        func = function(ext, int, on)
-            if CLIENT or not IsValid(int) then return end
-            local rotor = int:GetPart("default_rotor")
-            if on then
-                if IsValid(rotor) then
-                    rotor:SetBodygroup(1, 3) -- Base
-                    rotor:SetBodygroup(2, 3) -- Neon
-                end
-            else
-                if IsValid(rotor) then
-                    rotor:SetBodygroup(1, 2) -- Base
-                    rotor:SetBodygroup(2, 5) -- Neon
-                end
-            end
-        end
     }
 }
 
