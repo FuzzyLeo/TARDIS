@@ -29,7 +29,7 @@ function ENT:NotifyEvent(event)
 end
 
 if SERVER then
-    ENT:AddHook("Initialize", "halloween", function(self)
+    ENT:AddHook("PreMetadataInitialize", "halloween", function(self)
         local event = TARDIS:GetCurrentEvent(self)
         self:SetData("event", event, true)
         if event == TARDIS_EVENTS_APRIL_FOOLS then
