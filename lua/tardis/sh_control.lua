@@ -35,9 +35,9 @@ function TARDIS:GetControlMoves()
 end
 
 function TARDIS:CallControlMove(ent, hook, ...)
-    if not controlling_via_part and control_moves[hook] then
+    if control_moves[hook] then
         for id, func in pairs(control_moves[hook]) do
-            if ent.controlparts and ent.controlparts[id] then
+            if ent.controlparts and ent.controlparts[id] and not ent.controlpartsactive[id] then
                 for _, part in pairs(ent.controlparts[id]) do
                     if not part.NoAutoMove and (func == true or func(ent, part, ...)) then
                         TARDIS:TogglePart(part)
@@ -79,22 +79,35 @@ function TARDIS:Control(control_id, ply, part)
             return
         end
         if IsValid(part) then
-            controlling_via_part = true
+            if not ext.controlpartsactive then
+                ext.controlpartsactive = {}
+            end
+            if IsValid(int) and not int.controlpartsactive then
+                int.controlpartsactive = ext.controlpartsactive
+            end
+            ext.controlpartsactive[control_id] = part
         end
-        local res_ext, res_int
+        local async_complete = function(ent)
+            if ent.controlpartsactive then
+                ent.controlpartsactive[control_id] = false
+            end
+        end
+        local use_async_ext, use_async_int
         local cl_serv_ok = (CLIENT and not control.serveronly) or (SERVER and not control.clientonly)
         if cl_serv_ok and control.ext_func then
-            res_ext = control.ext_func(ext, ply, part)
+            use_async_ext = control.ext_func(ext, ply, part, async_complete)
         end
         if cl_serv_ok and control.int_func and IsValid(int) then
-            res_int = control.int_func(int, ply, part)
+            use_async_int = control.int_func(int, ply, part, async_complete)
         end
-        if CLIENT and (res_ext ~= false) and (res_int ~= false) and (not control.clientonly) then
+        if CLIENT and not control.clientonly then
             net.Start("TARDIS-Control")
                 net.WriteString(control_id)
             net.SendToServer()
         end
-        controlling_via_part = false
+        if not use_async_ext and not use_async_int then
+            ext.controlpartsactive[control_id] = false
+        end
         ext:CallCommonHook("TardisControlUsed", control_id, ply, part)
     end
 end

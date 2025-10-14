@@ -2,7 +2,8 @@ TARDIS:AddControl({
     id = "teleport_double",
     ext_func=function(self,ply,part)
         if not IsValid(part) then
-            return TARDIS:Control("teleport", ply, nil)
+            TARDIS:Control("teleport", ply, nil)
+            return
         end
 
         local on = part:GetOn()
