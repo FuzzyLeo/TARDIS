@@ -37,7 +37,7 @@ end
 function TARDIS:CallControlMove(ent, hook, ...)
     if control_moves[hook] then
         for id, func in pairs(control_moves[hook]) do
-            if ent.controlparts and ent.controlparts[id] and not ent.controlpartsactive[id] then
+            if ent.controlparts and ent.controlparts[id] and ent.controlpartsactive and not ent.controlpartsactive[id] then
                 for _, part in pairs(ent.controlparts[id]) do
                     if not part.NoAutoMove and (func == true or func(ent, part, ...)) then
                         TARDIS:TogglePart(part)
