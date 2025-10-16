@@ -117,7 +117,7 @@ else
         if self.ExteriorPart then
             local animtime = self.exterior.metadata.Exterior.DoorAnimationTime
             local lockeddoor = self.exterior.metadata.Exterior.LockedDoor
-            if self:GetData("locked") and lockeddoor.AnimEnabled then
+            if lockeddoor.AnimEnabled and (self:GetData("locked") or self.LockedAnim) then
                 if self.LockedAnim then
                     if self.DoorPos>=lockeddoor.AnimPos then
                         self.LockedAnim=false
