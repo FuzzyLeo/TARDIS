@@ -80,14 +80,7 @@ if CLIENT then
 
     function TARDIS:NotifyEvent(event)
         if not event then event = self:GetCurrentEvent() end
-        local lastnotified = self:GetSetting("events_lastnotified")
-        local year = tonumber(os.date("%Y"))
-        if lastnotified and lastnotified.year == year and lastnotified.event == event then return end
         self:Message(LocalPlayer(), "Events.NotifyEvent", TARDIS:GetEventName(event), "Settings.Sections.Misc")
-        self:SetSetting("events_lastnotified", {
-            year = year,
-            event = event
-        })
     end
 
     hook.Add("TARDIS_SettingChanged", "TARDIS_EventsSettingChanged", function(id, value, old_value, ply)

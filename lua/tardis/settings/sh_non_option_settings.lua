@@ -54,14 +54,3 @@ TARDIS:AddSetting({
 
     option = false,
 })
-
--- Last notified about event
-TARDIS:AddSetting({
-    id="events_lastnotified",
-    type="table",
-    value={},
-
-    class="local",
-
-    option = false,
-})
