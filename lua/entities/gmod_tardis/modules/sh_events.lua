@@ -42,6 +42,8 @@ if SERVER then
     end)
 else
     ENT:OnMessage("events-notify", function(self, data, ply)
+        if self:GetData("events-notified", false) then return end
         self:NotifyEvent(data[1])
+        self:SetData("events-notified", true)
     end)
 end
