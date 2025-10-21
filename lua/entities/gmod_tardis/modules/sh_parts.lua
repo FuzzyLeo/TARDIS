@@ -18,13 +18,35 @@ function ENT:GetParts()
     return self.parts
 end
 
-function ENT:SetPartInvisible(id, invisible)
-    local invisible_parts = self:GetData("invisible_int_parts", {})
-    invisible_parts[id] = invisible or false
-    self:SetData("invisible_int_parts", invisible_parts, true)
-end
+if SERVER then
+    function ENT:SetPartInvisible(id, invisible)
+        local invisible_parts = self:GetData("invisible_int_parts", {})
+        invisible_parts[id] = invisible or false
+        self:SetData("invisible_int_parts", invisible_parts, true)
+        local part = self:GetPart(id)
+        if IsValid(part) then
+            if part.Motion then
+                local phys = part:GetPhysicsObject()
+                if IsValid(phys) then
+                    phys:EnableMotion(not invisible)
+                    if not invisible then
+                        phys:Wake()
+                    end
+                end
+            end
 
-if CLIENT then
+            if part.InvisibleCollision == false then
+                if invisible then
+                    part:SetCollisionGroup(COLLISION_GROUP_IN_VEHICLE)
+                elseif part.Collision then
+                    part:SetCollisionGroup(COLLISION_GROUP_NONE)
+                elseif part.CollisionUse then
+                    part:SetCollisionGroup(COLLISION_GROUP_WORLD)
+                end
+            end
+        end
+    end
+else
     ENT:OnMessage("part_use", function(self,data,ply)
         local part = data[1]
 

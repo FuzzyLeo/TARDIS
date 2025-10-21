@@ -313,6 +313,16 @@ local overrides={
                 end
             end
         end
+
+        if SERVER and self.Motion then
+            if not IsValid(a) or not a:IsPlayer() then return end
+            if self:IsPlayerHolding() then return end
+
+            local phys = self:GetPhysicsObject()
+            if not IsValid(phys) or not phys:IsMoveable() then return end
+
+            a:PickupObject(self)
+        end
         return res
     end, SERVER or CLIENT},
     ["OnRemove"]={function(self,a,...)
@@ -429,12 +439,15 @@ local function AutoSetup(self,e,id)
     e.phys = e:GetPhysicsObject()
     if (e.phys:IsValid()) then
         e.phys:EnableMotion(e.Motion or false)
+        if e.Motion then
+            e.phys:Wake()
+        end
     end
     if not e.Collision then
         if e.CollisionUse == false then
-            e:SetCollisionGroup( COLLISION_GROUP_IN_VEHICLE )
+            e:SetCollisionGroup(COLLISION_GROUP_IN_VEHICLE)
         else
-            e:SetCollisionGroup( COLLISION_GROUP_WORLD ) -- Still works with USE, TODO: Find better way if possible (for performance reasons)
+            e:SetCollisionGroup(COLLISION_GROUP_WORLD)
         end
     end
     if e.AutoPosition ~= false then
@@ -449,6 +462,9 @@ local function AutoSetup(self,e,id)
     end
     if e.NoShadow then
         e:DrawShadow(false)
+    end
+    if e.Invisible or e.invisible then
+        e:SetInvisible(true)
     end
 end
 
@@ -527,13 +543,13 @@ if SERVER then
             if e.enabled==false then
                 e:Remove()
             else
+                ent.parts[k]=e
                 if e.AutoSetup then
                     AutoSetup(ent,e,k)
                 end
                 e:Spawn()
                 e:Activate()
                 ent:DeleteOnRemove(e)
-                ent.parts[k]=e
             end
         end
     end
