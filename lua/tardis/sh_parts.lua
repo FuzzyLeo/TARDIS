@@ -47,7 +47,7 @@ end
 
 function TARDIS.DrawOverride(self,override)
     if self.NoDraw then return end
-    if self:IsInvisible() then return end
+    if self:IsInvisible() and not (self.alpha and self.alpha > 0) then return end
 
     local int=self.interior
     local ext=self.exterior
@@ -66,7 +66,18 @@ function TARDIS.DrawOverride(self,override)
                 self.o.Draw(self)
                 render.SetBlend(1)
             else
+                if self.alpha and self.alpha < 1 then
+                    if self.alpha > 0 then
+                        render.OverrideColorWriteEnable(true, false)
+                        self.o.Draw(self)
+                        render.OverrideColorWriteEnable(false, false)
+                    end
+                    render.SetBlend(self.alpha)
+                end
                 self.o.Draw(self)
+                if self.alpha and self.alpha < 1 then
+                    render.SetBlend(1)
+                end
             end
             if self.PostDraw then self:PostDraw() end
             self.parent:CallHook("PostDrawPart",self)
@@ -222,6 +233,11 @@ local overrides={
                         self.extra_animations[k] = TARDIS.InitAnimation(self, v)
                     end
                 end
+
+                if self.InvisibleFade then
+                    self.lastinvisible = self:IsInvisible()
+                    self.alpha = 1
+                end
             end
             net.Start("TARDIS-SetupPart")
                 net.WriteEntity(self)
@@ -263,6 +279,20 @@ local overrides={
                         for k,v in pairs(self.extra_animations) do
                             TARDIS.ProcessAnimation(self, v)
                         end
+                    end
+                end
+
+                if self.InvisibleFade then
+                    local invisible,nofade = self:IsInvisible()
+                    if invisible ~= self.lastinvisible then
+                        self.lastinvisible = invisible
+                        self.invisibletarget = invisible and 0 or 1
+                        if nofade then
+                            self.alpha = self.invisibletarget
+                        end
+                    end
+                    if self.alpha ~= self.invisibletarget then
+                        self.alpha = math.Approach(self.alpha or 1, self.invisibletarget, FrameTime() * (self.FadeSpeed or 1))
                     end
                 end
                 return self.o.Think(self)
@@ -448,6 +478,9 @@ local function AutoSetup(self,e,id)
     if e.invisible then
         e.Invisible = e.invisible
     end
+    if e.invisiblefade then
+        e.InvisibleFade = e.invisiblefade
+    end
 
     e:SetModel(e.Model)
     e:PhysicsInit( SOLID_VPHYSICS )
@@ -483,7 +516,7 @@ local function AutoSetup(self,e,id)
         e:DrawShadow(false)
     end
     if e.Invisible then
-        e:SetInvisible(true)
+        e:SetInvisible(true, true)
     end
 end
 

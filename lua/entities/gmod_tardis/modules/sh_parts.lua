@@ -19,9 +19,12 @@ function ENT:GetParts()
 end
 
 if SERVER then
-    function ENT:SetPartInvisible(id, invisible)
+    function ENT:SetPartInvisible(id, invisible, nofade)
         local invisible_parts = self:GetData("invisible_int_parts", {})
-        invisible_parts[id] = invisible or false
+        invisible_parts[id] = {
+            invisible = invisible or false,
+            nofade = nofade or false
+        }
         self:SetData("invisible_int_parts", invisible_parts, true)
         local part = self:GetPart(id)
         if IsValid(part) then
