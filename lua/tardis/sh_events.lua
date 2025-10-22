@@ -21,9 +21,9 @@ function TARDIS:GetCurrentEvent(ent, autoonly)
     local event
     if month == 4 and day == 1 then
         event = TARDIS_EVENTS_APRIL_FOOLS
-    elseif month == 10 and day >= 29 and day <= 31 then
+    elseif month == 10 and day >= 24 and day <= 31 then
         event = TARDIS_EVENTS_HALLOWEEN
-    elseif month == 12 and day >= 21 and day <= 31 then
+    elseif month == 12 and day >= 17 and day <= 31 then
         event = TARDIS_EVENTS_CHRISTMAS
     end
 
