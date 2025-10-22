@@ -433,6 +433,9 @@ local function AutoSetup(self,e,id)
     if e.model then
         e.Model = e.model
     end
+    if e.motion then
+        e.Motion = e.motion
+    end
     if e.pos then
         e.Pos = e.pos
     end
