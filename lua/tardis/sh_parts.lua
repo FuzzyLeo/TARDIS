@@ -339,7 +339,7 @@ local overrides={
                     blockuse=true
                 end
 
-                if SERVER and IsValid(a) and a:IsPlayer() and self.Motion then
+                if SERVER and self.Motion and IsValid(a) and a:IsPlayer() and (self.parent:CheckSecurity(a) or self.BypassIsomorphic) then
                     local phys = self:GetPhysicsObject()
                     local walk = a:KeyDown(IN_WALK)
                     if walk and self.StartFrozen and IsValid(phys) and not phys:IsMoveable() and not self.unfrozen then
@@ -348,7 +348,7 @@ local overrides={
                         TARDIS:Message(a, "Parts.Moveable.Unfreeze")
                         blockuse=true
                         self.unfrozen=true
-                    elseif walk and self.ResetPositionUse then
+                    elseif walk and self.ResetPositionOnUse then
                         self:SetPos(self.init_pos)
                         self:SetAngles(self.init_ang)
                         if self.StartFrozen and IsValid(phys) then
@@ -385,7 +385,7 @@ local overrides={
         end
 
         if SERVER and self.Motion and IsValid(a) and a:IsPlayer()
-            and not (self.ResetPositionUse and a:KeyDown(IN_WALK))
+            and not (self.ResetPositionOnUse and a:KeyDown(IN_WALK))
             and not self:IsPlayerHolding() then
 
             local phys = self:GetPhysicsObject()
@@ -524,8 +524,8 @@ local function AutoSetup(self,e,id)
     if e.fadespeed then
         e.FadeSpeed = e.fadespeed
     end
-    if e.resetpositionuse then
-        e.ResetPositionUse = e.resetpositionuse
+    if e.resetpositiononuse then
+        e.ResetPositionOnUse = e.resetpositiononuse
     end
     if e.startfrozen then
         e.StartFrozen = e.startfrozen
