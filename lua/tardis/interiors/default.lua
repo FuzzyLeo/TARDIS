@@ -624,6 +624,7 @@ T.CustomHooks = {
         },
         func = function(ext, int)
             if CLIENT then return end
+            if ext.metadata.EnableClassicDoors then return end
             local setting_val = TARDIS:GetCustomSetting(ext.metadata.ID, "exterior_textures", ext)
             if setting_val == "capaldi" then
                 ext:ApplyTextureSet("exttextures_capaldi")
@@ -949,7 +950,6 @@ T.Templates = {
     default_exterior = false,
     exterior_ttcapsule_type50 = {override = true,}
 }
-
 
 T.CustomHooks = {
     doorframe_init = {
