@@ -40,8 +40,7 @@ function ENT:MakeVehicle( Pos, Ang, Model, Class, VName, VTable )
 
     ent.TardisPart=true
     ent:GetPhysicsObject():EnableMotion(false)
-    ent:SetRenderMode(RENDERMODE_TRANSALPHA)
-    ent:SetColor(Color(255,255,255,0))
+    ent:SetNoDraw(true)
     self:DeleteOnRemove(ent)
 
     constraint.Weld(self,ent,0,0)
@@ -55,3 +54,14 @@ function ENT:MakeVehicle( Pos, Ang, Model, Class, VName, VTable )
 
     return ent
 end
+
+ENT:AddHook("PreOnRemove","seats",function(self)
+    if self.seats then
+        for k,_ in pairs(self.occupants) do
+            local veh = k:GetVehicle()
+            if IsValid(veh) and veh.TardisPart then
+                k:ExitVehicle()
+            end
+        end
+    end
+end)

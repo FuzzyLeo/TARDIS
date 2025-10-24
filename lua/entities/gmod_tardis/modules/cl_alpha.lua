@@ -4,12 +4,12 @@ local use_enhanced_fade_cache = {}
 
 function ENT:GetAlpha()
     local alpha = self:GetData("alpha",255)/255
-    if self:GetData("vortexalpha",0)>alpha and TARDIS:GetExteriorEnt()==self then
+    if self:GetData("vortexalpha",0)>alpha and TARDIS:GetExteriorEnt()==self and LocalPlayer():GetTardisData("outside") then
         return self:GetData("vortexalpha",0),true
     end
     if self:GetData("vortex") then
         return 0
-    elseif self:GetData("teleport") then
+    elseif self:GetData("teleport") or self:GetData("teleport-interrupt-fade") then
         return alpha
     elseif self:GetData("teleport-trace") or self:GetData("tracking-trace") then
         return 20/255
@@ -20,6 +20,9 @@ end
 local function shouldapply(self,part)
     local target,override = self:GetAlpha()
     if (target ~= 1 or override) and ((not part) or (part and (not part.CustomAlpha))) then
+        if use_enhanced_fade_cache[self:EntIndex()] then
+            target = (2 * target * target) / (1 + target * target)
+        end
         return target
     end
 end
@@ -68,10 +71,42 @@ local function dopostdraw(self,part)
     end
 end
 
+ENT:AddHook("AlphaTranslucentChanged", "enhanced_fade_cache", function(self,transparent)
+    if transparent then
+        use_enhanced_fade_cache[self:EntIndex()] = shouldUseEnhancedFade(self)
+    end
+end)
+
+ENT:AddHook("AlphaTranslucentChanged", "rendergroup", function(self,transparent)
+    local rendergroup
+    if transparent then
+        rendergroup = RENDERGROUP_TRANSLUCENT
+        rendermode = RENDERMODE_TRANSALPHA
+    else
+        rendergroup = RENDERGROUP_OPAQUE
+        rendermode = RENDERMODE_NORMAL
+    end
+    self.RenderGroup = rendergroup
+    self:SetRenderMode(rendermode)
+    for k,v in pairs(self.parts) do
+        if v.ExteriorPart then
+            v.RenderGroup = rendergroup
+            v:SetRenderMode(rendermode)
+        end
+    end
+end)
+
 ENT:AddHook("Think", "enhanced_fade_cache", function(self)
     local alpha = self:GetAlpha()
-    if alpha > 0 and alpha < 1 then
-        use_enhanced_fade_cache[self:EntIndex()] = shouldUseEnhancedFade(self)
+    local alpha_translucent = self:GetData("alpha_translucent", false)
+    if alpha < 1 then
+        if alpha_translucent ~= true then
+            self:SetData("alpha_translucent", true)
+            self:CallHook("AlphaTranslucentChanged", true)
+        end
+    elseif alpha_translucent then
+        self:SetData("alpha_translucent", false)
+        self:CallHook("AlphaTranslucentChanged", false)
     end
 end)
 

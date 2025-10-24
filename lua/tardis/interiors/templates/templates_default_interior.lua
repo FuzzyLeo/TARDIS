@@ -10,6 +10,8 @@ TARDIS:AddInteriorTemplate("default_lamps", {
                 default_corridors = 0.05,
                 default_intdoors = 0.05,
                 default_intdoors_static = 0.05,
+                default_corridor_doors_1 = 0.05,
+                default_corridor_doors_2 = 0.05,
                 default_corridor_doors_static = 0.05,
             },
             parts_nopower = {
@@ -255,14 +257,12 @@ TARDIS:AddInteriorTemplate("default_small_version", {
         },
 
         Parts = {
-            default_rotor = false,
-            default_rotor_small = {
-                pos = Vector(0, 0, -0.07),
-            },
             default_intdoors = false,
             default_intdoors_static = { pos = Vector(73.559, -417.853, 47.506), ang = Angle(0,10,0), },
             default_corridor_doors_static = { pos = Vector(-475.5, 213, 160.8) },
             default_corridors = false,
+            default_corridor_doors_1 = false,
+            default_corridor_doors_2 = false,
             default_corridors_small = { ang = Angle(0,90,0) },
         },
     },
@@ -272,6 +272,24 @@ TARDIS:AddInteriorTemplate("default_small_version_lamp_fix", {
     Interior = {
         Size = {
             Max = Vector(484.983, 514.944, 800)
+        },
+    },
+})
+
+TARDIS:AddInteriorTemplate("default_studio_set_ceiling", {
+     CustomHooks = {
+        studio_set_ceiling = {
+            inthooks = {
+                ["Initialize"] = true,
+            },
+            func = function(ext,int,id)
+                if IsValid(int) then
+                    local rotor=int:GetPart("default_rotor")
+                    if IsValid(rotor) then
+                        rotor:SetBodygroup(2, 1) -- Ceiling
+                    end
+                end
+            end,
         },
     },
 })
@@ -359,13 +377,7 @@ TARDIS:AddInteriorTemplate("default_capaldi", {
                 end
                 local rotor = int:GetPart("default_rotor")
                 if IsValid(rotor) then
-                    rotor:SetBodygroup(1, 3) -- Base
-                    rotor:SetBodygroup(2, 3) -- Neon
-                end
-                local rotor_small = int:GetPart("default_rotor_small")
-                if IsValid(rotor_small) then
-                    rotor_small:SetBodygroup(1, 3) -- Base
-                    rotor_small:SetBodygroup(2, 3) -- Neon
+                    rotor:SetBodygroup(0, 2) -- Base
                 end
                 local phone = int:GetPart("default_phone")
                 if IsValid(phone) then

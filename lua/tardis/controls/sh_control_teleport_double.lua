@@ -2,15 +2,18 @@ TARDIS:AddControl({
     id = "teleport_double",
     ext_func=function(self,ply,part)
         if not IsValid(part) then
-            return TARDIS:Control("teleport", ply, nil)
+            TARDIS:Control("teleport", ply, nil)
+            return
         end
 
         local on = part:GetOn()
         local tp = self:GetData("teleport")
         local vx = self:GetData("vortex")
 
-        if (tp and on) or (vx and on) or (not on and not tp and not vx) then
+        if (vx and on) or (not on and not tp and not vx) then
             TARDIS:Control("teleport", ply, part)
+        elseif tp and (not vx) and on then
+            self:InterruptTeleport()
         end
 
         if on then

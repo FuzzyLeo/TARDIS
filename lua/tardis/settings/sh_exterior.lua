@@ -158,6 +158,18 @@ TARDIS:AddSetting({
     name="RotorwashEnabled",
 })
 
+TARDIS:AddSetting({
+    id="extsmoke-enabled",
+    type="bool",
+    value=true,
+
+    class="networked",
+
+    option=true,
+    section=SETTING_SECTION,
+    subsection="Effects",
+    name="SmokeEnabled",
+})
 
 --------------------------------------------------------------------------------
 -- Rendering
@@ -165,7 +177,7 @@ TARDIS:AddSetting({
 TARDIS:AddSetting({
     id="enhanced-fading-enabled",
     type="bool",
-    value=false,
+    value=true,
 
     class="local",
 

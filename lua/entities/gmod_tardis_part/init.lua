@@ -18,18 +18,7 @@ function ENT:SetCollide(collide, notrace)
     end
 end
 
--- this is deprecated; it's better to use ENT:SetInvisible()
--- some extensions still use color-based part invisibility, so we should not change this
+-- Deprecated: Use ENT:SetInvisible() instead
 function ENT:SetVisible(visible)
-    if visible then
-        if self.pre_invis_color then
-            self:SetColor(self.pre_invis_color)
-            self.pre_invis_color = nil
-        else
-            self:SetColor(Color(255,255,255,255))
-        end
-    else
-        self.pre_invis_color = (self:GetColor().a ~= 0) and self:GetColor()
-        self:SetColor(Color(0,0,0,0))
-    end
+    return not self:SetInvisible(not visible)
 end

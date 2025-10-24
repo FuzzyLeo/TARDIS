@@ -4,6 +4,7 @@ TARDIS:AddSetting({
     id="notification_type",
     type="list",
     value=3,
+    sort=false,
     get_values_func = function()
         local prefix = "Settings.Sections.Misc.NotificationType.Types."
         return {
@@ -19,6 +20,40 @@ TARDIS:AddSetting({
     option=true,
     section=SETTING_SECTION,
     name="NotificationType",
+})
+
+TARDIS:AddSetting({
+    id="events",
+    type="list",
+    value=1,
+    sort=false,
+    get_values_func = function()
+        local event = TARDIS:GetPhrase("Events.Event.Lower")
+        return {
+            { "Common.Disabled", TARDIS_EVENTS_DISABLED },
+            { "Common.Automatic", TARDIS_EVENTS_AUTO },
+            { TARDIS:GetEventName(TARDIS_EVENTS_APRIL_FOOLS) .. " " .. event, TARDIS_EVENTS_APRIL_FOOLS },
+            { TARDIS:GetEventName(TARDIS_EVENTS_HALLOWEEN) .. " " .. event, TARDIS_EVENTS_HALLOWEEN },
+            { TARDIS:GetEventName(TARDIS_EVENTS_CHRISTMAS) .. " " .. event, TARDIS_EVENTS_CHRISTMAS },
+        }
+    end,
+
+    class="networked",
+
+    option=true,
+    section=SETTING_SECTION,
+    name="Events",
+})
+
+TARDIS:AddButtonOption({
+    id="events_skip",
+
+    func=function(self)
+        self:SkipEvent()
+    end,
+
+    section=SETTING_SECTION,
+    name="Events.SkipCurrent",
 })
 
 TARDIS:AddSetting({
@@ -54,7 +89,7 @@ TARDIS:AddSetting({
 
     option=true,
     section=SETTING_SECTION,
-    name="IsomorphicSecurityDefault",
+    name="EnableIsomorphicSecurityDefault",
 })
 
 TARDIS:AddSetting({
@@ -306,6 +341,19 @@ TARDIS:AddSetting({
     section=SETTING_SECTION,
     subsection="Spawning",
     name="LegacyDoorType",
+})
+
+TARDIS:AddSetting({
+    id="use_enhanced_door_collision",
+    type="bool",
+    value=false,
+
+    class="networked",
+
+    option=true,
+    section=SETTING_SECTION,
+    subsection="Spawning",
+    name="UseEnhancedDoorCollision",
 })
 
 --------------------------------------------------------------------------------

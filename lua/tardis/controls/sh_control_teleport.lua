@@ -1,6 +1,6 @@
 TARDIS:AddControl({
     id = "teleport",
-    ext_func=function(self,ply)
+    ext_func=function(self,ply,part,complete)
         if (self:GetData("teleport") or self:GetData("vortex")) then
             self:Mat(function(result)
                 if result then
@@ -8,6 +8,7 @@ TARDIS:AddControl({
                 else
                     TARDIS:ErrorMessage(ply, "Controls.Teleport.FailedMat")
                 end
+                complete(self)
             end)
         else
             self:Demat(nil, nil, function(result)
@@ -22,8 +23,10 @@ TARDIS:AddControl({
                         TARDIS:ErrorMessage(ply, "Controls.Teleport.FailedDemat")
                     end
                 end
+                complete(self)
             end)
         end
+        return true
     end,
     serveronly=true,
     power_independent = false,

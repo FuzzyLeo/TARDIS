@@ -121,6 +121,10 @@ function TARDIS:CreateOptionInterface(id, data)
 
         elem2 = vgui.Create("DComboBox")
 
+        if data.sort ~= nil then
+            elem2:SetSortItems(data.sort)
+        end
+
         if data.get_values_func ~= nil then
             for k,v in pairs(data.get_values_func()) do
                 elem2:AddChoice(TARDIS:GetPhrase(v[1]), v[2])
@@ -146,8 +150,15 @@ function TARDIS:CreateOptionInterface(id, data)
             elem2:SetText(elem2:GetOptionTextByData(setting))
         end
 
-
-
+    elseif data.type=="button" then
+        elem = vgui.Create("DButton")
+        elem:SetText(text)
+        elem.DoClick = function(self)
+            if data.func then
+                data.func(TARDIS)
+            end
+        end
+        elem.RefreshVal = function(self) end
     else
         elem = vgui.Create("DLabel")
     end

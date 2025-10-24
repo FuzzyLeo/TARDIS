@@ -3,7 +3,9 @@
 	"$basetexture" "models/vtalanov98/toyota_ext/windows3"
 	"$bumpmap" "models/vtalanov98/toyota_ext/windowsn"
 	"$envmap" "models/vtalanov98/toyota_ext/environment"
-	"$envmaptint" "[0.7 0.7 0.7]"
+	"$envmaptint_default" "[0.7 0.7 0.7]"
+	"$envmaptint_color" "[0.7 0.7 0.7]"
+	"$envmaptint_mult" "0.7"
 	"$nodecal" "1"
 	"$normalmap" "models/vtalanov98/toyota_ext/windowsn"
 	"$selfillum" "1"
@@ -16,4 +18,17 @@
 	$phongexponent 60
 	$phongboost .1
 	$phongfresnelranges "[1 1 1]"
+
+	"Proxies"
+	{
+		"TARDIS_ExteriorWindowLight" {
+			"defaultColor" "$envmaptint_default"
+			"resultVar" "$envmaptint_color"
+		}
+		"Multiply" {
+			"srcVar1" "$envmaptint_color"
+			"srcVar2" "$envmaptint_mult"
+			"resultVar" "$envmaptint"
+		}
+	}
 }

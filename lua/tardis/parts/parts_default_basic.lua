@@ -168,8 +168,13 @@ end
 
 TARDIS:AddPart(PART)
 
-PART.Model = "models/molda/toyota_int/slidedoors3.mdl"
-PART.ID = "default_corridor_doors"
+PART.Model = "models/molda/toyota_int/slidedoors2.mdl"
+PART.ID = "default_corridor_doors_1"
+PART.ShouldTakeDamage = true
+TARDIS:AddPart(PART)
+
+PART.Model = "models/molda/toyota_int/slidedoors2.mdl"
+PART.ID = "default_corridor_doors_2"
 PART.ShouldTakeDamage = true
 TARDIS:AddPart(PART)
 
@@ -205,7 +210,6 @@ PART.ID = "default_rotor"
 PART.Model = "models/molda/toyota_int/rotor.mdl"
 PART.AutoSetup = true
 PART.Collision = true
-PART.UseTransparencyFix = true
 PART.ClientThinkOverride = true
 PART.ShouldTakeDamage = true
 PART.Animate = true
@@ -230,8 +234,9 @@ PART.ExtraAnimations = {
 
 TARDIS:AddPart(PART)
 
-PART.ID = "default_rotor_small"
-PART.Model = "models/molda/toyota_int/rotor_small.mdl"
+PART.ID = "default_transparent"
+PART.Model = "models/molda/toyota_int/transparent.mdl"
+PART.Translucent = true
 
 TARDIS:AddPart(PART)
 

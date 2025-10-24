@@ -294,6 +294,15 @@ if SERVER then
         return false
     end
 
+    ENT:AddHook("Initialize", "destination", function(self)
+        local skycam = ents.FindByClass("sky_camera")[1]
+        if IsValid(skycam) then
+            self:SetData("skycampos", skycam:GetPos(), true)
+        else
+            self:SetData("skycampos", nil, true)
+        end
+    end)
+
     ENT:AddHook("Outside", "destination", function(self, ply, enabled)
         if not enabled then
             ply:SetTardisData("destination", enabled, true)
@@ -820,10 +829,6 @@ function ENT:GetGroundedPos(point, get_angle)
     return pos, initial_yaw
 end
 
-function ENT:CanFit(point)
-    return not util.TraceEntity({start = point, endpos = point}, self).Hit
-end
-
 local function IsTraceBelowWorld(trace_result)
     if trace_result.HitPos.z < -16384 then
         return true
@@ -849,6 +854,26 @@ function ENT:FindPosInBox(p1, p2)
         return
     end
 
+    local td = {}
+    local tdret = {}
+    td.output = tdret
+    local td3d = {}
+    local td3dret = {}
+    td3d.output = td3dret
+    td3d.mask = MASK_NPCWORLDSTATIC
+    -- skycampos has to be networked as it is inaccessible clientside
+    local skycampos = self:GetData("skycampos")
+    local isskycam = (skycampos ~= nil)
+    if isskycam then
+        td3d.endpos = skycampos
+    end
+    local td3dtop = {}
+    local td3dtopret = {}
+    td3dtop.output = td3dtopret
+    td3dtop.mask = MASK_NPCWORLDSTATIC
+
+    local inskybox = false
+
     while tries > 0 do
         tries = tries - 1
 
@@ -858,7 +883,19 @@ function ENT:FindPosInBox(p1, p2)
 
         point=Vector(x,y,z)
 
-        if self:CanFit(point) and not IsTraceBelowWorld(self:DestinationTraceDown(point, -50)) then
+        td.start = point
+        td.endpos = point
+
+        if isskycam then
+            td3dtop.start = point
+            td3dtop.endpos = point + Vector(0,0,16384)
+            td3d.start = util.TraceLine(td3dtop).HitPos or point
+            inskybox = not util.TraceLine(td3d).Hit
+        end
+
+        if (not util.TraceEntity(td, self).Hit) -- space is free
+            and (not inskybox)
+            and (not IsTraceBelowWorld(self:DestinationTraceDown(point, -50))) then
             return point
         end
     end

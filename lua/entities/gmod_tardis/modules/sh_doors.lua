@@ -226,33 +226,52 @@ if SERVER then
         end
     end)
 
+    local function isbodygroupvalid(ent, bodygroup)
+        local bodygroups = ent:GetBodyGroups()
+        for k, v in ipairs(bodygroups) do
+            if v.id == bodygroup then
+                return true
+            end
+        end
+        return false
+    end
+
     ENT:AddHook("BodygroupChanged","doors",function(self,bodygroup,value)
         if not self.metadata.SyncExteriorBodygroupToDoors then return end
-        if self:IsChameleonActive() then return end
 
         local door=TARDIS:GetPart(self,"door")
-        local intdoor=TARDIS:GetPart(self.interior,"door")
-
-        if IsValid(door) and door:GetBodygroup(bodygroup) ~= value then
+        
+        if IsValid(door) and isbodygroupvalid(door, bodygroup) and door:GetBodygroup(bodygroup) ~= value then
             door:SetBodygroup(bodygroup,value)
         end
-
-        if IsValid(intdoor)  and door:GetBodygroup(bodygroup) ~= value then
+        
+        if self:IsChameleonActive() then return end
+        
+        local intdoor=TARDIS:GetPart(self.interior,"door")
+        if IsValid(intdoor) and isbodygroupvalid(intdoor, bodygroup) and intdoor:GetBodygroup(bodygroup) ~= value then
             intdoor:SetBodygroup(bodygroup,value)
         end
     end)
 
     ENT:AddHook("PartBodygroupChanged", "doors", function(self, part, bodygroup, value)
-        if not self.metadata.SyncDoorBodygroups then return end
-        if self:IsChameleonActive() then return end
-
         if not IsValid(part) or part ~= self:GetPart("door") then return end
-        if not IsValid(self.interior) then return end
-        local door_int = self.interior:GetPart("door")
-        if not IsValid(door_int) then return end
 
-        if door_int:GetBodygroup(bodygroup) ~= value then
-            door_int:SetBodygroup(bodygroup, value)
+        if self.metadata.SyncExteriorBodygroupToDoors then
+            if isbodygroupvalid(self, bodygroup) and self:GetBodygroup(bodygroup) ~= value then
+                self:SetBodygroup(bodygroup, value)
+            end
+        end
+        
+        if self.metadata.SyncDoorBodygroups then
+            if self:IsChameleonActive() then return end
+
+            if not IsValid(self.interior) then return end
+            local door_int = self.interior:GetPart("door")
+            if not IsValid(door_int) then return end
+
+            if isbodygroupvalid(door_int, bodygroup) and door_int:GetBodygroup(bodygroup) ~= value then
+                door_int:SetBodygroup(bodygroup, value)
+            end
         end
     end)
 
@@ -273,7 +292,7 @@ else
 
     function ENT:DoorOpen(real)
         local door=self:GetPart("door")
-        if real and IsValid(door) then
+        if real and IsValid(door) and not self:Locked() then
             return door.DoorPos ~= 0
         else
             return self:GetData("doorstate",false)

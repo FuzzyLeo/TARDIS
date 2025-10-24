@@ -1,0 +1,27 @@
+"VertexlitGeneric"
+{
+	"$basetexture" "models/vtalanov98/toyota_ext/windows4"
+	"$bumpmap" "models/vtalanov98/toyota_ext/windowsn"
+	"$envmap" "models/vtalanov98/toyota_ext/environment"
+	"$envmaptint_default" "[0.01 0.01 0.01]"
+	"$envmaptint_color" "[0.01 0.01 0.01]"
+	"$envmaptint_mult" "0.15"
+	"$nodecal" "0"
+	"$normalmap" "models/vtalanov98/toyota_ext/windowsn"
+	"$selfillum" "0"
+	"$selfillummask" "models/vtalanov98/toyota_ext/white"
+	"$surfaceprop" "Glass"
+
+	"Proxies"
+	{
+		"TARDIS_ExteriorWindowLight" {
+			"defaultColor" "$envmaptint_default"
+			"resultVar" "$envmaptint_color"
+		}
+		"Multiply" {
+			"srcVar1" "$envmaptint_color"
+			"srcVar2" "$envmaptint_mult"
+			"resultVar" "$envmaptint"
+		}
+	}
+}

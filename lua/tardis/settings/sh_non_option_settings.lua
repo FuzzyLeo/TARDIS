@@ -43,3 +43,14 @@ TARDIS:AddSetting({
 
     option = false,
 })
+
+-- Skip event
+TARDIS:AddSetting({
+    id="events_skipped",
+    type="table",
+    value={},
+
+    class="networked",
+
+    option = false,
+})

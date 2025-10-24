@@ -12,7 +12,7 @@
 	$rotor_mult "1"
 	$rotor_color "[1 1 1]"
 	$rotor "[1 1 1]"
-	$rotor_nopower "[0 0 0]"
+	$rotor_nopower "[0.5 0.2 0]"
 	Proxies {
 		TARDIS_DefaultInt_RotorInColor {
 			resultVar	$rotor_color

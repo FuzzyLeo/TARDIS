@@ -19,6 +19,7 @@ if SERVER then
         self:FlashLight(0.6)
         if not silent then self:SendMessage("locksound", {locked}) end
         self:CallHook("DoorLockToggled", locked)
+        self:CallClientHook("DoorLockToggled", locked)
         if callback then callback(true) end
     end
 
@@ -65,6 +66,7 @@ if SERVER then
         if self:GetData("locked") and IsValid(a) and a:IsPlayer() then
             if self:CallHook("LockedUse",a,c)==nil then
                 TARDIS:Message(a, "Lock.Locked")
+                self.exterior:SendMessage("lockattempted", {a})
             end
             self:EmitSound(self.metadata.Exterior.Sounds.Door.locked)
         end
@@ -114,6 +116,21 @@ else
             else
                 self.interior:EmitSound(intsoundoff)
             end
+        end
+    end)
+
+    ENT:OnMessage("lockattempted", function(self, data, ply)
+        local door = self:GetPart("door")
+        if IsValid(door) then
+            door.LockedAnim = true
+        end
+    end)
+
+    ENT:AddHook("DoorLockToggled", "lockattempted", function(self, locked)
+        if locked then return end
+        local door = self:GetPart("door")
+        if IsValid(door) then
+            door.LockedAnim = nil
         end
     end)
 end

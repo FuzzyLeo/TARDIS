@@ -9,11 +9,11 @@
 	"$nodecal" "1"
 	"$nocull" "0"
 
-	$rotor_mult "2.5"
+	$rotor_mult "3.5"
 	$rotor_mult_nopower "0.8"
 	$rotor_color "[1 1 1]"
 	$rotor "[1 1 1]"
-	$rotor_nopower "[0 0 0]"
+	$rotor_nopower "[1 0.7 0]"
 	Proxies {
 		TARDIS_DefaultInt_RotorInColor {
 			resultVar	$rotor_color

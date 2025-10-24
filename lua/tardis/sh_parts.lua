@@ -8,6 +8,10 @@ function TARDIS.ShouldDrawInteriorPart(self)
     local int=self.interior
     local ext=self.exterior
 
+    if self.AllowThroughPortals then
+        return true
+    end
+
     if not IsValid(int) then
         return false
     end
@@ -47,7 +51,7 @@ end
 
 function TARDIS.DrawOverride(self,override)
     if self.NoDraw then return end
-    if self:IsInvisible() then return end
+    if self:IsInvisible() and not (self.alpha and self.alpha > 0) then return end
 
     local int=self.interior
     local ext=self.exterior
@@ -66,7 +70,18 @@ function TARDIS.DrawOverride(self,override)
                 self.o.Draw(self)
                 render.SetBlend(1)
             else
+                if self.alpha and self.alpha < 1 then
+                    if self.alpha > 0 then
+                        render.OverrideColorWriteEnable(true, false)
+                        self.o.Draw(self)
+                        render.OverrideColorWriteEnable(false, false)
+                    end
+                    render.SetBlend(self.alpha)
+                end
                 self.o.Draw(self)
+                if self.alpha and self.alpha < 1 then
+                    render.SetBlend(1)
+                end
             end
             if self.PostDraw then self:PostDraw() end
             self.parent:CallHook("PostDrawPart",self)
@@ -182,8 +197,7 @@ function TARDIS.ProcessAnimation(self, a)
             if moving and self.SoundLoop and not self.use_sound then
                 self.use_sound = CreateSound(self, self.SoundLoop)
                 self.use_sound:SetSoundLevel(90)
-                self.use_sound:ChangeVolume(self.SoundLoopVolume or 0.75)
-                self.use_sound:Play()
+                self.use_sound:PlayEx(self.SoundLoopVolume or 0.75, 100)
             elseif self.use_sound and not moved_recently then
                 self.use_sound:Stop()
                 self.use_sound = nil
@@ -223,6 +237,11 @@ local overrides={
                         self.extra_animations[k] = TARDIS.InitAnimation(self, v)
                     end
                 end
+
+                if self.InvisibleFade then
+                    self.lastinvisible = self:IsInvisible()
+                    self.alpha = 1
+                end
             end
             net.Start("TARDIS-SetupPart")
                 net.WriteEntity(self)
@@ -233,6 +252,13 @@ local overrides={
                 return
             end
             self.o.Initialize(self)
+            local col = self:GetColor()
+            if col.a ~= 255 then
+                -- compatibility workaround for older addons that set alpha on init
+                self:SetRenderMode( RENDERMODE_TRANSALPHA )
+            end
+            self.init_pos = self:GetPos()
+            self.init_ang = self:GetAngles()
         end
     end, CLIENT or SERVER},
     ["Think"]={function(self)
@@ -251,7 +277,7 @@ local overrides={
                 return ply_pos:Distance(ext_pos) < close_dist
             end
 
-            if think_ok or self.ExteriorPart or is_visible_through_door() then
+            if think_ok or self.ExteriorPart or self.AllowThroughPortals or is_visible_through_door() then
                 if self.Animate then
                     TARDIS.ProcessAnimation(self, self.animation)
 
@@ -259,6 +285,20 @@ local overrides={
                         for k,v in pairs(self.extra_animations) do
                             TARDIS.ProcessAnimation(self, v)
                         end
+                    end
+                end
+
+                if self.InvisibleFade then
+                    local invisible,nofade = self:IsInvisible()
+                    if invisible ~= self.lastinvisible then
+                        self.lastinvisible = invisible
+                        self.invisibletarget = invisible and 0 or 1
+                        if nofade then
+                            self.alpha = self.invisibletarget
+                        end
+                    end
+                    if self.alpha ~= self.invisibletarget then
+                        self.alpha = math.Approach(self.alpha or 1, self.invisibletarget, FrameTime() * (self.FadeSpeed or 1))
                     end
                 end
                 return self.o.Think(self)
@@ -293,9 +333,47 @@ local overrides={
                 if self.HasUseBasic then
                     self.UseBasic(self,a,...)
                 end
+                local blockuse=false
                 if SERVER and self.Control and (not self.HasUse) then
                     TARDIS:Control(self.Control,a,self)
-                else
+                    blockuse=true
+                end
+
+                if SERVER and self.Motion and IsValid(a) and a:IsPlayer() and (self.parent:CheckSecurity(a) or self.BypassIsomorphic) then
+                    local phys = self:GetPhysicsObject()
+                    local walk = a:KeyDown(IN_WALK)
+                    if walk and self.StartFrozen and IsValid(phys) and not phys:IsMoveable() and not self.unfrozen then
+                        phys:EnableMotion(true)
+                        phys:Wake()
+                        if self.ResetPositionOnUse then
+                            TARDIS:Message(a, "Parts.Moveable.UnfreezeWithResetPositionOnUse")
+                        else
+                            TARDIS:Message(a, "Parts.Moveable.Unfreeze")
+                        end
+                        blockuse=true
+                        self.unfrozen=true
+                    elseif walk and self.ResetPositionOnUse then
+                        self:SetPos(self.init_pos)
+                        self:SetAngles(self.init_ang)
+                        if self.StartFrozen and IsValid(phys) then
+                            phys:EnableMotion(false)
+                            self.unfrozen=nil
+                            self.unfreezehint=nil
+                        end
+                        TARDIS:Message(a, "Parts.Moveable.Reset")
+                        blockuse=true
+                    elseif not walk and self.StartFrozen and IsValid(phys) and not phys:IsMoveable() then
+                        if not self.unfreezehint then
+                            self.unfreezehint={}
+                        end
+                        if not self.unfreezehint[a] then
+                            self.unfreezehint[a]=true
+                            TARDIS:Message(a, "Parts.Moveable.UnfreezeHint")
+                        end
+                    end
+                end
+
+                if not blockuse then
                     res=self.o.Use(self,a,...)
                 end
             end
@@ -307,6 +385,16 @@ local overrides={
                 elseif self.interior then
                     self.interior:CallHook("PartUsed",self,a)
                 end
+            end
+        end
+
+        if SERVER and self.Motion and IsValid(a) and a:IsPlayer()
+            and not (self.ResetPositionOnUse and a:KeyDown(IN_WALK))
+            and not self:IsPlayerHolding() then
+
+            local phys = self:GetPhysicsObject()
+            if IsValid(phys) and phys:IsMoveable() then 
+                a:PickupObject(self)
             end
         end
         return res
@@ -416,35 +504,74 @@ local function AutoSetup(self,e,id)
     local data=GetData(self,e,id)
     if not data then return end
 
-    e:SetModel(e.model or e.Model)
+    if e.model then
+        e.Model = e.model
+    end
+    if e.motion then
+        e.Motion = e.motion
+    end
+    if e.pos then
+        e.Pos = e.pos
+    end
+    if e.ang then
+        e.Ang = e.ang
+    end
+    if e.scale then
+        e.Scale = e.scale
+    end
+    if e.invisible then
+        e.Invisible = e.invisible
+    end
+    if e.invisiblefade then
+        e.InvisibleFade = e.invisiblefade
+    end
+    if e.fadespeed then
+        e.FadeSpeed = e.fadespeed
+    end
+    if e.resetpositiononuse then
+        e.ResetPositionOnUse = e.resetpositiononuse
+    end
+    if e.startfrozen then
+        e.StartFrozen = e.startfrozen
+    end
+
+    e:SetModel(e.Model)
     e:PhysicsInit( SOLID_VPHYSICS )
     e:SetMoveType( MOVETYPE_VPHYSICS )
     e:SetSolid( SOLID_VPHYSICS )
-    e:SetRenderMode( RENDERMODE_TRANSALPHA )
+    e:SetRenderMode( RENDERMODE_NORMAL )
     e:SetUseType( SIMPLE_USE )
     e.phys = e:GetPhysicsObject()
-    if (e.phys:IsValid()) then
-        e.phys:EnableMotion(e.Motion or false)
+    if e.phys:IsValid() then
+        if e.Motion and not e.StartFrozen then
+            e.phys:EnableMotion(true)
+            e.phys:Wake()
+        else
+            e.phys:EnableMotion(false)
+        end
     end
     if not e.Collision then
         if e.CollisionUse == false then
-            e:SetCollisionGroup( COLLISION_GROUP_IN_VEHICLE )
+            e:SetCollisionGroup(COLLISION_GROUP_IN_VEHICLE)
         else
-            e:SetCollisionGroup( COLLISION_GROUP_WORLD ) -- Still works with USE, TODO: Find better way if possible (for performance reasons)
+            e:SetCollisionGroup(COLLISION_GROUP_WORLD)
         end
     end
     if e.AutoPosition ~= false then
-        e:SetPos(self:LocalToWorld(e.pos or e.Pos or Vector(0,0,0)))
-        e:SetAngles(self:LocalToWorldAngles(e.ang or e.Ang or Angle(0,0,0)))
+        e:SetPos(self:LocalToWorld(e.Pos or Vector(0,0,0)))
+        e:SetAngles(self:LocalToWorldAngles(e.Ang or Angle(0,0,0)))
     end
     if not e.Collision then
         e:SetParent(self)
     end
-    if e.scale then
-        e:SetModelScale(e.scale,0)
+    if e.Scale then
+        e:SetModelScale(e.Scale,0)
     end
     if e.NoShadow then
         e:DrawShadow(false)
+    end
+    if e.Invisible then
+        e:SetInvisible(true, true)
     end
 end
 
@@ -478,7 +605,11 @@ if SERVER then
         if data and data.Parts then
             for k,v in pairs(data.Parts) do
                 if v then
-                    local part=parts[k]
+                    local partid = k
+                    if type(v)=="table" and v.id then
+                        partid = v.id
+                    end
+                    local part=parts[partid]
                     if part then
                         tempparts[k]=part.class
                     else
@@ -523,13 +654,13 @@ if SERVER then
             if e.enabled==false then
                 e:Remove()
             else
+                ent.parts[k]=e
                 if e.AutoSetup then
                     AutoSetup(ent,e,k)
                 end
                 e:Spawn()
                 e:Activate()
                 ent:DeleteOnRemove(e)
-                ent.parts[k]=e
             end
         end
     end
@@ -593,8 +724,8 @@ else
                 table.Merge(e,data)
             end
 
-            if e.ExteriorPart then
-                e.RenderGroup = RENDERGROUP_BOTH
+            if e.Translucent then
+                e.RenderGroup = RENDERGROUP_TRANSLUCENT
             end
 
             if not parent.controlparts then parent.controlparts = {} end

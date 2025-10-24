@@ -4,5 +4,6 @@
 	"$nodecal" "1"
 	"$selfillum" "1"
 	"$selfillummask" "models/vtalanov98/toyota_ext/white"
+	"$selfillumtint" "[0.5 0.5 0.5]"
 	"$surfaceprop" "Plastic"
 }

@@ -34,6 +34,7 @@ end)
 function ENT:Initialize()
     if IsValid(self:GetCreator()) then
         self.exterior = self
+        self:CallHook("PreMetadataInitialize", self.metadataID)
         self.metadata=TARDIS:CreateInteriorMetadata(self.metadataID, self)
         self.Model=self.metadata.Exterior.Model
         self.Portal=self.metadata.Exterior.Portal

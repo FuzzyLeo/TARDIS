@@ -211,7 +211,7 @@ T.Interior = {
         default_gears2 = {},
         default_gears3 = {},
 
-        default_handbrake = { pos = Vector(0,0,-0.1) },
+        default_handbrake = { pos = Vector(0,0,-0.08) },
         default_keyboard = {},
         default_telepathic = {},
         default_throttle = {},
@@ -219,7 +219,7 @@ T.Interior = {
         default_side_lever1 = { pos = Vector(100.487, 114.569, 126.76), },
         default_side_lever2 = { pos = Vector(-55.242, -142.028, 126.76), },
         default_side_dial = {},
-        default_side_speakers = {},
+        default_side_speakers = { ang = Angle(0,90,0), },
         default_throttle_lights = {},
 
         default_bouncy_lever = { pos = Vector(37.6148, 12.5797, 134.562), },
@@ -334,9 +334,12 @@ T.Interior = {
 
         default_rotor_ring = {},
 
-        default_rotor = { pos = Vector(0,0,-0.07) },
+        default_rotor = { pos = Vector(0,0,-0.07), ang = Angle(0,180,0) },
+        default_transparent = { pos = Vector(0,0,-0.07) },
         default_corridors = { ang = Angle(0,90,0), },
-        default_intdoors = { pos = Vector(73.559, -417.853, 47.506), ang = Angle(0,10,0), },
+        default_corridor_doors_1 = { pos = Vector(550.412, -751.723, 42.0499),  ang = Angle(0, 10, 0) },
+        default_corridor_doors_2 = { pos = Vector(-298.36, -672.676, 41.9816),  ang = Angle(0, 10, 0) },
+        default_intdoors = { pos = Vector(72.782, -412.767, 42.0395), ang = Angle(0,10,0), },
 
         default_sonic_dispenser_hitbox = { ang = Angle(0,90,0), },
     },
@@ -373,6 +376,9 @@ T.Interior = {
         default_spin_b_3 = "physlock",
         default_spin_b_4 = "spin_cycle",
         default_thick_lever = "shields",
+
+        default_button_1 = "toggle_handbrake_control",
+        default_button_2 = "toggle_teleport_control",
 
         default_flat_switch_1 = "toggle_screen_1",
         default_flat_switch_2 = "toggle_screen_2",
@@ -493,9 +499,27 @@ T.Interior = {
             prefix = "models/molda/toyota_int/",
             { "default_telepathic", 0, "telepathics" }
         },
+        ["warning"] = {
+            prefix = "models/molda/toyota_int/",
+            { "default_telepathic", 0, "telepathics_warning" }
+        },
+        ["warning_handbrake"] = {
+            prefix = "models/molda/toyota_int/",
+            { "default_telepathic", 0, "telepathics_warning_handbrake" }
+        },
         ["off"] = {
             prefix = "models/molda/toyota_int/",
             { "default_telepathic", 0, "telepathics_off" }
+        },
+        ["exttextures_capaldi"] = {
+            prefix = "models/vtalanov98/toyota_ext/",
+            { "door", 0, "exterior_2017" },
+            { "default_doorframe", 1, "exterior_2017" }
+        },
+        ["exttextures_original"] = {
+            prefix = "models/vtalanov98/toyota_ext/",
+            { "door", 0, "exterior_original" },
+            { "default_doorframe", 1, "exterior_original" }
         },
     },
 }
@@ -511,26 +535,52 @@ T.Exterior = {
             ang = Angle(180, 0, 0),
             scale = 5
         },
+    },
+    TextureSets = {
+        ["exttextures_capaldi"] = {
+            prefix = "models/vtalanov98/toyota_ext/",
+            { "self", 0, "exterior_2017" },
+            { "door", 0, "exterior_2017" }
+        },
+        ["exttextures_original"] = {
+            prefix = "models/vtalanov98/toyota_ext/",
+            { "self", 0, "exterior_original" },
+            { "door", 0, "exterior_original" }
+        },
+    },
+    LockedDoor = {
+        AnimEnabled = true
     }
 }
 
 T.Timings = {
-    DematAbortState = 3,
+    DematAbortState = 3.2,
     TakeOffState = 3,
     ParkingState = 3.2,
 }
 
+
 T.CustomHooks = {
-    power = {
+    state = {
         exthooks = {
             ["PowerToggled"] = true,
+            ["WarningToggled"] = true,
+            ["HandbrakeToggled"] = true,
         },
-        func = function(ext, int, on)
+        func = function(ext, int)
             if CLIENT then return end
-            if on then
-                int:ApplyTextureSet("normal")
-            else
+            if not ext:GetPower() then
                 int:ApplyTextureSet("off")
+                return
+            end
+            if ext:GetWarning() then
+                if ext:GetHandbrake() then
+                    int:ApplyTextureSet("warning_handbrake")
+                else
+                    int:ApplyTextureSet("warning")
+                end
+            else
+                int:ApplyTextureSet("normal")
             end
         end
     },
@@ -565,6 +615,30 @@ T.CustomHooks = {
             end
         end,
     },
+    exttextures = {
+        exthooks = {
+            ["PostInitialize"] = true
+        },
+        inthooks = {
+            ["PostInitialize"] = true
+        },
+        func = function(ext, int)
+            if CLIENT then return end
+            if ext.metadata.EnableClassicDoors then return end
+            local setting_val = TARDIS:GetCustomSetting(ext.metadata.ID, "exterior_textures", ext)
+            if setting_val == "capaldi" then
+                ext:ApplyTextureSet("exttextures_capaldi")
+                if IsValid(int) then
+                    int:ApplyTextureSet("exttextures_capaldi")
+                end
+            elseif setting_val == "original" then
+                ext:ApplyTextureSet("exttextures_original")
+                if IsValid(int) then
+                    int:ApplyTextureSet("exttextures_original")
+                end
+            end
+        end,
+    }
 }
 
 
@@ -612,6 +686,16 @@ T.CustomSettings = {
             ["random"] = "Interiors.Default.CustomSettings.Color.Random",
         },
     },
+    exterior_textures = {
+        text = "Interiors.Default.CustomSettings.ExteriorTextures",
+        value_type = "list",
+        value = "smith",
+        options = {
+            ["smith"] = "Interiors.Default.CustomSettings.ExteriorTextures.Smith",
+            ["capaldi"] = "Interiors.Default.CustomSettings.ExteriorTextures.Capaldi",
+            ["original"] = "Interiors.Default.CustomSettings.ExteriorTextures.Original",
+        },
+    },
     lamps = {
         text = "Interiors.Default.CustomSettings.Lamps",
         value_type = "bool",
@@ -619,6 +703,11 @@ T.CustomSettings = {
     },
     small_version = {
         text = "Interiors.Default.CustomSettings.SmallVersion",
+        value_type = "bool",
+        value = false,
+    },
+    studio_set_ceiling = {
+        text = "Interiors.Default.CustomSettings.StudioSetCeiling",
         value_type = "bool",
         value = false,
     },
@@ -665,6 +754,12 @@ T.Templates = {
             return TARDIS:GetCustomSetting(id, "small_version", ply)
         end,
     },
+    default_studio_set_ceiling = {
+        override = true,
+        condition = function(id, ply, ent)
+            return TARDIS:GetCustomSetting(id, "studio_set_ceiling", ply)
+        end,
+    },
     default_screens_off = {
         override = true,
         condition = function(id, ply, ent)
@@ -683,6 +778,12 @@ T.Templates = {
             local lamps = TARDIS:GetCustomSetting(id, "lamps", ply)
             local small = TARDIS:GetCustomSetting(id, "small_version", ply)
             return (lamps and small)
+        end,
+    },
+    default_halloween = {
+        override = true,
+        condition = function(id, ply, ent)
+            return ent:IsHalloweenEvent()
         end,
     },
 }
@@ -713,13 +814,11 @@ T.Interior = {
     TextureSets = {
         ["normal"] = {
             prefix = "models/molda/toyota_int/",
-            { "default_telepathic", 0, "telepathics2" },
-            { "default_rotor", 10, "neon_out_capaldi" },
-            { "default_rotor", 11, "neon_mid_capaldi" },
-            { "default_rotor", 12, "neon_in_capaldi" },
-            { "default_rotor_small", 8, "neon_out_capaldi" },
-            { "default_rotor_small", 9, "neon_mid_capaldi" },
-            { "default_rotor_small", 10, "neon_in_capaldi" },
+            { "default_telepathic", 0, "telepathics" },
+            { "default_rotor", 4, "neon_mid_capaldi" },
+            { "default_rotor", 5, "neon_in_capaldi" },
+            { "default_transparent", 0, "glass_capaldi" },
+            { "default_transparent", 4, "neon_out_capaldi" },
             { "default_console", 6, "gearsglow_capaldi" },
             { "default_floor", 0, "rails_capaldi" },
             { "default_floor", 4, "floornew_capaldi" },
@@ -738,6 +837,10 @@ T.Interior = {
             { "default_intdoors", 1, "portalsnew2_capaldi" },
             { "default_intdoors_static", 0, "portalsnew_capaldi" },
             { "default_intdoors_static", 1, "portalsnew2_capaldi" },
+            { "default_corridor_doors_1", 0, "portalsnew_capaldi" },
+            { "default_corridor_doors_1", 1, "portalsnew2_capaldi" },
+            { "default_corridor_doors_2", 0, "portalsnew_capaldi" },
+            { "default_corridor_doors_2", 1, "portalsnew2_capaldi" },
             { "self", 2, "portalsnew_capaldi" },
             { "self", 4, "portalsnew2_capaldi" },
             { "default_corridors", 0, "portalsnew_capaldi" },
@@ -763,14 +866,14 @@ T.Interior = {
         console_white = {
             color = Color(255,50,0),
             warn_color = Color(255,143,143),
-            off_color = Color(74,142,187),
-            off_brightness = 0.025,
+            off_color = Color(187,142,74),
+            off_brightness = 0.1,
             warn_brightness = 0.25,
         },
         console_bottom = {
             color = Color(255, 50, 0),
             warn_color = Color(255, 50, 0),
-            nopower = false,
+            off_color = Color(255, 50, 0),
         },
     },
 }
@@ -792,26 +895,6 @@ T.CustomHooks = {
             if CLIENT then return end
             int:ApplyTextureSet("normal")
         end,
-    },
-    capaldi_power = {
-        exthooks = {
-            ["PowerToggled"] = true,
-        },
-        func = function(ext, int, on)
-            if CLIENT or not IsValid(int) then return end
-            local rotor = int:GetPart("default_rotor")
-            if on then
-                if IsValid(rotor) then
-                    rotor:SetBodygroup(1, 3) -- Base
-                    rotor:SetBodygroup(2, 3) -- Neon
-                end
-            else
-                if IsValid(rotor) then
-                    rotor:SetBodygroup(1, 2) -- Base
-                    rotor:SetBodygroup(2, 5) -- Neon
-                end
-            end
-        end
     }
 }
 
@@ -873,7 +956,6 @@ T.Templates = {
     default_exterior = false,
     exterior_ttcapsule_type50 = {override = true,}
 }
-
 
 T.CustomHooks = {
     doorframe_init = {

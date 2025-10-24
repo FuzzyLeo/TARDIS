@@ -79,6 +79,10 @@ if SERVER then
 
     function ENT:Demat(pos, ang, callback, force)
 
+        if pos and ang then
+            self:SetDestination(pos, ang)
+        end
+
         force = force or self:CallCommonHook("ShouldForceDemat", pos, ang)
 
         if self:CallHook("CanDemat", force, false) == false then
@@ -92,7 +96,8 @@ if SERVER then
             return callback and callback(false)
         end
 
-        if not self:DematDoorCheck(pos, ang, callback, force) then return end
+        local doorcheck = self:DematDoorCheck(pos, ang, callback, force)
+        if not doorcheck then return doorcheck end
 
         if force then
             self:SetData("force-demat", true, true)
@@ -111,6 +116,7 @@ if SERVER then
         self:SetData("step",1)
         self:SetStepDelay()
         self:SetData("teleport",true)
+        self:SetData("teleport-interrupt-fade", nil, true)
         self:SetCollisionGroup( COLLISION_GROUP_WORLD )
         self:SetData("demat-startpos",self:GetPos())
         self:SetData("demat-startang",self:GetAngles())
@@ -209,6 +215,7 @@ if SERVER then
         self:SetData("hads-demat",false)
         self:SetData("vortex",true)
         self:SetData("teleport",false)
+        self:SetData("teleport-interrupt-fade", nil)
         self:SetSolid(SOLID_NONE)
         self:RemoveAllDecals()
 
@@ -272,6 +279,7 @@ else
         self:SetData("step",1)
         self:SetStepDelay()
         self:SetData("teleport",true)
+        self:SetData("teleport-interrupt-fade", nil)
         if TARDIS:GetSetting("teleport-sound") and TARDIS:GetSetting("sound") then
             local shouldPlayExterior = self:CallHook("ShouldPlayDematSound", false)~=false
             local shouldPlayInterior = self:CallHook("ShouldPlayDematSound", true)~=false
@@ -400,6 +408,7 @@ else
         self:SetData("vortex",true)
         self:SetData("vortex_enter_time",CurTime())
         self:SetData("teleport",false)
+        self:SetData("teleport-interrupt-fade", nil)
         self:CallHook("StopDemat")
     end
 
@@ -418,6 +427,14 @@ else
     ENT:AddHook("ShouldTurnOffLight", "teleport", function(self)
         if self:GetData("teleport", false) and self:GetData("alpha",255) == 0 then return true end
     end)
+end
+
+function ENT:IsTeleporting()
+    return self:GetData("teleport", false)
+end
+
+function ENT:IsInVortex()
+    return self:GetData("vortex", false)
 end
 
 function ENT:SetStepDelay()
@@ -473,13 +490,28 @@ ENT:AddHook("Think","teleport",function(self,delta)
     local demat = self:GetData("demat")
     local hads = self:GetData("hads-demat")
     local mat = self:GetData("mat")
-    if not (demat or mat) then return end
-    local alpha=self:GetData("alpha",255)
-    local target=self:GetTargetAlpha()
-    local step=self:GetData("step",1)
+    local restoring = self:GetData("teleport-interrupt-fade", false)
+    if not (demat or mat or restoring) then return end
 
+    local alpha=self:GetData("alpha",255)
     local teleport_md = self.metadata.Exterior.Teleport
     local fast = self:GetFastRemat()
+
+    if restoring then
+        local target = 255
+        local speed = teleport_md.DematInterruptSpeed
+        alpha=math.Approach(alpha,target,delta*66*speed)
+        self:SetData("alpha",alpha)
+        self:SetAttachedTransparency(alpha)
+
+        if alpha==target then
+            self:SetData("teleport-interrupt-fade", nil)
+        end
+        return
+    end
+
+    local target=self:GetTargetAlpha()
+    local step=self:GetData("step",1)
 
     local demat_steps = hads and #teleport_md.HadsDematSequence or #teleport_md.DematSequence
 

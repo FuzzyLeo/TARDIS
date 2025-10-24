@@ -6,14 +6,12 @@
 
     "$selfillum" "1"
     "$selfillummask" "models/molda/toyota_int/white"
-    "$selfillumtint" "[0.3 0.3 0.3]"
+    "$selfillumtint" "[2 2 2]"
     "$color2" "[1 1 1]"
 
     "$nodecal" "1"
     "$nocull" "0"
 
-    $sine_basic 1
-    $sine_use 0
     $sine_add 1
     $sine_r 1
     $sine_g 1
@@ -26,25 +24,25 @@
         }
         Sine
         {
-            sineperiod 5
-            sinemin 0
-            sinemax 0.7
+            sineperiod 10
+            sinemin 0.9
+            sinemax 1.1
             resultVar "$sine_r"
         }
         Sine
         {
-            sineperiod 5
-            timeoffset 0.5
-            sinemin 0.8
-            sinemax 1.4
+            sineperiod 10
+            timeoffset 1
+            sinemin 0.9
+            sinemax 1.1
             resultVar "$sine_g"
         }
         Sine
         {
-            sineperiod 5
-            timeoffset 2
-            sinemin 1
-            sinemax 1.8
+            sineperiod 10
+            timeoffset 4
+            sinemin 0.9
+            sinemax 1.1
             resultVar "$sine_b"
         }
         Add

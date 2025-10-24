@@ -137,6 +137,8 @@ function TARDIS:ValidateMetadata(t)
 end
 
 function TARDIS:AddInterior(t)
+    t = table.Copy(t)
+    
     local id = t.ID
 
     self.MetadataRaw[id] = t

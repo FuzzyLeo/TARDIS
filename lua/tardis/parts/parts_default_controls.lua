@@ -68,7 +68,7 @@ PART.AutoSetup = true
 PART.Collision = true
 PART.ShouldTakeDamage = false
 PART.Animate = true
-PART.AnimateSpeed = 2.3
+PART.AnimateSpeed = 3
 TARDIS:AddPart(PART)
 
 local PART={}
@@ -184,13 +184,15 @@ PART.Animate = true
 PART.AnimateSpeed = 6
 
 PART.ID = "default_button_1"
-PART.Sound = "p00gie/tardis/default/buttons.ogg"
-PART.AnimateSpeed = 5
+PART.EnabledOnStart = true
+PART.Sound = "p00gie/tardis/default/balls.ogg"
+PART.AnimateSpeed = 10
 TARDIS:AddPart(PART)
 
 PART.ID = "default_button_2"
-PART.Sound = "p00gie/tardis/default/buttons.ogg"
-PART.AnimateSpeed = 5
+PART.EnabledOnStart = true
+PART.Sound = "p00gie/tardis/default/balls.ogg"
+PART.AnimateSpeed = 10
 TARDIS:AddPart(PART)
 
 local PART = {}

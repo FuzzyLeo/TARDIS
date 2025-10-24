@@ -8,6 +8,7 @@ ENT.PrintName       = "TARDIS Part"
 ENT.Spawnable       = false
 ENT.AdminSpawnable  = false
 ENT.Category        = "Doctor Who"
+ENT.RenderGroup     = RENDERGROUP_OPAQUE
 ENT.TardisPart      = true
 ENT.AllowedProperties = {
     ["skin"] = true,
@@ -22,11 +23,11 @@ function ENT:SetupDataTables()
 end
 
 hook.Add("PhysgunPickup", "tardis-part", function(ply,ent)
-    if ent.TardisPart then return false end
+    if ent.TardisPart and (not ent.Motion or (ent.StartFrozen and not ent.unfrozen)) then return false end
 end)
 
 hook.Add("PlayerUnfrozeObject", "tardis-part", function(ply,ent,phys)
-    if ent.TardisPart then phys:EnableMotion(false) end
+    if ent.TardisPart and (not ent.Motion or (ent.StartFrozen and not ent.unfrozen)) then phys:EnableMotion(false) end
 end)
 
 hook.Add("CanProperty", "tardis-part", function(ply,prop,ent)
@@ -60,13 +61,14 @@ hook.Add("BodygroupChanged", "tardis_parts", function(ent,bodygroup,value)
     end
 end)
 
-function ENT:SetInvisible(invisible)
-    return self.parent:SetPartInvisible(self.ID, invisible)
+function ENT:SetInvisible(invisible, nofade)
+    return self.parent:SetPartInvisible(self.ID, invisible, nofade)
 end
 
 function ENT:IsInvisible()
     local inv_parts = self:GetData("invisible_int_parts")
 
-    if not inv_parts then return false end
-    return inv_parts[self.ID]
+    if not inv_parts or not inv_parts[self.ID] then return false end
+    local inv = inv_parts[self.ID]
+    return inv.invisible, inv.nofade
 end

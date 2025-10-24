@@ -138,6 +138,10 @@ T.Exterior = {
     Chameleon = {
         AnimTime = 4,
     },
+    LockedDoor = {
+        AnimPos = 0.06,
+        AnimTime = 0.1
+    },
     Parts = {
         vortex = {
             model = "models/doctorwho1200/toyota/2013timevortex.mdl",
@@ -152,6 +156,7 @@ T.Exterior = {
         SequenceSpeedFast = 0.935,
         SequenceSpeedHads = 1.8,
         SequenceSpeedWarnFast = 0.97,
+        DematInterruptSpeed = 5,
         PrematDelayFast = 1.9,
         PrematDelay = 8.5,
         DematSequence = {
