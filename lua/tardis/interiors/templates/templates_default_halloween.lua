@@ -43,8 +43,8 @@ local HALLOWEEN_NON_LOOPED_SOUNDS = {
     {"ambient/materials/shipgroan4.wav", 80},
 }
 
-local HALLOWEEN_DEBUG = true
-local HALLOWEEN_DEBUG_TIMINGS = true
+local HALLOWEEN_DEBUG = false
+local HALLOWEEN_DEBUG_TIMINGS = false
 if HALLOWEEN_DEBUG_TIMINGS then
     HALLOWEEN_TIME_BEFORE_FIRST_KNOCK_MIN = 1
     HALLOWEEN_TIME_BEFORE_FIRST_KNOCK_MAX = 1
@@ -209,7 +209,7 @@ TARDIS:AddInteriorTemplate("default_halloween", {
                             if math.random() < HALLOWEEN_USE_LOOPED_SOUND_CHANCE then
                                 debug_print("Using looped corridor sound")
                                 ext:SetData("halloween-loopsound", HALLOWEEN_LOOPED_SOUNDS[math.random(1,#HALLOWEEN_LOOPED_SOUNDS)], true)
-                            elseif HALLOWEEN_DEBUG then
+                            else
                                 debug_print("Using non-looped corridor sounds")
                             end
                             ext:SetData("halloween-state", HALLOWEEN_STATE_CORRIDOR_SOUNDS, true)
