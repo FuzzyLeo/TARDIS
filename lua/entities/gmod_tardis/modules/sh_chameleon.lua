@@ -254,10 +254,15 @@ function ENT:ChangeExterior(id, animate, ply, retry)
             extportal:SetInverted(portal_md.inverted)
             if portal_md.model then
                 extportal:SetModel(portal_md.model)
+            else
+                extportal:SetModel("models/error.mdl")
             end
             if portal_md.model_offset then
                 extportal:SetModelPos(portal_md.model_offset.pos)
                 extportal:SetModelAng(portal_md.model_offset.ang)
+            else
+                extportal:SetModelPos(Vector(0,0,0))
+                extportal:SetModelAng(Angle(0,0,0))
             end
             extportal:SetParent(self)
 
