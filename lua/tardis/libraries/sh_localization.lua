@@ -188,8 +188,8 @@ function TARDIS:UpdateLanguage()
     if oldLangCode == langCode then return end
 
     hook.Call("TARDIS_LanguageChanged", GAMEMODE, langCode, oldLangCode)
-    for k,v in pairs(ents.FindByClass("gmod_tardis")) do
-        v:CallCommonHook("LanguageChanged", langCode, oldLangCode)
+    for _,ent in ipairs(TARDIS:GetExteriorEnts()) do
+        ent:CallCommonHook("LanguageChanged", langCode, oldLangCode)
     end
 end
 
