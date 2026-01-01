@@ -146,7 +146,7 @@ TARDIS:AddScreen("Chameleon", {id="chameleon", text="Screens.Chameleon", menu=fa
         local icon = TARDIS:GetExteriorIcon(id)
         local ext_data = ext:ChangeExteriorMetadata(id)
 
-        if screen.is3D2D then
+        if screen.is3D2D then -- 3D Preview doesnt work on 3D screens, so icon is used instead as a fallback
             preview:SetVisible(icon ~= nil)
             if icon then
                 preview:SetImage(icon)
@@ -156,7 +156,7 @@ TARDIS:AddScreen("Chameleon", {id="chameleon", text="Screens.Chameleon", menu=fa
             if ext_data then
 
                 local basemodel = ext_data.Model
-                local doormodel = ext_data.Parts.door.model or ext_data.Parts.door.Model -- case sensitive, some extensions have it capitalised
+                local doormodel = ext_data.Parts.door.model or ext_data.Parts.door.Model -- case sensitive, some extensions have it capitalised, this can be done better but im not sure how
                 local doorpos = (ext_data.Portal.pos + ext_data.Parts.door.posoffset)
                 local textures
                 if ext_data.TextureSets then
@@ -174,13 +174,12 @@ TARDIS:AddScreen("Chameleon", {id="chameleon", text="Screens.Chameleon", menu=fa
                 size = math.max( size, math.abs(mn.y) + math.abs(mx.y) )
                 size = math.max( size, math.abs(mn.z) + math.abs(mx.z) )
 
-                preview3D:SetFOV( 30 )
+                preview3D:SetFOV( 30 ) -- these are set here so the camera resets when switching to a new exterior
                 preview3D:SetLookAng( Angle(5,193,0) )
-                --preview3D:SetCamPos( Vector( size, size, size ) )
                 preview3D:SetCamPos( Vector( size*2.2, size/2, size/1.5 ) )
 
 
-                if textures then
+                if textures then -- Apply texturesets if they exist
                     local prefix = textures.prefix or ""
                     for i,v in ipairs(textures) do
                         if v[1] == "self" then
@@ -205,11 +204,10 @@ TARDIS:AddScreen("Chameleon", {id="chameleon", text="Screens.Chameleon", menu=fa
                         door:Remove()
                     end
                 end
-                preview3D:Refresh()
-                function preview3D:LayoutEntity( ent )
-                    -- do nothing
-                end
 
+                function preview3D:LayoutEntity( ent )
+                    -- overrides the model constantly spinning
+                end
             end
         end
 
