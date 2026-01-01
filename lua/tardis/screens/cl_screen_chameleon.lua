@@ -159,11 +159,17 @@ TARDIS:AddScreen("Chameleon", {id="chameleon", text="Screens.Chameleon", menu=fa
                 local basemodel = ext_data.Model
                 local doormodel = ext_data.Parts.door.model or ext_data.Parts.door.Model -- case sensitive, some extensions have it capitalised
                 local doorpos = (ext_data.Portal.pos + ext_data.Parts.door.posoffset)
+                local textures
+                if ext_data.TextureSets then
+                    textures = ext_data.TextureSets.normal
+                end
 
-                PrintTable(ext_data)
-
+                --PrintTable(ext_data)
                 preview3D:SetModel(basemodel)
-                local mn, mx = preview3D.Entity:GetRenderBounds()
+
+                modelent = preview3D.Entity
+
+                local mn, mx = modelent:GetRenderBounds()
                 local size = 0
                 size = math.max( size, math.abs(mn.x) + math.abs(mx.x) )
                 size = math.max( size, math.abs(mn.y) + math.abs(mx.y) )
@@ -173,10 +179,28 @@ TARDIS:AddScreen("Chameleon", {id="chameleon", text="Screens.Chameleon", menu=fa
                 preview3D:SetCamPos( Vector( size, size, size ) )
                 preview3D:SetLookAt( (mn + mx) * 0.5 )
 
+                if textures then
+                    local prefix = textures.prefix or ""
+                    for i,v in ipairs(textures) do
+                        if v[1] == "self" then
+                            modelent:SetSubMaterial(v[2],prefix .. v[3])
+                        end
+                    end
+                end
+
                 if doormodel then
                     function preview3D:PostDrawModel( ent )
                         door = ClientsideModel(doormodel)
                         door:SetPos(doorpos)
+                        if textures then
+                            local prefix = textures.prefix or ""
+                            for i,v in ipairs(textures) do
+                                if v[1] == "door" then
+                                    door:SetSubMaterial(v[2],prefix .. v[3])
+                                    print(prefix .. v[3])
+                                end
+                            end
+                        end
                         door:DrawModel()
                         door:Remove()
                     end
