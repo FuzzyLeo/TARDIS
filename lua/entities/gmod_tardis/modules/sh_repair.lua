@@ -89,6 +89,7 @@ if SERVER then
         self:StopSmoke()
         self:FlashLight(1.5)
         self:RemoveAllDecals()
+        self:RemoveAllPartDecals()
         if IsValid(self.interior) then
             self.interior:ResetPartPositions()
             self.interior:RemoveAllDecals()
