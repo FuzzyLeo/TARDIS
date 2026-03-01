@@ -54,7 +54,6 @@ local function ensure_rt(self, w, h)
 
     self.rt_w, self.rt_h = w, h
     local name = "tardis_dmodelpanel3d2d_rt_" .. util.CRC(tostring(self) .. "_" .. w .. "x" .. h)
-    print(tostring(self))
 
     -- RT with a dedicated depth surface to ensure depth testing works inside 3D2D
     self.rt = GetRenderTargetEx(name, w, h, RT_SIZE_LITERAL, MATERIAL_RT_DEPTH_SEPARATE, 0, CREATERENDERTARGETFLAGS_UNFILTERABLE_OK, IMAGE_FORMAT_BGRA8888)
