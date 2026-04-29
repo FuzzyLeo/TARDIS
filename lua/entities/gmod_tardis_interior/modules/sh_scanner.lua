@@ -122,7 +122,7 @@ ENT:AddHook("Initialize", "scanner", function(self)
                         ["$nodecal"] = "1"
                     }
                 )
-                scanner.rt = GetRenderTarget(scanner.uid, v.width, v.height, false)
+                scanner.rt = GetRenderTarget(scanner.uid, v.width, v.height)
                 scanner.mat:SetTexture("$basetexture",scanner.rt)
             end
             scanner.ang = v.ang

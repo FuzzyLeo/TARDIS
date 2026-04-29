@@ -761,7 +761,7 @@ function TARDIS:LoadScreen(id, options)
     screen:SetPos(0, 0)
     screen:SetSize(screen.width, screen.height)
     screen:SetPaintedManually(true) -- change to false to debug screen sizes in 2D
-    screen:SetDrawBackground(true)
+    screen:SetPaintBackground(true)
     screen:SetBackgroundColor(Color(0,0,0,0))
 
     local main=self:LoadScreenUI(screen)

@@ -72,7 +72,7 @@ local function CreateBoolDebugConVar(name, desc)
     convar_update_funcs[id] = convar_update
 end
 
-net.Receive("TARDIS_Debug_Convar", function(name, len, ply)
+net.Receive("TARDIS_Debug_Convar", function()
     local id = net.ReadString()
     if convar_update_funcs[id] then
         convar_update_funcs[id]()

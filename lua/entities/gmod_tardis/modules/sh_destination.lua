@@ -376,7 +376,9 @@ else
     function ENT:GetDestinationPropTrace(ply,ang)
         local prop = self:GetData("destinationprop")
         local pos,ang=self:GetDestinationPropPos(ply,nil,ang)
-        local trace=util.QuickTrace(pos,ang:Forward()*TRACE_DISTANCE,{self,TARDIS:GetPart(self,"door"),prop})
+        ---@type Entity[]
+        local filter={self,TARDIS:GetPart(self,"door"),prop}
+        local trace=util.QuickTrace(pos,ang:Forward()*TRACE_DISTANCE,filter)
         local angle=trace.HitNormal:Angle()
         angle:RotateAroundAxis(angle:Right(),-90)
         return trace.HitPos,angle

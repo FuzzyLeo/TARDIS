@@ -205,19 +205,19 @@ local function old_virtual_console(self,ext,int,frame,screen)
         if ext:DoorMoving() then
             doorswitch.moving = true
             doorswitch.first = true
-            if not doorswitch:GetDisabled() then
+            if doorswitch:IsEnabled() then
                 if doorswitch.open then
                     doorswitch:SetText(TARDIS:GetPhrase("Screens.VirtualConsole.Old.DoorClosing"))
                 else
                     doorswitch:SetText(TARDIS:GetPhrase("Screens.VirtualConsole.Old.DoorOpening"))
                 end
-                doorswitch:SetDisabled(true)
+                doorswitch:SetEnabled(false)
             end
-        elseif doorswitch:GetDisabled() and not doorlock.lock then
+        elseif not doorswitch:IsEnabled() and not doorlock.lock then
             if not doorswitch.open then
                 doorswitch.moving = false
             end
-            doorswitch:SetDisabled(false)
+            doorswitch:SetEnabled(true)
         elseif ext:DoorOpen() and (not doorswitch.open) or doorswitch.first then
             if not doorswitch.moving then
                 doorswitch.open = true
@@ -237,27 +237,27 @@ local function old_virtual_console(self,ext,int,frame,screen)
 
     function doorlock:Think()
         if ext:Locking() then
-            if not doorlock:GetDisabled() then
+            if doorlock:IsEnabled() then
                 if ext:Locked() then
                     doorlock:SetText(TARDIS:GetPhrase("Screens.VirtualConsole.Old.LockUnlocking"))
                 else
                     doorlock:SetText(TARDIS:GetPhrase("Screens.VirtualConsole.Old.LockLocking"))
                 end
-                doorlock:SetDisabled(true)
+                doorlock:SetEnabled(false)
             end
-        elseif doorlock:GetDisabled() then
-            doorlock:SetDisabled(false)
+        elseif not doorlock:IsEnabled() then
+            doorlock:SetEnabled(true)
         elseif ext:Locked() and (not doorlock.lock) or doorlock.first then
             doorlock.lock=true
             doorlock:SetText(TARDIS:GetPhrase("Screens.VirtualConsole.Old.UnlockDoor"))
-            doorswitch:SetDisabled(true)
+            doorswitch:SetEnabled(false)
             if doorlock.first then
                 doorlock.first=nil
             end
         elseif not ext:Locked() and doorlock.lock or doorlock.first then
             doorlock.lock=false
             doorlock:SetText(TARDIS:GetPhrase("Screens.VirtualConsole.Old.LockDoor"))
-            doorswitch:SetDisabled(false)
+            doorswitch:SetEnabled(true)
             if doorlock.first then
                 doorlock.first=nil
             end

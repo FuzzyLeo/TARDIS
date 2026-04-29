@@ -406,7 +406,9 @@ if SERVER then
         end
 
         local diffang = (entPos - pos):Angle()
-        local trace = util.QuickTrace(pos,diffang:Forward()*(TRACKING_MAX_DISTANCE_TRACE + entSize),{self,TARDIS:GetPart(self,"door")})
+        ---@type Entity[]
+        local filter = {self,TARDIS:GetPart(self,"door")}
+        local trace = util.QuickTrace(pos,diffang:Forward()*(TRACKING_MAX_DISTANCE_TRACE + entSize),filter)
         local targetfound = trace.Entity==ent or tdiff < (TRACKING_MAX_DISTANCE_NO_LOS + entSize)
 
         local trackinglost = self:GetData("tracking-lost")

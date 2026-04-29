@@ -131,7 +131,7 @@ function TARDIS:GetSetting(id, src, no_default)
     if IsValid(src) and not src:IsPlayer() and not src.TardisExterior then
         src = src.exterior
     end
-    if IsValid(src) and IsEntity(src) then
+    if IsValid(src) and isentity(src) then
         ply = (src:IsPlayer() and src) or src:GetCreator()
     end
 

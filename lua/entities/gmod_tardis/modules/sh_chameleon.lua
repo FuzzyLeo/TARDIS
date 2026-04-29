@@ -219,7 +219,7 @@ function ENT:ChangeExterior(id, animate, ply, retry)
             oldVelocity = self.phys:GetVelocity()
         end
 
-        self:SetMaterial()
+        self:SetMaterial("")
         self:SetSubMaterial()
         for k,v in ipairs(self:GetBodyGroups()) do
             self:SetBodygroup(v.id, 0)

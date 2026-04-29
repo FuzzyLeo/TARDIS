@@ -165,7 +165,7 @@ else
         end
     end)
 
-    hook.Add("Initialize", "tardis-outside", function(name)
+    hook.Add("Initialize", "tardis-outside", function()
         oldtargetid=oldtargetid or GAMEMODE.HUDDrawTargetID
         GAMEMODE.HUDDrawTargetID = function(...)
             if LocalPlayer():GetTardisData("outside") then return end

@@ -424,6 +424,7 @@ end
 
 local parts={}
 
+---@return Entity
 function TARDIS:GetPart(ent,id)
     return IsValid(ent) and ent.parts and ent.parts[id] or NULL
 end
