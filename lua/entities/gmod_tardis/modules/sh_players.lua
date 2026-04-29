@@ -72,8 +72,8 @@ else
     end
 
     net.Receive("TARDIS-PlayerData", function()
-        local k=net.ReadType(net.ReadUInt(8))
-        local v=net.ReadType(net.ReadUInt(8))
+        local k=net.ReadType()
+        local v=net.ReadType()
         LocalPlayer():SetTardisData(k,v)
     end)
 

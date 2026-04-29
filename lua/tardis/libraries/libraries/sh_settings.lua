@@ -373,6 +373,8 @@ else
         TARDIS:SendSettings()
     end)
 
+    -- Dynamic read/write counts not handled by analyzer.
+    ---@diagnostic disable-next-line: gmod-net-read-write-order-mismatch
     net.Receive("TARDIS-ClientSettings",function(len)
         local ply=net.ReadInt(8)
         if not TARDIS.ClientSettings[ply] then TARDIS.ClientSettings[ply]={} end
@@ -403,7 +405,11 @@ else
 end
 
 function TARDIS:SendSetting(id,value,ply)
-    net.Start(SERVER and "TARDIS-Settings" or "TARDIS-ClientSettings")
+    if SERVER then
+        net.Start("TARDIS-Settings")
+    else
+        net.Start("TARDIS-ClientSettings")
+    end
         net.WriteBool(true)
         net.WriteString(id)
         net.WriteType(value)
@@ -419,7 +425,11 @@ function TARDIS:SendSetting(id,value,ply)
 end
 
 function TARDIS:SendSettings(ply)
-    net.Start(SERVER and "TARDIS-Settings" or "TARDIS-ClientSettings")
+    if SERVER then
+        net.Start("TARDIS-Settings")
+    else
+        net.Start("TARDIS-ClientSettings")
+    end
         net.WriteBool(false)
         net.WriteString(self.von.serialize(SERVER and self.GlobalSettings or self.NetworkedSettings))
     if SERVER then

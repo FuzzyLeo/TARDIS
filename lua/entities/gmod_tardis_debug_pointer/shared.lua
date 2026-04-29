@@ -97,6 +97,8 @@ if SERVER then
     util.AddNetworkString("TARDIS-Pointer-Debug-Update")
     util.AddNetworkString("TARDIS-Pointer-Use")
 
+    -- Dynamic read/write counts not handled by analyzer.
+    ---@diagnostic disable-next-line: gmod-net-read-write-order-mismatch
     net.Receive("TARDIS-Pointer-Debug-Update",function(len,ply)
         local pointer = net.ReadEntity()
         if not IsValid(pointer) then return end

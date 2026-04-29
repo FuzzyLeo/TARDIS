@@ -124,7 +124,7 @@ else
         end
         return oldgetviewentity2(self,...)
     end
-    hook.Add("CalcView", "tardis-outside", function(ply, pos, ang)
+    hook.Add("CalcView", "tardis-outside", function(ply, pos, ang, fov)
         if ply:GetTardisData("outside") then
             local ext=ply:GetTardisData("exterior")
             if IsValid(ext) then

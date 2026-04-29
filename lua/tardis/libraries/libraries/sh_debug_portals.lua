@@ -3,6 +3,8 @@ if SERVER then
     util.AddNetworkString("TARDIS-Debug-Portals")
     util.AddNetworkString("TARDIS-Debug-Portals-Update")
 
+    -- Dynamic read/write counts not handled by analyzer.
+    ---@diagnostic disable-next-line: gmod-net-read-write-order-mismatch
     net.Receive("TARDIS-Debug-Portals-Update",function(len,ply)
         if not ply:IsAdmin() then return end
 

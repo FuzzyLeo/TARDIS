@@ -48,6 +48,8 @@ if SERVER then
             trace.endpos = vStart + (vForward * 4096)
             trace.filter = ply
 
+            -- Realm-mismatch heuristic false positive: util.TraceLine is shared and we are inside if SERVER then.
+            ---@diagnostic disable-next-line: gmod-realm-mismatch-heuristic
             tr = util.TraceLine(trace)
         end
 
@@ -134,6 +136,8 @@ else -- CLIENT
         return TARDIS.MetadataRaw["base"].Exterior.Sounds[snd_name]
     end
 
+    -- Dynamic read/write counts not handled by analyzer.
+    ---@diagnostic disable-next-line: gmod-net-read-write-order-mismatch
     net.Receive("TARDIS-Spawn-Delete-Sound", function()
         local ent
         local pos

@@ -46,7 +46,7 @@ function TARDIS:ImportExterior(int_id, import_options)
     local E = self:CopyTable(T.Exterior)
     E.ID = import_options.ext_id or int_id
     E.Base = import_options.base or "base"
-    E.Name = import_options.name or T.Name or ext_id
+    E.Name = import_options.name or T.Name or int_id
 
     if import_options.category then
         E.Category = import_options.category

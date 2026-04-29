@@ -419,6 +419,8 @@ if SERVER then
     function PART:RequestPositionUpdate(ply) self:RequestUpdate(true, false, ply) end
     function PART:RequestFullUpdate(ply) self:RequestUpdate(true, true, ply) end
 
+    -- Dynamic read/write counts not handled by analyzer.
+    ---@diagnostic disable-next-line: gmod-net-read-write-order-mismatch
     net.Receive("TARDIS_DefaultMonitorsUpdate", function(len,ply)
         local part = net.ReadEntity()
         local update_pos = net.ReadBool()

@@ -127,11 +127,12 @@ TARDIS:AddKeyBind("destination-snaptofloor",{
             local prop = self:GetData("destinationprop")
             if IsValid(prop) then
                 local pos, ang
+                local should_glue = false
                 if TARDIS:IsBindDown("destination-boost") then
                     pos,ang = self:GetDestinationPropTrace(ply,Angle(90,0,0))
                 else
                     local prevpos = self:GetData("destination_snaptofloor_lastpos")
-                    local should_glue = (prevpos == prop:GetPos())
+                    should_glue = (prevpos == prop:GetPos())
 
                     pos, ang = self:GetGroundedPos(prop:GetPos(), should_glue)
                 end
@@ -171,7 +172,7 @@ TARDIS:AddKeyBind("destination-find-random",{
                 prop:SetPos(pos)
                 prop:SetAngles(ang)
 
-                self:SetData("destination_snaptofloor_lastpos", grounded and pos)
+                self:SetData("destination_snaptofloor_lastpos", pos)
             end
         end
     end,

@@ -30,6 +30,8 @@ if SERVER then
                 if not v.color then
                     v.color = Color(255,255,255)
                 end
+                -- MakeLamp is registered globally by the lamp STool at runtime; no stub for it.
+                ---@diagnostic disable-next-line: undefined-global
                 local lamp = MakeLamp(nil, -- creator
                     v.color.r, v.color.g, v.color.b,
                     KEY_NONE, -- toggle key

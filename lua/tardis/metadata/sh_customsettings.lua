@@ -85,7 +85,7 @@ if CLIENT then
     end
 
     function TARDIS:ToggleCustomSetting(int_id, setting_id)
-        local value = TARDIS:GetCustomSetting(int_id, setting_id, ent)
+        local value = TARDIS:GetCustomSetting(int_id, setting_id)
         TARDIS:SetCustomSetting(int_id, setting_id, (not value))
     end
 end
@@ -99,7 +99,7 @@ end
 
 if CLIENT then
     function TARDIS:SetFavoriteInt(id, favorite)
-        self:SetCustomSetting(id, "is_favorite", favorite, ent)
+        self:SetCustomSetting(id, "is_favorite", favorite)
     end
 
     function TARDIS:ToggleFavoriteInt(id)
