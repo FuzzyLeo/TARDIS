@@ -1,5 +1,5 @@
 -- Third-party library
----@diagnostic disable: unbalanced-assignments
+---@diagnostic disable
 
 --[[    vON 1.3.4
 
