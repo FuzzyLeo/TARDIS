@@ -1,4 +1,7 @@
 -- a modified version of table.Copy() to deal with Vectors / Angles / ...
+---@param t table
+---@param lookup_table table?
+---@return table
 function TARDIS:CopyTable(t, lookup_table)
     if not t or not istable(t) then return nil end
 

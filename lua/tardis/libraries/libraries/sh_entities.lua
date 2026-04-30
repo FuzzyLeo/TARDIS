@@ -38,6 +38,8 @@ hook.Add("Doors-ExteriorRemoved", "TARDIS_UpdateExteriors", updateexts)
 hook.Add("Doors-InteriorAdded", "TARDIS_UpdateInteriors", updateints)
 hook.Add("Doors-InteriorRemoved", "TARDIS_UpdateInteriors", updateints)
 
+---@param ply Player?
+---@return gmod_tardis[]
 function TARDIS:GetExteriorEnts(ply)
     if ply then
         return extsbycreator[ply] or {}
@@ -45,6 +47,8 @@ function TARDIS:GetExteriorEnts(ply)
     return exts
 end
 
+---@param ply Player?
+---@return gmod_tardis_interior[]
 function TARDIS:GetInteriorEnts(ply)
     if ply then
         return intsbycreator[ply] or {}
@@ -52,10 +56,14 @@ function TARDIS:GetInteriorEnts(ply)
     return ints
 end
 
+---@param ply Player?
+---@return gmod_tardis?
 function TARDIS:GetExteriorEnt(ply)
     return (CLIENT and LocalPlayer() or ply):GetTardisData("exterior")
 end
 
+---@param ply Player?
+---@return gmod_tardis_interior?
 function TARDIS:GetInteriorEnt(ply)
     return (CLIENT and LocalPlayer() or ply):GetTardisData("interior")
 end

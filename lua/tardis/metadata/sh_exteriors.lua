@@ -43,7 +43,7 @@ function TARDIS:ImportExterior(int_id, import_options)
     local T = self:GetInterior(int_id)
     if not T or not T.Exterior then return false end
 
-    local E = assert(self:CopyTable(T.Exterior))
+    local E = self:CopyTable(T.Exterior)
     E.ID = import_options.ext_id or int_id
     E.Base = import_options.base or "base"
     E.Name = import_options.name or T.Name or int_id
@@ -92,11 +92,12 @@ end
 function TARDIS:CreateExteriorMetadata(id)
     self:SetupExteriorMetadata(id)
 
-    if self.ExteriorsMetadata[id] == nil then
+    local raw = self.ExteriorsMetadata[id]
+    if raw == nil then
         return self:CreateExteriorMetadata("default")
     end
 
-    local metadata = assert(TARDIS:CopyTable(self.ExteriorsMetadata[id]))
+    local metadata = TARDIS:CopyTable(raw)
     metadata.TextureSets = TARDIS:GetMergedTextureSets(metadata.TextureSets)
 
     return metadata

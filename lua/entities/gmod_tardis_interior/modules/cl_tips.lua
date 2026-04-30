@@ -148,7 +148,6 @@ end)
 hook.Add("HUDPaint", "TARDIS-DrawTips", function()
     local interior = TARDIS:GetInteriorEnt(LocalPlayer())
     if not IsValid(interior) then return end
-    ---@cast interior gmod_tardis_interior
     if not interior.tips then return end
     if not TARDIS:GetSetting("tips") then return end
     if interior:CallHook("ShouldDrawTips") == false then return end

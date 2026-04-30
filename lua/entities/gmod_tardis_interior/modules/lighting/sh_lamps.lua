@@ -4,7 +4,7 @@ if CLIENT then
     local function MergeLampTable(tbl, base, keep_warn_off_options)
         if not tbl then return nil end
 
-        local new_table = assert(TARDIS:CopyTable(base))
+        local new_table = TARDIS:CopyTable(base)
         new_table.states = nil
         if not keep_warn_off_options then
             new_table.warn = nil

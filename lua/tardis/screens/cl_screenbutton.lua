@@ -24,16 +24,6 @@
 ---@field order integer?
 TardisScreenButton = {}
 
----@class TardisScreenButtonMove
----@field now boolean?
----@field parent TardisScreenButton?
----@field speed number?
----@field aim number[]?
----@field now_outside boolean?
----@field aim_outside boolean?
----@field transp_aim number?
----@field move fun()?
-
 ---@return TardisScreenButton
 function TardisScreenButton:new(parent,screen)
     local sb = {}
@@ -343,6 +333,16 @@ function TardisScreenButton:SetPressedStateData(ent, data)
         end
     end
 end
+
+---@class TardisScreenButtonMove
+---@field now boolean?
+---@field parent TardisScreenButton?
+---@field speed number?
+---@field aim number[]?
+---@field now_outside boolean?
+---@field aim_outside boolean?
+---@field transp_aim number?
+---@field move fun()?
 
 ---@param x number
 ---@param y number

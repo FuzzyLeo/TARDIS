@@ -123,6 +123,9 @@ function TARDIS:HandleMissingTemplate(template_id, id, template)
     end
 end
 
+---@param metadata table
+---@param ent Entity?
+---@return table
 function TARDIS:MergeTemplates(metadata, ent)
     if not metadata.Templates then
         return metadata
