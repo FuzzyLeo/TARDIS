@@ -1,5 +1,8 @@
 -- TARDIS Interior
 
+---@class gmod_tardis_interior : gmod_door_interior
+---@field BaseClass gmod_door_interior
+
 ENT.Base="gmod_door_interior"
 ENT.TardisInterior=true
 ENT.Exterior="gmod_tardis"

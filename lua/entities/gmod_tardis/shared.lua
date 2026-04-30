@@ -1,5 +1,8 @@
 -- TARDIS
 
+---@class gmod_tardis : gmod_door_exterior
+---@field BaseClass gmod_door_exterior
+
 ENT.Base="gmod_door_exterior"
 ENT.Spawnable=false
 ENT.PrintName="TARDIS"
