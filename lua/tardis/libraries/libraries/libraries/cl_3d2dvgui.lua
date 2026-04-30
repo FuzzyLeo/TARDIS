@@ -97,7 +97,7 @@ local function postPanelEvent(pnl, event, ...)
 
     local handled = false
 
-    for i, child in pairs(table.Reverse(pnl:GetChildren())) do
+    for _, child in pairs(table.Reverse(pnl:GetChildren())) do
         if postPanelEvent(child, event, ...) then
             handled = true
             break

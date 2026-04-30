@@ -43,7 +43,7 @@ local function get_release_notes(version, newVersion)
             local notes = releaseMetadata.summary
             if releaseMetadata.changes then
                 notes = notes .. "\n"
-                for k,v in ipairs(releaseMetadata.changes) do
+                for _,v in ipairs(releaseMetadata.changes) do
                     notes = notes .. "\n" .. "• ".. v
                 end
             end

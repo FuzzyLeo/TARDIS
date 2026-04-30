@@ -61,7 +61,7 @@ function ListView3D:new(parent,screen,elem_height,col)
 end
 
 function ListView3D:CleanLayout()
-    for k,v in ipairs(self.elements) do
+    for _,v in ipairs(self.elements) do
         if IsValid(v) then
             v:Remove()
         end
@@ -117,7 +117,7 @@ function ListView3D:UpdateLayout()
 
         b.OnToggled = function(this, state)
             if state then
-                for k,another_line in pairs(self.line_elements) do
+                for _,another_line in pairs(self.line_elements) do
                     if another_line ~= this then
                         another_line:SetToggle(false)
                         another_line:SetFont(self.font)
@@ -259,7 +259,7 @@ function ListView3D:GetSelectedLine()
     return self.selected_line
 end
 function ListView3D:ClearSelection()
-    for k,v in pairs(self.line_elements) do
+    for _,v in pairs(self.line_elements) do
         v:SetToggle(false)
         v:SetFont(self.font)
         v.panel:SetBackgroundColor(Color(255,255,255))

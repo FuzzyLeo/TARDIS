@@ -14,13 +14,13 @@ ENT.AdminOnly       = true
 -- debugging functions
 
 concommand.Add("tardis2_debug_pointer_clear", function(ply,cmd,args)
-    for k,v in pairs(ents.FindByClass("gmod_tardis_debug_pointer")) do
+    for _,v in pairs(ents.FindByClass("gmod_tardis_debug_pointer")) do
         v:Remove()
     end
 end)
 
 concommand.Add("tardis2_debug_pointer_color", function(ply,cmd,args)
-    for k,v in pairs(ents.FindByClass("gmod_tardis_debug_pointer")) do
+    for _,v in pairs(ents.FindByClass("gmod_tardis_debug_pointer")) do
         v:SetColor(Color(10,0,255))
     end
 end)

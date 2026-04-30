@@ -116,7 +116,7 @@ TARDIS:AddScreen("Chameleon", {id="chameleon", text="Screens.Chameleon", menu=fa
     table.sort(categories)
 
     list_categories:Clear()
-    for k,v in ipairs(categories) do
+    for _,v in ipairs(categories) do
         list_categories:AddLine(TARDIS:GetPhrase(v))
     end
 
@@ -139,7 +139,7 @@ TARDIS:AddScreen("Chameleon", {id="chameleon", text="Screens.Chameleon", menu=fa
 
         table.SortByMember(exteriors, 2, true)
         list_exteriors:Clear()
-        for i,v in ipairs(exteriors) do
+        for _,v in ipairs(exteriors) do
             list_exteriors:AddLine(TARDIS:GetPhrase(v[2]))
         end
     end
@@ -185,7 +185,7 @@ TARDIS:AddScreen("Chameleon", {id="chameleon", text="Screens.Chameleon", menu=fa
 
                 if textures then -- Apply texturesets if they exist
                     local prefix = textures.prefix or ""
-                    for i,v in ipairs(textures) do
+                    for _,v in ipairs(textures) do
                         if v[1] == "self" then
                             modelent:SetSubMaterial(v[2],prefix .. v[3])
                         end
@@ -199,12 +199,12 @@ TARDIS:AddScreen("Chameleon", {id="chameleon", text="Screens.Chameleon", menu=fa
                         preview3D.door = ClientsideModel(doormodel)
                         preview3D.door:SetNoDraw(true)
                     end
-                    for i,v in ipairs(preview3D.door:GetMaterials()) do
+                    for i,_ in ipairs(preview3D.door:GetMaterials()) do
                         preview3D.door:SetSubMaterial(i-1)
                     end
                     if textures then
                         local prefix = textures.prefix or ""
-                        for i,v in ipairs(textures) do
+                        for _,v in ipairs(textures) do
                             if v[1] == "door" then
                                 preview3D.door:SetSubMaterial(v[2],prefix .. v[3])
                             end

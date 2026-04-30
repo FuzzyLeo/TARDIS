@@ -280,7 +280,7 @@ local overrides={
                     TARDIS.ProcessAnimation(self, self.animation)
 
                     if self.extra_animations then
-                        for k,v in pairs(self.extra_animations) do
+                        for _,v in pairs(self.extra_animations) do
                             TARDIS.ProcessAnimation(self, v)
                         end
                     end
@@ -470,7 +470,7 @@ function TARDIS:GetRegisteredPart(id)
 end
 
 hook.Add("InitPostEntity", "tardis-parts", function()
-    for k,v in pairs(overridequeue) do
+    for _,v in pairs(overridequeue) do
         SetupOverrides(v)
     end
     overridequeue={}

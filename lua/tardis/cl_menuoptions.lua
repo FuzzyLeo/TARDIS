@@ -8,7 +8,7 @@ function TARDIS:ReloadSpawnmenuOptionElements(section)
         return true
     else
         if self.SpawnmenuOptionsSectionElements[section] then
-            for k,v in ipairs(self.SpawnmenuOptionsSectionElements[section]) do
+            for _,v in ipairs(self.SpawnmenuOptionsSectionElements[section]) do
                 if v.RefreshVal then
                     v:RefreshVal()
                 end
@@ -25,7 +25,7 @@ hook.Add("PopulateToolMenu", "TARDIS2-PopulateToolMenu", function()
     local options={}
     local sections={}
     local subsections={}
-    for k,v in pairs(TARDIS:GetSettingsData()) do
+    for _,v in pairs(TARDIS:GetSettingsData()) do
         if v.option then
             table.insert(options,{v.id, v, (v.subsection or " ") .. v.name})
             if v.section and not table.HasValue(sections,v.section) then
@@ -38,7 +38,7 @@ hook.Add("PopulateToolMenu", "TARDIS2-PopulateToolMenu", function()
         end
     end
 
-    for k,v in pairs(TARDIS:GetButtonOptions()) do
+    for _,v in pairs(TARDIS:GetButtonOptions()) do
         table.insert(options,{v.id, v, (v.subsection or " ") .. v.name})
         if v.section and not table.HasValue(sections,v.section) then
             table.insert(sections, v.section)
@@ -54,7 +54,7 @@ hook.Add("PopulateToolMenu", "TARDIS2-PopulateToolMenu", function()
 
     TARDIS.SpawnmenuOptionsSectionElements = {}
 
-    for k,section in ipairs(sections) do
+    for _,section in ipairs(sections) do
         local section_id = "TARDIS2_Options_" .. section
         local section_text = " " .. TARDIS:GetPhrase("Settings.Sections."..section)
 
@@ -125,7 +125,7 @@ hook.Add("PopulateToolMenu", "TARDIS2-PopulateToolMenu", function()
                         TARDIS:ResetSectionSettings(section)
                         TARDIS:Message(LocalPlayer(), "MenuOptions.SectionReset", "Settings.Sections."..section)
 
-                        for i,v in ipairs(section_elements) do
+                        for _,v in ipairs(section_elements) do
                             if v.RefreshVal then
                                 v:RefreshVal()
                             end
@@ -188,7 +188,7 @@ hook.Add("PopulateToolMenu", "TARDIS2-PopulateToolMenu", function()
         table.SortByMember(keybinds,1,true)
         table.SortByMember(bind_sections,1,true)
 
-        for k,v in ipairs(bind_sections) do
+        for _,v in ipairs(bind_sections) do
             local category = vgui.Create("DForm")
             panel:AddItem(category)
 

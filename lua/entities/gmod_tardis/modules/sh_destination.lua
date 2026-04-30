@@ -403,7 +403,7 @@ else
         prop:Spawn()
         local groups = ent:GetBodyGroups()
         if groups then
-            for k,v in pairs(groups) do
+            for _,v in pairs(groups) do
                 prop:SetBodygroup(v.id, v.num)
             end
         end
@@ -471,7 +471,7 @@ else
     function ENT:RemoveDestinationProp()
         local prop = self:GetData("destinationprop")
         if IsValid(prop) then
-            for k,v in pairs(prop:GetChildren()) do
+            for _,v in pairs(prop:GetChildren()) do
                 if IsValid(v) then
                     v:Remove()
                 end
@@ -691,7 +691,7 @@ local function GenerateTracePoints(self, yaw)
     table.insert(trace_offsets, Vector(xmin, ymax, zmin))
     table.insert(trace_offsets, Vector(xmax, ymin, zmin))
 
-    for i,v in ipairs(trace_offsets) do
+    for _,v in ipairs(trace_offsets) do
         v:Rotate(yaw)
     end
 
@@ -738,7 +738,7 @@ local function SelectPlaneDefiningPoints(points)
         end
     end
     table.sort(todelete, function(left_index,right_index) return left_index > right_index end)
-    for i,c in ipairs(todelete) do
+    for _,c in ipairs(todelete) do
         table.remove(points, c)
     end
 
@@ -767,7 +767,7 @@ function ENT:GetGroundedPos(point, get_angle)
 
     -- a number of point quick-traces is more precise than TraceEntityHull or TraceEntity since they don't take rotation into account
 
-    for k,offset in ipairs(GenerateTracePoints(self,initial_yaw)) do
+    for _,offset in ipairs(GenerateTracePoints(self,initial_yaw)) do
         table.insert(traces, self:DestinationTraceDownHit(point + offset))
     end
 
@@ -801,7 +801,7 @@ function ENT:GetGroundedPos(point, get_angle)
 
     if TRACE_DEBUG then
         -- Debugging code, might be useful in the future
-        for k,v in ipairs(traces) do
+        for _,v in ipairs(traces) do
             if not v:IsEqualTol(a, 0.0001) and not v:IsEqualTol(b, 0.0001) and not v:IsEqualTol(c, 0.0001) then
                 RunConsoleCommand("tardis2_debug_pointer", "worldpos", v.x, v.y, v.z)
             end

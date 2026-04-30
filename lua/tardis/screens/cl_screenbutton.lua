@@ -247,7 +247,7 @@ function TardisScreenButton:AdjustTextOffset()
         local spacesizeX, spacesizeY = surface.GetTextSize(" ")
 
         local spaces = math.floor(0.5 * (size - w) / spacesizeX)
-        for i = 1, spaces do
+        for _ = 1, spaces do
             text = " "..text.." "
         end
         label:SetText(text)

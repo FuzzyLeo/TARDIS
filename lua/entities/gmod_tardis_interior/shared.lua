@@ -47,7 +47,7 @@ function ENT:CallHook(name,...)
         return a,b,c,d,e,f
     end
     if hooks[name] then
-        for k,v in pairs(hooks[name]) do
+        for _,v in pairs(hooks[name]) do
             a,b,c,d,e,f = v(self,...)
             if a~=nil then
                 return a,b,c,d,e,f
@@ -55,7 +55,7 @@ function ENT:CallHook(name,...)
         end
     end
     if self.metadata and self.metadata.Interior and self.metadata.Interior.CustomHooks then
-        for hook_id,body in pairs(self.metadata.Interior.CustomHooks) do
+        for _,body in pairs(self.metadata.Interior.CustomHooks) do
             if body and istable(body) and ((body[1] == name) or (istable(body[1]) and body[1][name])) then
                 local func = body[2]
                 a,b,c,d,e,f = func(self, ...)
@@ -66,7 +66,7 @@ function ENT:CallHook(name,...)
         end
     end
     if self.metadata and self.metadata.CustomHooks then
-        for hook_id,body in pairs(self.metadata.CustomHooks) do
+        for _,body in pairs(self.metadata.CustomHooks) do
             if body and istable(body) and body.inthooks and body.inthooks[name] then
                 a,b,c,d,e,f = body.func(self.exterior, self, ...)
                 if a~=nil then

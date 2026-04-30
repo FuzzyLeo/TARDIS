@@ -223,7 +223,7 @@ function ENT:ApplyLightState(state)
         ChangeSingleLightState(ldata.main, state)
         ParseLightTable(ldata.main, self, 20)
 
-        for k,v in pairs(ldata.extra) do
+        for _,v in pairs(ldata.extra) do
             ChangeSingleLightState(v, state)
             ParseLightTable(v, self, 10)
         end

@@ -44,7 +44,7 @@ matproxy.Add({
         self.FrameDurations = {}
         self.FrameNumbers = {}
 
-        for k,v in pairs(self.Textures) do
+        for k,_ in pairs(self.Textures) do
             local animate = (self.FrameRates[k] and self.FrameRates[k] > 0)
             self.AnimateTextures[k] = animate
             if animate then

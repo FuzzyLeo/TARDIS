@@ -26,7 +26,7 @@ local function new_virtual_console(self,ext,int,frame,screen)
 
     -- controls
 
-    for k,control in pairs(TARDIS:GetControls()) do
+    for _,control in pairs(TARDIS:GetControls()) do
         local options = control.screen_button
         if options and options.virt_console and not (screen.is3D2D and options.popup_only) then
             local button = TardisScreenButton:new(frame, screen)

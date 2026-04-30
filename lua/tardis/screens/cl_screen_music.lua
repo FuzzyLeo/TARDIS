@@ -56,7 +56,7 @@ function TARDIS:AddCustomMusic(name, url)
         return
     end
 
-    for k,v in pairs(custom_music) do
+    for _,v in pairs(custom_music) do
         if v[1] == name then
             TARDIS:ErrorMessage(LocalPlayer(), "Screens.Music.Conflict")
             return
@@ -286,7 +286,7 @@ TARDIS:AddScreen("Music", {id="music", text="Screens.Music", menu=false, order=1
         end
         list_songs:Clear()
         urls = {}
-        for k,v in pairs(custom_music) do
+        for _,v in pairs(custom_music) do
             list_songs:AddLine(v[1])
             table.insert(urls, v[2])
         end

@@ -192,7 +192,7 @@ if SERVER then
             local waspilot=self.pilot==ply
             if IsValid(self.pilot) and waspilot then
                 self.pilot=nil
-                for k,v in pairs(self.occupants) do
+                for k,_ in pairs(self.occupants) do
                     if k:GetTardisData("thirdperson") then
                         if IsValid(self.pilot) then
                             TARDIS:Message(k, "Flight.NameIsNowThePilot", self.pilot:Nick())
@@ -273,7 +273,7 @@ if SERVER then
 
             local function num_keys_pressed()
                 local count = 0
-                for k,v in pairs(fbinds) do
+                for _,v in pairs(fbinds) do
                     if v then
                         count = count + 1
                     end

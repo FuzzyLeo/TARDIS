@@ -25,7 +25,7 @@ if SERVER then
 
         self.debug_lamps = {}
 
-        for k,v in pairs(lamps) do
+        for _,v in pairs(lamps) do
             if v then
                 if not v.color then
                     v.color = Color(255,255,255)
@@ -78,7 +78,7 @@ if SERVER then
 
     ENT:AddHook("OnRemove", "debug_lamps", function(self)
         if not self.debug_lamps then return end
-        for k,v in pairs(self.debug_lamps) do
+        for _,v in pairs(self.debug_lamps) do
             if IsValid(v) then
                 v:Remove()
             end
@@ -88,7 +88,7 @@ if SERVER then
     ENT:AddHook("PowerToggled", "debug_lamps", function(self, on)
         if not self.debug_lamps then return end
 
-        for k,v in pairs(self.debug_lamps) do
+        for _,v in pairs(self.debug_lamps) do
             if IsValid(v) and v.lamp_data.nopower ~= true then
                 v:SetOn(on)
             end

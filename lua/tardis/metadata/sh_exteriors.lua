@@ -1,5 +1,5 @@
 function TARDIS:SetExteriorCategory(ext_id, category)
-    for k,v in pairs(self.ExteriorCategories) do
+    for _,v in pairs(self.ExteriorCategories) do
         if v[ext_id] then
             v[ext_id] = nil
         end

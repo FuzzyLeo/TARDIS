@@ -2,7 +2,7 @@
 
 if SERVER then
     local function runcallbacks(callbacks,state)
-        for k,v in pairs(callbacks) do
+        for k,_ in pairs(callbacks) do
             k(state)
             callbacks[k]=nil
         end

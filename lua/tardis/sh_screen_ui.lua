@@ -109,7 +109,7 @@ function TARDIS:ScreenActive(name)
     local t={}
     if IsValid(int) then
         if int.screens3D then
-            for k,v in pairs(int.screens3D) do
+            for _,v in pairs(int.screens3D) do
                 if IsValid(v) and IsValid(v.curscreen) and v.frame:IsVisible() and v.curscreen._name==name then
                     table.insert(t,v)
                 end
@@ -129,7 +129,7 @@ function TARDIS:GetScreens()
     if not self.HUDScreenActive or not IsValid(self.screenpop) then return end
     local tab = {}
 
-    for k,v in pairs(self.screenpop.screens) do
+    for _,v in pairs(self.screenpop.screens) do
         tab[v.name] = v
     end
 
@@ -502,7 +502,7 @@ function TARDIS:LoadScreenUI(screen)
 
     self:LoadButtons(screen, mmenu, function(parent)
         local buttons={}
-        for k,v in ipairs(screen.screens) do
+        for _,v in ipairs(screen.screens) do
             local button = vgui.Create("DButton")
             button:SetText(v.options and v.options.id)
             button:SetFont(TARDIS:GetScreenFont(screen, "Default"))
@@ -541,7 +541,7 @@ function TARDIS:LoadButtons(screen, frame, func, isvgui)
 
         local layout = HexagonalLayout:new(frame, layout_rows, 0.2)
 
-        for k,v in ipairs(screen.screens) do
+        for _,v in ipairs(screen.screens) do
             local button = TardisScreenButton:new(frame,screen)
             button:SetID(v.options and v.options.id or v.name)
             button:SetFrameType(0, 1)
@@ -565,7 +565,7 @@ function TARDIS:LoadButtons(screen, frame, func, isvgui)
         end
 
         if IsValid(screen.ext) then
-            for k,control in pairs(TARDIS:GetControls()) do
+            for _,control in pairs(TARDIS:GetControls()) do
                 local options = control.screen_button
                 if options and options.mmenu and not (screen.is3D2D and options.popup_only) then
                     local button = TardisScreenButton:new(frame, screen)
@@ -673,7 +673,7 @@ function TARDIS:LoadButtons(screen, frame, func, isvgui)
         newpage()
 
         local buttons=func(frame)
-        for k,v in ipairs(buttons) do
+        for _,v in ipairs(buttons) do
             v:SetParent(page)
             v:SetSize(page:GetWide()*0.318,page:GetTall()*0.295)
             v:SetPos(movebutton(v))

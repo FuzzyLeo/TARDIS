@@ -446,7 +446,7 @@ TARDIS:AddScreen("Destination", {id="coordinates", text="Screens.Coordinates", m
 
         llist:Clear()
         if TARDIS.Locations[map] ~= nil then
-            for k,v in pairs(TARDIS.Locations[map]) do
+            for _,v in pairs(TARDIS.Locations[map]) do
                 llist:AddLine(v.name)
             end
         end

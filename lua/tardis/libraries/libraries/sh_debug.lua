@@ -318,7 +318,7 @@ function TARDIS:Debug(...)
     if ... == nil or args == nil then
         full_text = full_text .. "<nil>"
     else
-        for k,arg in pairs(args) do
+        for _,arg in pairs(args) do
             local text
             if istable(arg) then
                 table.insert(tables_to_print, arg)
@@ -336,7 +336,7 @@ function TARDIS:Debug(...)
         print(full_text)
     end
 
-    for i,v in ipairs(tables_to_print) do
+    for _,v in ipairs(tables_to_print) do
         print("\n\n" .. debug_table_prefix .. tostring(v) .. ":")
         print("―――――――――――――――――――――――――――――――――――――――――――――――――――")
         PrintTable(v, 1)

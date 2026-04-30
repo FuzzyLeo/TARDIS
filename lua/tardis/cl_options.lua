@@ -126,7 +126,7 @@ function TARDIS:CreateOptionInterface(id, data)
         end
 
         if data.get_values_func ~= nil then
-            for k,v in pairs(data.get_values_func()) do
+            for _,v in pairs(data.get_values_func()) do
                 elem2:AddChoice(TARDIS:GetPhrase(v[1]), v[2])
             end
         end

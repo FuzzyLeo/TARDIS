@@ -58,7 +58,7 @@ if CLIENT then
     ENT:AddHook("Initialize","messages",function(self)
         if not self.msg_queue then return end
 
-        for k,v in ipairs(self.msg_queue) do
+        for _,v in ipairs(self.msg_queue) do
             if messagehandlers[v.name] then
                 messagehandlers[v.name](self, v.data, v.ply)
             elseif self.metadata and self.metadata.CustomMessages and self.metadata.CustomMessages[v.name] then

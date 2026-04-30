@@ -110,7 +110,6 @@ function TARDIS:CompileLanguage(code)
     end
 
     local base = lang.Base or self.DefaultLanguage
-    local baseLang = self.Languages[base]
     if code ~= base then
         local basePhrases = self.LanguageCache[base]
         if basePhrases then

@@ -54,7 +54,7 @@ end
 
 function ENT:RemoveScreens()
     if self.screens3D then
-        for k,v in pairs(self.screens3D) do
+        for _,v in pairs(self.screens3D) do
             if IsValid(v) then
                 v:Remove()
             end
@@ -130,7 +130,7 @@ end
 
 ENT:AddHook("PreDrawTranslucentRenderables", "screens", function(self)
     if self.screens3D then
-        for k,v in pairs(self.screens3D) do
+        for _,v in pairs(self.screens3D) do
             local should,pos,ang = self:ShouldRenderScreen(v)
             if should then
                 local col=Color(0,0,0,0)
