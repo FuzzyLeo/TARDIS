@@ -116,3 +116,14 @@ glua_check .
 ```
 
 Run from the project root. The `.` is required (no-arg fails on Windows), and the working directory must be the TARDIS root so `.luarc.json`'s relative paths (`./.tools/glua-api`, `../Doors`, etc.) resolve. Useful when a fix has rippled across the codebase or when picking up the project to find latent issues the LSP hasn't surfaced yet.
+
+#### Removing `---@diagnostic disable` rules from `.luarc.json`
+
+When enabling a previously-disabled rule, prefer source-side type annotations over per-callsite asserts or `---@cast` directives — annotations propagate automatically; callsite workarounds need to be repeated everywhere.
+
+- Entity-lookup helpers (`TARDIS:GetInteriorEnt`, `GetExteriorEnt`, etc.) return `gmod_tardis_interior?` / `gmod_tardis?` — those classes are defined in each SENT's `shared.lua`.
+- For helpers that take and return tables (e.g. `TARDIS:CopyTable`), plain `---@param t table; ---@return table` is usually sufficient. The generic form (`---@generic T : table; ---@return T`) sounds tighter but doesn't propagate cleanly through `any?` field accesses with this analyzer.
+- The analyzer narrows nullability on locals, not on repeated field accesses. `if self.X[id] == nil then return end` doesn't narrow a later `self.X[id]` — extract to a local (`local raw = self.X[id]`) so the nil check narrows it.
+- `assert(...)` is appropriate for runtime invariants where failure indicates a bug (GMod core lookups like `FindMetaTable("Player")`, paired-companion variables, post-bounds-check random picks). It is *not* a substitute for missing type annotations.
+
+This section is migration scaffolding — once `disable` is empty, it can be removed.
