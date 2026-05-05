@@ -43,14 +43,20 @@ local function build_pack_index(pack)
         pack_root = "vgui/entities/tardis/iconpacks/" .. pack.Folder .. "/"
     end
 
+    -- Index keys are stored lowercase so lookups survive Workshop's
+    -- filename-lowercasing pass — a pack that works locally with mixed-case
+    -- filenames still resolves once it's served from the workshop VPK.
     for cat in pairs(index.icons) do
         local cat_root = pack_root .. cat .. "/"
         local by_id = {}
         for _, name in ipairs(scan_dir(cat_root)) do
             local id, ext = name:match("^(.+)%.([^%.]+)$")
-            if id and ext and EXT_PRIORITY[ext] then
-                by_id[id] = by_id[id] or {}
-                by_id[id][ext] = name
+            if id and ext then
+                id, ext = id:lower(), ext:lower()
+                if EXT_PRIORITY[ext] then
+                    by_id[id] = by_id[id] or {}
+                    by_id[id][ext] = name
+                end
             end
         end
         for id, ext_to_name in pairs(by_id) do
@@ -70,8 +76,11 @@ local function build_pack_index(pack)
         local by_ext = {}
         for _, name in ipairs(scan_dir(pack_root)) do
             local id, ext = name:match("^(.+)%.([^%.]+)$")
-            if id == "missing" and EXT_PRIORITY[ext] then
-                by_ext[ext] = name
+            if id and ext then
+                id, ext = id:lower(), ext:lower()
+                if id == "missing" and EXT_PRIORITY[ext] then
+                    by_ext[ext] = name
+                end
             end
         end
         local picked = pick_best_ext(by_ext)
@@ -83,9 +92,12 @@ local function build_pack_index(pack)
         local by_id = {}
         for _, name in ipairs(scan_dir("vgui/entities/tardis/")) do
             local id, ext = name:match("^(.+)%.([^%.]+)$")
-            if id and ext and EXT_PRIORITY[ext] and id ~= "missing" then
-                by_id[id] = by_id[id] or {}
-                by_id[id][ext] = name
+            if id and ext then
+                id, ext = id:lower(), ext:lower()
+                if EXT_PRIORITY[ext] and id ~= "missing" then
+                    by_id[id] = by_id[id] or {}
+                    by_id[id][ext] = name
+                end
             end
         end
         for id, ext_to_name in pairs(by_id) do
@@ -153,14 +165,14 @@ function TARDIS:PackProvidesIcon(pack_id, category, id)
     local idx = self.iconpack_index[pack_id]
     if not idx then return false end
     local cat = idx.icons[category]
-    return cat and cat[id] ~= nil or false
+    return cat and id and cat[id:lower()] ~= nil or false
 end
 
 function TARDIS:GetPackIcon(pack_id, category, id)
     local idx = self.iconpack_index[pack_id]
     if not idx then return nil end
     local cat = idx.icons[category]
-    return cat and cat[id] or nil
+    return cat and id and cat[id:lower()] or nil
 end
 
 function TARDIS:GetIconProvider(category, id, config_override)
@@ -254,7 +266,7 @@ local function lookup_pack_icon(self, pack_id, category, id)
     local idx = self.iconpack_index[pack_id]
     if not idx then return nil end
     local cat = idx.icons[category]
-    return cat and cat[id] or nil
+    return cat and id and cat[id:lower()] or nil
 end
 
 function TARDIS:GetIcon(category, id, config_override)
