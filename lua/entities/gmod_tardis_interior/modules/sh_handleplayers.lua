@@ -27,4 +27,19 @@ else
             return false
         end
     end)
+
+    -- Predict tardis data clear on exit (mirror of the entry-side hook on
+    -- gmod_tardis). Gated on the main interior portal so customportals
+    -- and false-world windows don't drop the player out of the TARDIS.
+    -- Server's TARDIS-PlayerDataClear broadcast still arrives shortly
+    -- after and re-clears.
+    ENT:AddHook("PostTeleportPortal", "predict-tardisdata", function(self, portal, ent)
+        if ent ~= LocalPlayer() then return end
+        if not (self.portals and portal == self.portals.interior) then return end
+        ent:ClearTardisData()
+        if TARDIS_PredictDebug then
+            TARDIS_PredictDebug:Log("predict-tardisdata int clear",
+                string.format("portal=%s", tostring(portal)))
+        end
+    end)
 end
