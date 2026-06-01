@@ -39,6 +39,13 @@ function ENT:Initialize()
         self.Model=self.metadata.Exterior.Model
         self.Portal=self.metadata.Exterior.Portal
         self.Fallback=self.metadata.Exterior.Fallback
+        -- world-portals opt-in: per-exterior override of whether transiting props phase
+        -- the exterior shell. nil = keep the class default (true -- props phase the box
+        -- to get out). Set Exterior.PortalNoCollide=false in an exterior's metadata to
+        -- keep its shell solid.
+        if self.metadata.Exterior.PortalNoCollide ~= nil then
+            self.PortalNoCollide=self.metadata.Exterior.PortalNoCollide
+        end
         self.BaseClass.Initialize(self)
     end
 end
