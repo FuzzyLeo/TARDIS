@@ -50,7 +50,6 @@ function PART:Initialize()
             self:DrawShadow(false)
         elseif self.InteriorPart then
             self.DrawThroughPortal = true
-            table.insert(self.interior.stuckfilter, self)
         end
 
         if self.use_enhanced_door_collision then

@@ -47,8 +47,7 @@ end
 -- GetStuckTrace builds identical filter membership client- and server-side (the
 -- predicted unstick must land in the same place). Returns a list, not a veto, so
 -- it must be the only StuckFilter consumer returning non-nil - CallHook stops at
--- the first. The server also appends this part via parts/door.lua; a duplicate in
--- a trace filter is harmless.
+-- the first.
 ENT:AddHook("StuckFilter", "tardis-door", function(self)
     local door = self:GetPart("door")
     if IsValid(door) then return { door } end
