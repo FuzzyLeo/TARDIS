@@ -558,11 +558,10 @@ else
     end)
 end
 
--- Shared so the predicted player teleport (world-portals SetupMove on the
--- client) can also veto. GetTracking is networked; constraint.GetAllConstrainedEntities
--- is server-authoritative — on the client it returns an empty list, so the
--- constraint-based veto only fires server-side. The ent==trackingEnt check
--- still works on both realms.
+-- Shared so world-portals' predicted teleport (SetupMove on the client) can veto
+-- too. GetTracking is networked (both realms); constraint.GetAllConstrainedEntities
+-- is server-only (empty on the client), so that branch is gated SERVER and only the
+-- ent==trackingEnt check predicts.
 ENT:AddHook("ShouldTeleportPortal", "tracking", function(self,portal,ent)
     local trackingEnt = self:GetTracking()
     if not IsValid(trackingEnt) then return end

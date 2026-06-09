@@ -129,9 +129,9 @@ else
     end)
 end
 
--- Shared so the predicted player teleport (world-portals SetupMove on the
--- client) can also veto via CanPlayerEnter → ShouldTeleportPortal. Locked()
--- reads networked GetData so this is realm-safe.
+-- Shared so world-portals' predicted teleport (SetupMove on the client) can veto
+-- too, via CanPlayerEnter -> ShouldTeleportPortal. Locked() reads networked
+-- GetData, so it's realm-safe.
 ENT:AddHook("CanPlayerEnter","lock",function(self,ply)
     if self:Locked() then
         return false

@@ -48,7 +48,7 @@ local lastNetTpTime
 -- already did it) and only stamps RecordNetTeleport. So this firing without
 -- a preceding wp-teleport(client) event in the log means: predict missed,
 -- server did the teleport, your GetPos will catch up on the next snapshot,
--- and crucially nobody called SetEyeAngles — your view stays at the entry
+-- and crucially nobody called SetEyeAngles - your view stays at the entry
 -- orientation. That's the "facing the wall" / "walked back out" bug.
 if wp and wp.RecordNetTeleport and not wp._tardisDebugChained then
     local orig = wp.RecordNetTeleport
@@ -97,7 +97,7 @@ hook.Add("wp-teleport", "TARDIS_PredictDebugLog", function(portal, ent, newpos, 
 end)
 
 -- (Server-side WorldPortals_Teleport broadcast lands at the world-portals
--- net.Receive — see worldportals_debug_predict for the "Last net broadcast"
+-- net.Receive - see worldportals_debug_predict for the "Last net broadcast"
 -- line. Don't override that net handler here, last-wins would break it.)
 
 -- Client-side enter/exit tracking. Watch ply.door / ply.doori / tardis.interior
@@ -141,8 +141,8 @@ hook.Add("Think", "TARDIS_PredictDebug_StateWatch", function()
 end)
 
 -- Stuck-inside-portal detection. At high ping the predict swept test
--- sometimes misses on TARDIS entry — especially when the exterior is parked
--- on a slight slope — and the player ends up wedged inside the portal
+-- sometimes misses on TARDIS entry - especially when the exterior is parked
+-- on a slight slope - and the player ends up wedged inside the portal
 -- volume with the 3D portal wrapped around them. That wedged state
 -- correlates with the entry-angle bug; logging it lets us see the pattern.
 -- Fires when LocalPlayer is behind a TARDIS portal's plane AND inside its
@@ -233,7 +233,7 @@ end)
 -- skips the shift, and prediction-error correction drifts GetPos back
 -- toward oldPos ("kicked back outside"). This watcher logs arm/disarm
 -- transitions, sanity FAIL/OK transitions, and any big eye-angle or
--- GetPos jumps that happen during the armed window — so a single
+-- GetPos jumps that happen during the armed window - so a single
 -- "weird" frame can be traced backward across its event log.
 local prevPredictedPos, prevSanity, prevArmedEyeAng, prevArmedGetPos
 hook.Add("Think", "TARDIS_PredictDebug_ShiftWatch", function()
@@ -316,7 +316,7 @@ hook.Add("Think", "TARDIS_PredictDebug_ShiftWatch", function()
 end)
 
 -- Continuous eye-angle watcher. Catches "snap back" changes that happen
--- outside the predict-lerp armed window — the gap between disarm and the
+-- outside the predict-lerp armed window - the gap between disarm and the
 -- next predict, where ARMED ang jump can't see. Hypothesis: predict's
 -- cmd:SetViewAngles in SetupMove doesn't propagate to the network packet
 -- (cmd is serialized before SetupMove modifications), so the server's

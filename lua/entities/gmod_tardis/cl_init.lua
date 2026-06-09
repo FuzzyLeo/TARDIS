@@ -11,10 +11,9 @@ ENT:AddHook("PlayerInitialize", "interior", function(self)
 
     self.metadata=TARDIS:CreateInteriorMetadata(id, self)
 
-    -- Mirror the interior's cl_init Fallback plumbing for the exterior, so the
-    -- predicted unstick can read the exterior fallback spot client-side: Doors'
-    -- ResolveFallbackPos uses self.Fallback for the exit direction. The server
-    -- sets this in init.lua; the metadata is rebuilt client-side just above.
+    -- Mirror the exterior Fallback client-side so the predicted unstick can read
+    -- it: Doors' ResolveFallbackPos uses self.Fallback for the exit direction, and
+    -- the client only has it via the metadata rebuilt just above.
     if self.metadata and self.metadata.Exterior then
         self.Fallback = self.metadata.Exterior.Fallback
     end

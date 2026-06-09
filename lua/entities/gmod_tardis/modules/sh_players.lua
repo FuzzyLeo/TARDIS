@@ -92,14 +92,11 @@ else
         TARDIS:RemoveHUDScreen() -- force close hud screen if exit tardis
     end)
 
-    -- Predict tardis data on entry. The interior's ShouldDraw keys off
-    -- GetTardisData("interior") rather than ply.doori, so the Doors-level
-    -- predict hook (which sets ply.door / ply.doori) doesn't make the
-    -- interior visible until the server's TARDIS-PlayerData broadcast
-    -- arrives ~RTT later — visible as a blank-sky frame mid-teleport at
-    -- non-trivial ping. Mirror the SetTardisData pair the server's
-    -- PlayerEnter "players" hook would set; the broadcast still re-sets
-    -- the same values shortly after.
+    -- Predict tardis-data on entry. The interior's ShouldDraw keys off
+    -- GetTardisData("interior"), not ply.doori, so the Doors-level predict hook
+    -- isn't enough - without this the interior stays hidden until the server's
+    -- TARDIS-PlayerData broadcast arrives ~RTT later (blank-sky frame at ping).
+    -- Mirror the SetTardisData pair the server sets; the broadcast re-sets it soon.
     ENT:AddHook("PostTeleportPortal", "predict-tardisdata", function(self, portal, ent)
         if ent ~= LocalPlayer() then return end
         ent:SetTardisData("exterior", self)

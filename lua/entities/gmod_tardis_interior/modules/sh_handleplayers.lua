@@ -28,11 +28,10 @@ else
         end
     end)
 
-    -- Predict tardis data clear on exit (mirror of the entry-side hook on
-    -- gmod_tardis). Gated on the main interior portal so customportals
-    -- and false-world windows don't drop the player out of the TARDIS.
-    -- Server's TARDIS-PlayerDataClear broadcast still arrives shortly
-    -- after and re-clears.
+    -- Predict tardis-data clear on exit (mirror of the entry-side hook on
+    -- gmod_tardis). Gated on the main interior portal so customportals and
+    -- false-world windows don't drop the player out; the server's
+    -- TARDIS-PlayerDataClear broadcast re-clears shortly after.
     ENT:AddHook("PostTeleportPortal", "predict-tardisdata", function(self, portal, ent)
         if ent ~= LocalPlayer() then return end
         if not (self.portals and portal == self.portals.interior) then return end
@@ -44,14 +43,12 @@ else
     end)
 end
 
--- Exclude the interior door part from the stuck test on both realms, so Doors'
--- GetStuckTrace builds identical filter membership client- and server-side and
--- the predicted unstick lands in the same place. Shared (registered on both
--- realms); the part is networked, IsValid guards the brief pre-spawn window.
--- Returns a list, not a veto, so it must be the only StuckFilter consumer that
--- returns non-nil (CallHook short-circuits on the first non-nil result). The
--- server still appends this part to stuckfilter in parts/door.lua; a duplicate
--- in a trace filter is a harmless no-op.
+-- Exclude the interior door part from the stuck test on both realms so Doors'
+-- GetStuckTrace builds identical filter membership client- and server-side (the
+-- predicted unstick must land in the same place). Returns a list, not a veto, so
+-- it must be the only StuckFilter consumer returning non-nil - CallHook stops at
+-- the first. The server also appends this part via parts/door.lua; a duplicate in
+-- a trace filter is harmless.
 ENT:AddHook("StuckFilter", "tardis-door", function(self)
     local door = self:GetPart("door")
     if IsValid(door) then return { door } end

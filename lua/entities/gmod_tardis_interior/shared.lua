@@ -11,11 +11,10 @@ ENT.TardisInterior=true
 ENT.Exterior="gmod_tardis"
 
 -- world-portals opt-in: the interior model is the interior portal's parent, so it
--- goes through the same PortalNoCollide gate as everything else. DEFAULT false
--- (solid) so transiting props rest on / are bounded by the interior rather than
--- falling through it into the void; props phase the flagged entry wall part instead.
--- Per-interior override: set Interior.PortalNoCollide in the interior's metadata
--- (init.lua applies it over this default).
+-- runs through the same PortalNoCollide gate. DEFAULT false (solid) so transiting
+-- props rest on the interior instead of falling through into the void; they phase
+-- the flagged entry-wall part instead. Override per-interior with
+-- Interior.PortalNoCollide in metadata.
 ENT.PortalNoCollide=false
 
 local class=string.sub(ENT.Folder,string.find(ENT.Folder, "/[^/]*$")+1) -- only works if in a folder
