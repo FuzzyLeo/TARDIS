@@ -75,17 +75,10 @@ else
         local k=net.ReadType()
         local v=net.ReadType()
         LocalPlayer():SetTardisData(k,v)
-        if TARDIS_PredictDebug then
-            TARDIS_PredictDebug:Log("net TARDIS-PlayerData",
-                tostring(k) .. "=" .. tostring(v))
-        end
     end)
 
     net.Receive("TARDIS-PlayerDataClear", function()
         LocalPlayer():ClearTardisData()
-        if TARDIS_PredictDebug then
-            TARDIS_PredictDebug:Log("net TARDIS-PlayerDataClear")
-        end
     end)
 
     ENT:AddHook("PlayerExit", "players", function(self)
@@ -101,11 +94,6 @@ else
         if ent ~= LocalPlayer() then return end
         ent:SetTardisData("exterior", self)
         ent:SetTardisData("interior", self.interior)
-        if TARDIS_PredictDebug then
-            TARDIS_PredictDebug:Log("predict-tardisdata ext fire",
-                string.format("portal=%s interior=%s",
-                    tostring(portal), tostring(self.interior)))
-        end
     end)
 end
 

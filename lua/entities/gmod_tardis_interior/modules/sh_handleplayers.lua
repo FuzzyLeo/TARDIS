@@ -36,10 +36,6 @@ else
         if ent ~= LocalPlayer() then return end
         if not (self.portals and portal == self.portals.interior) then return end
         ent:ClearTardisData()
-        if TARDIS_PredictDebug then
-            TARDIS_PredictDebug:Log("predict-tardisdata int clear",
-                string.format("portal=%s", tostring(portal)))
-        end
     end)
 end
 
