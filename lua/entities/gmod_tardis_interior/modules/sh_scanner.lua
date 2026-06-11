@@ -156,7 +156,9 @@ ENT:AddHook("ShouldDraw", "scanner", function(self)
 end)
 
 ENT:AddHook("ShouldNotRenderPortal","scanner",function(self,parent,portal,exit)
-    if self.scannerrender and portal==self.portals.interior then
+    -- The scanner shows the outside world, so none of the interior's own portals
+    -- (interior door, false worlds, custom portals) belong in its view.
+    if self.scannerrender and portal:GetParent()==self then
         return true
     end
 end)

@@ -113,7 +113,10 @@ end)
 
 -- Thanks world-portals
 function ENT:ShouldRenderScreen(screen)
-    local camOrigin = GetViewEntity():EyePos()
+    -- The render-view origin: during a portal render this is the transformed camera, so a
+    -- screen viewed through a portal (a TARDIS nested in another) measures its distance and
+    -- behind-test correctly instead of from the real player eye in a far-off skybox.
+    local camOrigin = EyePos()
     local pos = self:LocalToWorld(screen.pos3D)
     local ang = self:LocalToWorldAngles(screen.ang3D)
     local distance = camOrigin:Distance(pos)
