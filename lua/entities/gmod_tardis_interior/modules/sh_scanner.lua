@@ -156,25 +156,18 @@ ENT:AddHook("ShouldDraw", "scanner", function(self)
 end)
 
 ENT:AddHook("ShouldNotRenderPortal","scanner",function(self,parent,portal,exit)
-    if self.scannerrender and portal==self.portals.interior then
+    -- The scanner shows the outside world, so none of the interior's own portals
+    -- (interior door, false worlds, custom portals) belong in its view.
+    if self.scannerrender and portal:GetParent()==self then
         return true
     end
 end)
 
+-- The scanner shows the outside world, so hide the interior's props for its render
 ENT:AddHook("PreScannerRender", "scanner", function(self)
-    for k,_ in pairs(self.props) do
-        if IsValid(k) then
-            k.olddrawscanner=k:GetNoDraw()
-            k:SetNoDraw(true)
-        end
-    end
+    self.cordonhidden = true
 end)
 
 ENT:AddHook("PostScannerRender", "scanner", function(self)
-    for k,_ in pairs(self.props) do
-        if IsValid(k) and k.olddrawscanner~=nil then
-            k:SetNoDraw(false)
-            k.olddrawscanner=nil
-        end
-    end
+    self.cordonhidden = false
 end)

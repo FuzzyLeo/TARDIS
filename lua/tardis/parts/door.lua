@@ -7,6 +7,7 @@ PART.AutoSetup = true
 PART.AutoPosition = false
 PART.ClientThinkOverride = true
 PART.Collision = true
+PART.PortalNoCollide = true
 PART.NoStrictUse = true
 PART.ShouldTakeDamage = true
 PART.BypassIsomorphic = true
@@ -46,7 +47,6 @@ function PART:Initialize()
             self:DrawShadow(false)
         elseif self.InteriorPart then
             self.DrawThroughPortal = true
-            table.insert(self.interior.stuckfilter, self)
         end
 
         if self.use_enhanced_door_collision then

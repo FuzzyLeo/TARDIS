@@ -1,18 +1,19 @@
 -- Handles portals for rendering, thanks to bliptec (http://facepunch.com/member.php?u=238641) for being a babe
 
-if SERVER then
-    ENT:AddHook("ShouldTeleportPortal", "portals", function(self,portal,ent)
-        if (not self.exterior:DoorOpen() and portal==self.portals.interior) or (ent.TardisPart and not ent.AllowThroughPortals) then
+-- Shared so world-portals' predicted player teleport can also veto.
+ENT:AddHook("ShouldTeleportPortal", "portals", function(self,portal,ent)
+    if (not self.exterior:DoorOpen() and portal==self.portals.interior) or (ent.TardisPart and not ent.AllowThroughPortals) then
+        return false
+    end
+    if portal:GetCustomLink() then
+        local part = self:GetPart(portal:GetCustomLink())
+        if IsValid(part) and part:GetOn()==false then
             return false
         end
-        if portal:GetCustomLink() then
-            local part = self:GetPart(portal:GetCustomLink())
-            if IsValid(part) and part:GetOn()==false then
-                return false
-            end
-        end
-    end)
-else
+    end
+end)
+
+if CLIENT then
     ENT:AddHook("ShouldRenderPortal", "portals", function(self,portal,exit,origin)
         local dont,black = self:CallHook("ShouldNotRenderPortal",self,portal,exit,origin)
         if dont==nil then
@@ -44,7 +45,15 @@ else
         local ext=self.exterior
         if not IsValid(ext) then return end
 
-        if LocalPlayer():GetTardisData("exterior")==ext or not ext:GetData("doorstate",false) then
+        -- Skip the distance auto-close (keep the door open) when closing would be wrong: the
+        -- door is already shut; the player is inside us at any depth; or our exterior is parked
+        -- in another interior the player isn't in - out there the world distance to it is
+        -- meaningless and it only renders nested through that interior's portal, so closing it
+        -- here just blanks us when someone looks in. We still distance-close from its own space.
+        local container = ext.insideof
+        if not ext:GetData("doorstate",false)
+            or self:LocalPlayerInside()
+            or (IsValid(container) and not container:LocalPlayerInside()) then
             if ext.DoorOverride~=nil then ext.DoorOverride=nil end
             return
         end
@@ -82,4 +91,20 @@ ENT:AddHook("TraceFilterPortal", "portals", function(self,portal)
     if portal:GetCustomLink() then
         return self:GetPart(portal:GetCustomLink())
     end
+end)
+
+-- The solids a prop transiting our portal may phase through, fed to world-portals' pass-
+-- through no-collide so a big prop doesn't jam crossing the doorway. It's opt-in: anything
+-- left off stays solid (a missed one just jams the prop, never voids it), so we list only
+-- what should give way - the interior model where metadata opts in (Interior.PortalNoCollide,
+-- off by default so you can still stand on the floor), plus any parts flagged PortalNoCollide.
+ENT:AddHook("NoCollidePortal", "parts", function(self)
+    local list = {}
+    if self.metadata.Interior.PortalNoCollide == true and IsValid(self:GetPhysicsObject()) then
+        list[#list+1] = self
+    end
+    for _, part in pairs(self:GetParts() or {}) do
+        if IsValid(part) and part.PortalNoCollide then list[#list+1] = part end
+    end
+    return list
 end)

@@ -1,12 +1,13 @@
 -- Portals
 
-if SERVER then
-    ENT:AddHook("ShouldTeleportPortal", "portals", function(self,portal,ent)
-        if not self:DoorOpen() or (ent.TardisPart and not ent.AllowThroughPortals) then
-            return false
-        end
-    end)
-else
+-- Shared so world-portals' predicted player teleport can also veto.
+ENT:AddHook("ShouldTeleportPortal", "portals", function(self,portal,ent)
+    if not self:DoorOpen() or (ent.TardisPart and not ent.AllowThroughPortals) then
+        return false
+    end
+end)
+
+if CLIENT then
     ENT:AddHook("ShouldRenderPortal", "portals", function(self,portal,exit,origin)
         local dont,black = self:CallHook("ShouldNotRenderPortal",self,portal,exit,origin)
         if dont==nil then
@@ -42,4 +43,17 @@ ENT:AddHook("ShouldVortexIgnoreZ", "portals", function(self)
     if IsValid(self.interior) and wp.drawingent==self.interior.portals.interior then
         return true
     end
+end)
+
+-- The solids a transiting prop may phase: the exterior shell itself unless metadata
+-- opts it out (Exterior.PortalNoCollide=false), plus any parts flagged PortalNoCollide.
+ENT:AddHook("NoCollidePortal", "parts", function(self)
+    local list = {}
+    if self.metadata.Exterior.PortalNoCollide ~= false and IsValid(self:GetPhysicsObject()) then
+        list[#list+1] = self
+    end
+    for _, part in pairs(self:GetParts() or {}) do
+        if IsValid(part) and part.PortalNoCollide then list[#list+1] = part end
+    end
+    return list
 end)

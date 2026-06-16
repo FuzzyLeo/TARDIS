@@ -10,4 +10,9 @@ ENT:AddHook("PlayerInitialize", "interior", function(self)
     end
 
     self.metadata=TARDIS:CreateInteriorMetadata(id, self)
+
+    -- The predicted unstick reads self.Fallback on the client (set server-side in init.lua).
+    if self.metadata and self.metadata.Exterior then
+        self.Fallback = self.metadata.Exterior.Fallback
+    end
 end)

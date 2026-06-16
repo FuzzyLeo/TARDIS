@@ -30,6 +30,7 @@ PART.Model = "models/molda/toyota_int/entry.mdl"
 PART.AutoSetup = true
 PART.Collision = true
 PART.ShouldTakeDamage = true
+PART.PortalNoCollide = true
 TARDIS:AddPart(PART)
 
 -- Default pillars
@@ -268,6 +269,7 @@ PART.Model = "models/molda/toyota_int/corridor_version2.mdl"
 PART.AutoSetup = true
 PART.Collision = true
 PART.ShouldTakeDamage = true
+PART.PortalNoCollide = true
 TARDIS:AddPart(PART)
 
 PART.ID = "default_corridors_small"

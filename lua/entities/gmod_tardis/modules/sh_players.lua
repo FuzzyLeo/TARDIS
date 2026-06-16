@@ -84,6 +84,16 @@ else
     ENT:AddHook("PlayerExit", "players", function(self)
         TARDIS:RemoveHUDScreen() -- force close hud screen if exit tardis
     end)
+
+    -- Predicted entry: set the TARDIS tardis-data client-side too. The interior's
+    -- ShouldDraw keys off GetTardisData("interior"), not ply.doori, so the Doors
+    -- predict isn't enough; without it the interior stays hidden until the server's
+    -- TARDIS-PlayerData broadcast re-sets it.
+    ENT:AddHook("PostTeleportPortal", "predict-tardisdata", function(self, portal, ent)
+        if ent ~= LocalPlayer() then return end
+        ent:SetTardisData("exterior", self)
+        ent:SetTardisData("interior", self.interior)
+    end)
 end
 
 ENT:AddHook("Initialize", "creatorID", function(self)

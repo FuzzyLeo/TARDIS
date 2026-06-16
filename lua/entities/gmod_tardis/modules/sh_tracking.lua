@@ -501,18 +501,6 @@ if SERVER then
         end
     end)
 
-    ENT:AddHook("ShouldTeleportPortal", "tracking", function(self,portal,ent)
-        local trackingEnt = self:GetTracking()
-        if not IsValid(trackingEnt) then return end
-
-        if ent == trackingEnt then
-            return false
-        end
-        if table.HasValue(constraint.GetAllConstrainedEntities(trackingEnt), ent) then
-            return false
-        end
-    end)
-
     ENT:AddHook("SpinChanged", "tracking", function(self, dir)
         local trackedBy = self:GetData("tracking-tracked-by")
         if IsValid(trackedBy) then
@@ -569,3 +557,19 @@ else
         TARDIS:Message(LocalPlayer(), "Controls.Tracking.RotationHint", TARDIS:GetKeyName(TARDIS:GetBindKey("tracking-rotation")))
     end)
 end
+
+-- Shared so world-portals' predicted teleport (SetupMove on the client) can veto
+-- too. GetTracking is networked (both realms); constraint.GetAllConstrainedEntities
+-- is server-only (empty on the client), so that branch is gated SERVER and only the
+-- ent==trackingEnt check predicts.
+ENT:AddHook("ShouldTeleportPortal", "tracking", function(self,portal,ent)
+    local trackingEnt = self:GetTracking()
+    if not IsValid(trackingEnt) then return end
+
+    if ent == trackingEnt then
+        return false
+    end
+    if SERVER and table.HasValue(constraint.GetAllConstrainedEntities(trackingEnt), ent) then
+        return false
+    end
+end)

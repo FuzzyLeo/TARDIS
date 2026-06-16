@@ -50,12 +50,6 @@ if SERVER then
         return true
     end
 
-    ENT:AddHook("CanPlayerEnter","lock",function(self,ply)
-        if self:Locked() then
-            return false
-        end
-    end)
-
     ENT:AddHook("CanToggleDoor","lock",function(self,state)
         if (not state) and self:Locked() then
             return false
@@ -134,3 +128,12 @@ else
         end
     end)
 end
+
+-- Shared so world-portals' predicted teleport (SetupMove on the client) can veto
+-- too, via CanPlayerEnter -> ShouldTeleportPortal. Locked() reads networked
+-- GetData, so it's realm-safe.
+ENT:AddHook("CanPlayerEnter","lock",function(self,ply)
+    if self:Locked() then
+        return false
+    end
+end)
