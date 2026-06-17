@@ -110,6 +110,8 @@ Useful when a fix has rippled across the codebase or when picking up the project
 
 #### Removing `---@diagnostic disable` rules from `.luarc.json`
 
+The current block — `need-check-nil`, `unchecked-nil-access`, `undefined-field`, `param-type-mismatch`, `assign-type-mismatch` — was re-added wholesale on the glua_ls 1.0.15 → 1.0.27 bump: 1.0.20+'s flow-based nil analysis and stricter inference flood ~400 false positives on TARDIS's dynamic `self` dispatch, runtime-set entity fields, and integer-enum usage (zero real bugs). Whittle it back down per the guidance below as `Pollux12/gmod-glua-ls` fixes the false positives.
+
 When enabling a previously-disabled rule, prefer source-side type annotations over per-callsite asserts or `---@cast` directives — annotations propagate automatically; callsite workarounds need to be repeated everywhere.
 
 - Entity-lookup helpers (`TARDIS:GetInteriorEnt`, `GetExteriorEnt`, etc.) return `gmod_tardis_interior?` / `gmod_tardis?` — those classes are defined in each SENT's `shared.lua`.

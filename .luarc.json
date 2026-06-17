@@ -2,6 +2,15 @@
     "runtime": {
         "version": "LuaJIT"
     },
+    "diagnostics": {
+        "disable": [
+            "need-check-nil",
+            "unchecked-nil-access",
+            "undefined-field",
+            "param-type-mismatch",
+            "assign-type-mismatch"
+        ]
+    },
     "workspace": {
         "library": [
             "./.tools/glua-api",
