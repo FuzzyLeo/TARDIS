@@ -181,6 +181,7 @@ if CLIENT then
 
     ENT:AddHook("Think", "lights", function(self)
         if TARDIS:GetSetting("lightoverride-enabled") then return end
+        if not self.light_data then return end
         local light = self.light_data.main
         local lights = self.light_data.extra
         local index=self:EntIndex()

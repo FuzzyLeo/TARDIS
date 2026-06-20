@@ -26,7 +26,7 @@ local function predraw_o(self, part)
     end
 
     --render.SetLightingMode(1)
-    local light = self.light_data.main
+    local light = self.light_data and self.light_data.main
 
     if light == nil then return end
     --because for some reason SOMEONE OUT THERE didn't define a light.
@@ -74,7 +74,7 @@ end
 
 local function postdraw_o(self)
     if not TARDIS:GetSetting("lightoverride-enabled") then return end
-    if self.light_data.main == nil then return end
+    if not self.metadata.Interior.LightOverride then return end
     render.SuppressEngineLighting(false)
 end
 
