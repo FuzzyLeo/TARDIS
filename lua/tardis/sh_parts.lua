@@ -53,6 +53,11 @@
 ---@field ExteriorPart boolean?
 ---@field AllowThroughPortals boolean?
 ---@field DrawThroughPortal boolean?
+---@field ShadowCollision boolean?
+---@field ShadowPending boolean?
+---@field ShadowLocalPos Vector?
+---@field ShadowLocalAng Angle?
+---@field LastShadowTarget Vector?
 -- Injected by the part system at setup:
 ---@field exterior gmod_tardis
 ---@field interior gmod_tardis_interior
@@ -582,6 +587,77 @@ local function GetData(self,e,id)
     return data
 end
 
+-- Swept-shadow collision: a part's own physobj follows the shell so it pushes props as
+-- the TARDIS moves. Driven each tick from the exterior parts module over its GetParts().
+local SHADOW_TELEPORT_DIST = 128
+local SHADOW_MASS = 50000
+
+---@param part gmod_tardis_part
+local function SetupPartShadow(part)
+    local phys = part:GetPhysicsObject()
+    if not IsValid(phys) then return end
+    phys:EnableMotion(false)
+    phys:SetMass(SHADOW_MASS)
+    if IsValid(part.parent) then
+        constraint.NoCollide(part.parent, part, 0, 0)
+    end
+    part.ShadowPending = true -- promoted next tick, past the spawn-tick stuck-push that would fling the parent
+    part.LastShadowTarget = nil
+    part.ShadowLocalPos = nil
+    part.ShadowLocalAng = nil
+end
+
+-- Captured on each realm right after Initialize: the WorldToLocal/LocalToWorld round-trip
+-- gives the same offset wherever the shell is, so server and client agree.
+---@param part gmod_tardis_part
+local function CapturePartShadowOffset(part)
+    if not (part.ShadowCollision and part.ExteriorPart) then return end
+    if not IsValid(part.parent) then return end
+    part.ShadowLocalPos = part.parent:WorldToLocal(part:GetPos())
+    part.ShadowLocalAng = part.parent:WorldToLocalAngles(part:GetAngles())
+end
+
+---@param part gmod_tardis_part
+function TARDIS:UpdatePartShadow(part)
+    local parent = part.parent
+    if not IsValid(parent) or not part.ShadowLocalPos then return end
+
+    local tpos = parent:LocalToWorld(part.ShadowLocalPos)
+    local tang = parent:LocalToWorldAngles(part.ShadowLocalAng)
+    if part:GetPos() ~= tpos or part:GetAngles() ~= tang then
+        part:SetPos(tpos)
+        part:SetAngles(tang)
+    end
+
+    if CLIENT then return end
+
+    if part:GetSolid() == SOLID_NONE then -- door open / dematerialising: dormant, re-snap on re-solidify
+        part.LastShadowTarget = nil
+        return
+    end
+
+    local phys = part:GetPhysicsObject()
+    if not IsValid(phys) then return end
+
+    if part.ShadowPending then
+        part:MakePhysicsObjectAShadow(false, false)
+        phys = part:GetPhysicsObject()
+        if IsValid(phys) then phys:SetMass(SHADOW_MASS) end
+        part.ShadowPending = false
+        part.LastShadowTarget = nil
+    end
+
+    local last = part.LastShadowTarget
+    if (not last) or tpos:Distance(last) > SHADOW_TELEPORT_DIST then
+        phys:SetPos(tpos) -- single-tick warp (spawn/teleport): snap, don't sweep
+        phys:SetAngles(tang)
+    elseif (not phys:GetPos():IsEqualTol(tpos, 0.05)) or phys:GetAngles() ~= tang then
+        phys:Wake()
+        phys:UpdateShadow(tpos, tang, FrameTime())
+    end
+    part.LastShadowTarget = tpos
+end
+
 local function AutoSetup(self,e,id)
     local data=GetData(self,e,id)
     if not data then return end
@@ -646,6 +722,9 @@ local function AutoSetup(self,e,id)
     end
     if not e.Collision then
         e:SetParent(self)
+    end
+    if SERVER and e.ShadowCollision and e.ExteriorPart then
+        SetupPartShadow(e)
     end
     if e.Scale then
         e:SetModelScale(e.Scale,0)
@@ -744,6 +823,7 @@ if SERVER then
                 end
                 e:Spawn()
                 e:Activate()
+                CapturePartShadowOffset(e)
                 ent:DeleteOnRemove(e)
             end
         end
@@ -827,6 +907,7 @@ else
             if e.o.Initialize then
                 e.o.Initialize(e)
             end
+            CapturePartShadowOffset(e)
             e._init=true
         end
     end

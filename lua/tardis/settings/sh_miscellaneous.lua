@@ -246,16 +246,3 @@ TARDIS:AddSetting({
     name="LegacyDoorType",
 })
 
-TARDIS:AddSetting({
-    id="use_enhanced_door_collision",
-    type="bool",
-    value=false,
-
-    class="networked",
-
-    option=true,
-    section=SETTING_SECTION,
-    subsection="Spawning",
-    name="UseEnhancedDoorCollision",
-})
-

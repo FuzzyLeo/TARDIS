@@ -7,6 +7,7 @@ PART.AutoSetup = true
 PART.AutoPosition = false
 PART.ClientThinkOverride = true
 PART.Collision = true
+PART.ShadowCollision = true
 PART.PortalNoCollide = true
 PART.NoStrictUse = true
 PART.ShouldTakeDamage = true
@@ -15,7 +16,6 @@ PART.BypassIsomorphic = true
 function PART:Initialize()
     local metadata=self.exterior.metadata
     local portal=self.ExteriorPart and metadata.Exterior.Portal or metadata.Interior.Portal
-    self.use_enhanced_door_collision = TARDIS:GetSetting("use_enhanced_door_collision", self.exterior)
     self.portal=portal
     if portal then
         self.posoffset=(self.posoffset or Vector(26*(self.InteriorPart and 1 or -1),0,-51.65))
@@ -42,18 +42,12 @@ function PART:Initialize()
 
     if SERVER then
         if self.ExteriorPart then
+            -- un-parented: collision follows the shell as a swept shadow (ShadowCollision)
             self.ClientDrawOverride = true
             self:SetSolid(SOLID_VPHYSICS)
             self:DrawShadow(false)
         elseif self.InteriorPart then
             self.DrawThroughPortal = true
-        end
-
-        if self.use_enhanced_door_collision then
-            if self.ExteriorPart then
-                constraint.NoCollide(self.parent, self, 0, 0)
-            end
-        else
             self:SetParent(self.parent)
         end
 
@@ -119,16 +113,6 @@ if SERVER then
         end
     end
 
-    function PART:Think()
-        if self.ExteriorPart and self.use_enhanced_door_collision then
-            local pos,ang=LocalToWorld(self.posoffset,self.angoffset,self.portal_pos,self.portal_ang)
-            self:SetPos(self.parent:LocalToWorld(pos))
-            self:SetAngles(self.parent:LocalToWorldAngles(ang))
-            self:NextThink(CurTime())
-            return true
-        end
-    end
-
     hook.Add("SkinChanged", "tardisi-door", function(ent,i)
         if ent.TardisExterior then
             local exterior_door=ent:GetPart("door")
@@ -189,12 +173,6 @@ else
                     intdoor:SetPoseParameter("switch", self.DoorPos)
                     intdoor:InvalidateBoneCache()
                 end
-            end
-
-            if self.use_enhanced_door_collision then
-                local pos,ang=LocalToWorld(self.posoffset,self.angoffset,self.portal_pos,self.portal_ang)
-                self:SetPos(self.parent:LocalToWorld(pos))
-                self:SetAngles(self.parent:LocalToWorldAngles(ang))
             end
         end
     end

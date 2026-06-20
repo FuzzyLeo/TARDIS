@@ -18,6 +18,14 @@ function ENT:GetParts()
     return self.parts
 end
 
+ENT:AddHook("Think", "shadow_parts", function(self)
+    for _, part in pairs(self:GetParts() or {}) do
+        if IsValid(part) and part.ShadowCollision then
+            TARDIS:UpdatePartShadow(part)
+        end
+    end
+end)
+
 ENT:AddHook("SetupOwner", "parts", function(self, ply)
     for _, part in pairs(self:GetParts() or {}) do
         Doors:SetupOwner(part, ply)
