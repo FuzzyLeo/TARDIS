@@ -32,7 +32,7 @@ function ENT:Initialize()
 end
 
 function ENT:Use( activator, caller )
-    if activator:GetTardisData("interior") then
+    if activator:GetTardisInterior() then
         local pos,ang = TARDIS:GetLocalPos(self, activator)
         if not pos then return end
         if not ang then return end

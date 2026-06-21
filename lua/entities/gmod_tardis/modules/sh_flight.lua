@@ -588,14 +588,14 @@ else
                 local e=ply:GetViewEntity()
                 if not IsValid(e) then e=ply end
                 if e:EntIndex()==-1 then -- clientside prop
-                    local ext=ply:GetTardisData("exterior")
+                    local ext=ply:GetTardisExterior()
                     if ext then
                         e=ext
                     else
                         e=ply
                     end
                 end
-                if ply:GetTardisData("exterior")==self and e==self.thpprop and ply:GetTardisData("outside") then
+                if ply:GetTardisExterior()==self and e==self.thpprop and ply:GetTardisData("outside") then
                     self.flightsound:ChangePitch(95+p,0.1)
                 else
                     local pos = e:GetPos()

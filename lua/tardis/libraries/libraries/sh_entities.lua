@@ -59,13 +59,15 @@ end
 ---@param ply Player?
 ---@return gmod_tardis?
 function TARDIS:GetExteriorEnt(ply)
-    local p = CLIENT and LocalPlayer() or ply
-    return p and p:GetTardisData("exterior") or nil
+    if CLIENT then ply = ply or LocalPlayer() end
+    if not IsValid(ply) then return end
+    return ply:GetTardisExterior()
 end
 
 ---@param ply Player?
 ---@return gmod_tardis_interior?
 function TARDIS:GetInteriorEnt(ply)
-    local p = CLIENT and LocalPlayer() or ply
-    return p and p:GetTardisData("interior") or nil
+    if CLIENT then ply = ply or LocalPlayer() end
+    if not IsValid(ply) then return end
+    return ply:GetTardisInterior()
 end

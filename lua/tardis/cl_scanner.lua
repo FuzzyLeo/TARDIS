@@ -1,8 +1,8 @@
 -- Scanner
 
 hook.Add("RenderScene", "TARDISI_Scanner", function(pos,ang)
-    local int=LocalPlayer():GetTardisData("interior")
-    local ext=LocalPlayer():GetTardisData("exterior")
+    local int=LocalPlayer():GetTardisInterior()
+    local ext=LocalPlayer():GetTardisExterior()
     if IsValid(ext) then
         local scanners = {}
         local screens=TARDIS:ScreenActive("Scanner")

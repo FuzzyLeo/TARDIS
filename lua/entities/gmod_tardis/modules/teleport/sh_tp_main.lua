@@ -310,7 +310,7 @@ else
 
             local pos = data[1]
 
-            if LocalPlayer():GetTardisData("exterior")==self then
+            if LocalPlayer():GetTardisExterior()==self then
                 if self:GetFastRemat() then
                     if shouldPlayInterior and IsValid(self.interior) then
                         self.interior:EmitSound(sound_fullflight_int)
@@ -367,7 +367,7 @@ else
             local ext = self.metadata.Exterior.Sounds.Teleport
             local int = self.metadata.Interior.Sounds.Teleport
             local pos=data[1]
-            if LocalPlayer():GetTardisData("exterior")==self and (not self:GetFastRemat()) then
+            if LocalPlayer():GetTardisExterior()==self and (not self:GetFastRemat()) then
                 if self:IsLowHealth() then
                     if shouldPlayExterior then
                         self:EmitSound(ext.mat_damaged)

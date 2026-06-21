@@ -12,7 +12,7 @@ if CLIENT then
 
     function TARDIS:SelectForRedecoration(id)
         TARDIS:SetSetting("redecorate-interior", id)
-        local current_tardis = LocalPlayer():GetTardisData("exterior")
+        local current_tardis = LocalPlayer():GetTardisExterior()
 
         if not current_tardis or not current_tardis:GetData("redecorate") then
             TARDIS:Message(LocalPlayer(), "Spawnmenu.RedecorationSelected")

@@ -6,8 +6,8 @@ if SERVER then
     TARDIS.binds=TARDIS.binds or {}
 
     net.Receive("TARDIS-KeyBind", function(_,ply)
-        local ext=ply:GetTardisData("exterior")
-        local int=ply:GetTardisData("interior")
+        local ext=ply:GetTardisExterior()
+        local int=ply:GetTardisInterior()
         if IsValid(ext) then
             local id=net.ReadString()
             local bind=TARDIS.binds[id]
@@ -34,8 +34,10 @@ if SERVER then
     end
 
     function TARDIS:IsBindDown(ply,id)
-        if self.binds[id] then
-            return self.binds[id].b[ply]
+        local bind = self.binds[id]
+        local b = bind and bind.b
+        if b then
+            return b[ply]
         end
     end
 
@@ -162,8 +164,8 @@ else
 
     hook.Add("Think", "TARDIS-KeyBind", function()
         if gui.IsConsoleVisible() or gui.IsGameUIVisible() or vgui.GetHoveredPanel() then return end
-        local ext=LocalPlayer():GetTardisData("exterior")
-        local int=LocalPlayer():GetTardisData("interior")
+        local ext=LocalPlayer():GetTardisExterior()
+        local int=LocalPlayer():GetTardisInterior()
         if IsValid(ext) then
             for key, info in pairs(keys) do
                 local b = info.b

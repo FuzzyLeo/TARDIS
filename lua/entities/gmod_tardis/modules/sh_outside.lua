@@ -39,14 +39,15 @@ if SERVER then
     end)
 
     hook.Add("SetupPlayerVisibility", "tardis-outside", function(ply)
-        if ply:GetTardisData("outside") and IsValid(ply:GetTardisData("exterior")) then
-            AddOriginToPVS(ply:GetTardisData("exterior"):GetPos())
+        local ext=ply:GetTardisExterior()
+        if ply:GetTardisData("outside") and IsValid(ext) then
+            AddOriginToPVS(ext:GetPos())
         end
     end)
 
     hook.Add("StartCommand", "tardis-outside", function(ply, cmd)
         if ply:GetTardisData("outside") then
-            local ext=ply:GetTardisData("exterior")
+            local ext=ply:GetTardisExterior()
             if not IsValid(ext) then return end
             if not ply:Alive() then ext:SetOutsideView(ply,false) return end
             local ang=cmd:GetViewAngles()
@@ -63,7 +64,9 @@ if SERVER then
 else
     hook.Add("StartCommand", "tardis-outside", function(ply, cmd)
         if ply:GetTardisData("outside") then
-            ply:GetTardisData("exterior"):CallHook("Outside-StartCommand", ply, cmd)
+            local ext=ply:GetTardisExterior()
+            if not IsValid(ext) then return end
+            ext:CallHook("Outside-StartCommand", ply, cmd)
             cmd:ClearMovement()
         end
     end)
@@ -105,7 +108,7 @@ else
     oldgetviewentity=oldgetviewentity or GetViewEntity
     function GetViewEntity(...)
         if LocalPlayer():GetTardisData("outside") then
-            local ext=LocalPlayer():GetTardisData("exterior")
+            local ext=LocalPlayer():GetTardisExterior()
             if ext and IsValid(ext.thpprop) then
                 return ext.thpprop
             end
@@ -118,7 +121,7 @@ else
     function meta:GetViewEntity(...)
         if not self then return oldgetviewentity2(self,...) end
         if self:GetTardisData("outside") then
-            local ext=self:GetTardisData("exterior")
+            local ext=self:GetTardisExterior()
             if IsValid(ext) and IsValid(ext.thpprop) then
                 return ext.thpprop
             end
@@ -127,7 +130,7 @@ else
     end
     hook.Add("CalcView", "tardis-outside", function(ply, pos, ang, fov)
         if ply:GetTardisData("outside") then
-            local ext=ply:GetTardisData("exterior")
+            local ext=ply:GetTardisExterior()
             if IsValid(ext) then
                 local newPos, newAng = ext:CallHook("Outside-PosAng", ply, pos, ang)
                 if newPos then

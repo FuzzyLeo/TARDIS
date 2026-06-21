@@ -170,7 +170,7 @@ ENT:AddHook("Think", "tp_interrupt", function(self)
     end
 
     local showeffects = (CLIENT and self:GetData("teleport-interrupt-effects", false)
-            and LocalPlayer():GetTardisData("exterior") == self
+            and LocalPlayer():GetTardisExterior() == self
             and (not LocalPlayer():GetTardisData("thirdperson"))
             and TARDIS:GetSetting("breakdown-effects"))
 

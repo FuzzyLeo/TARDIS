@@ -67,7 +67,7 @@ CreateConVar("tardis2_selected_interior", "", {FCVAR_REPLICATED}, "TARDIS - sele
 ---@field ExcludedSkins table?
 ---@field WinterSkins table?
 ---@field DoorAnimationTime number
----@field ScannerOffset Vector?
+---@field ScannerOffset Vector
 ---@field PhaseMaterial string?
 ---@field Portal tardis_portal
 ---@field Fallback tardis_fallback

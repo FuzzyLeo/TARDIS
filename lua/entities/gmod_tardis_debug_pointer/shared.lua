@@ -45,7 +45,7 @@ concommand.Add("tardis2_debug_pointer", function(ply,cmd,args)
         ent:SetPos(close_pos)
     end
 
-    local interior = ply:GetTardisData("interior")
+    local interior = ply:GetTardisInterior()
 
     for i,v in ipairs(args) do
         if v == "model" then
@@ -150,7 +150,7 @@ else
         pr:SetSize(menu_w, menu_h)
         pr:Center()
 
-        local ent = LocalPlayer():GetTardisData("interior")
+        local ent = LocalPlayer():GetTardisInterior()
         if not ent then
             frame:Close()
             LocalPlayer():ChatPrint("No TARDIS interior found")

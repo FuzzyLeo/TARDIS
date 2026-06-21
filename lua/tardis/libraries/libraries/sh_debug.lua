@@ -38,8 +38,8 @@ end
 
 concommand.Add("tardis2_debug_func", function(ply,cmd,args)
     if not ply:IsAdmin() then return end
-    local ext = ply:GetTardisData("exterior")
-    local int = ply:GetTardisData("interior")
+    local ext = ply:GetTardisExterior()
+    local int = ply:GetTardisInterior()
 
     TARDIS.DebugFunction(ext,int,ply,cmd,args)
 end)
@@ -86,14 +86,14 @@ CreateBoolDebugConVar("debug_tips", "TARDIS - generate tip code when using the p
 CreateBoolDebugConVar("debug_tips_show_all", "TARDIS - show all existing tips (not depending on their text)")
 
 concommand.Add("tardis2_debug_tips_print", function(ply,cmd,args)
-    local int = ply:GetTardisData("interior")
+    local int = ply:GetTardisInterior()
     if not IsValid(int) then return end
 
     print(int.debug_tips_text or "NO TIPS DEBUG TEXT GENERATED")
 end)
 
 concommand.Add("tardis2_debug_tips_reset", function(ply,cmd,args)
-    local int = ply:GetTardisData("interior")
+    local int = ply:GetTardisInterior()
     if not IsValid(int) then return end
 
     int.debug_tips_text = nil
@@ -161,7 +161,7 @@ TARDIS.DebugTipsFunction = function(self, ply, ...)
 end
 
 concommand.Add("tardis2_debug_warning", function(ply,cmd,args)
-    local ext = ply:GetTardisData("exterior")
+    local ext = ply:GetTardisExterior()
     if not IsValid(ext) or not ply:IsAdmin() then return end
 
     local max = ext:GetHealthMax()
@@ -195,7 +195,7 @@ concommand.Add("tardis2_debug_warning", function(ply,cmd,args)
 end)
 
 concommand.Add("tardis2_debug_health", function(ply,cmd,args)
-    local ext = ply:GetTardisData("exterior")
+    local ext = ply:GetTardisExterior()
     if not IsValid(ext) or not ply:IsAdmin() then return end
     if not args[1] or not tonumber(args[1]) then return end
 
@@ -203,7 +203,7 @@ concommand.Add("tardis2_debug_health", function(ply,cmd,args)
 end)
 
 concommand.Add("tardis2_debug_shields", function(ply,cmd,args)
-    local ext = ply:GetTardisData("exterior")
+    local ext = ply:GetTardisExterior()
     if not IsValid(ext) or not ply:IsAdmin() then return end
     if not args[1] or not tonumber(args[1]) then return end
 
@@ -211,21 +211,21 @@ concommand.Add("tardis2_debug_shields", function(ply,cmd,args)
 end)
 
 concommand.Add("tardis2_debug_power", function(ply,cmd,args)
-    local ext = ply:GetTardisData("exterior")
+    local ext = ply:GetTardisExterior()
     if not IsValid(ext) or not ply:IsAdmin() then return end
 
     ext:TogglePower()
 end)
 
 concommand.Add("tardis2_debug_ply_pos", function(ply,cmd,args)
-    local int = ply:GetTardisData("interior")
+    local int = ply:GetTardisInterior()
     if not IsValid(int) then return end
 
     print(tostring(int:WorldToLocal(ply:GetPos())))
 end)
 
 concommand.Add("tardis2_debug_minmax", function(ply,cmd,args)
-    local int = ply:GetTardisData("interior")
+    local int = ply:GetTardisInterior()
     if not IsValid(int) or not ply:IsAdmin() then return end
 
     int.ExitBox = {
@@ -243,9 +243,10 @@ concommand.Add("tardis2_debug_minmax", function(ply,cmd,args)
     end
 
     local min, max
-    if args[1] == "exit" and int.metadata.Interior.ExitBox.Min and int.metadata.Interior.ExitBox.Max then
-        min = int.metadata.Interior.ExitBox.Min
-        max = int.metadata.Interior.ExitBox.Max
+    local exitbox = int.metadata.Interior.ExitBox
+    if args[1] == "exit" and exitbox and exitbox.Min and exitbox.Max then
+        min = exitbox.Min
+        max = exitbox.Max
         ply:ChatPrint("Created pointers for T.Interior.ExitBox")
     elseif (args[1] == "size" or not args[1]) and int.metadata.Interior.Size.Min and int.metadata.Interior.Size.Max then
         min = int.metadata.Interior.Size.Min

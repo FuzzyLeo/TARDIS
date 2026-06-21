@@ -187,7 +187,7 @@ else -- CLIENT
                 self.interior:EmitSound(int.demat_fail or ext.demat_fail)
             end
         end
-        if LocalPlayer():GetTardisData("exterior") == self and IsValid(self.interior) then
+        if LocalPlayer():GetTardisExterior() == self and IsValid(self.interior) then
             util.ScreenShake(self.interior:GetPos(), 2.5, 100, 3, 300)
         end
     end)
@@ -202,7 +202,7 @@ else -- CLIENT
                 self.interior:EmitSound(int.mat_fail or ext.mat_fail)
             end
         end
-        if LocalPlayer():GetTardisData("exterior") == self and IsValid(self.interior) then
+        if LocalPlayer():GetTardisExterior() == self and IsValid(self.interior) then
             util.ScreenShake(self.interior:GetPos(), 2.5, 100, 3, 300)
         end
     end)
@@ -269,7 +269,7 @@ ENT:AddHook("Think","breakdown-effects", function(self)
     if self:GetData("force-demat", false) then
         local timediff = CurTime() - self:GetData("force-demat-time")
 
-        local showeffects = (CLIENT and LocalPlayer():GetTardisData("exterior") == self
+        local showeffects = (CLIENT and LocalPlayer():GetTardisExterior() == self
             and (not LocalPlayer():GetTardisData("thirdperson"))
             and TARDIS:GetSetting("breakdown-effects"))
 

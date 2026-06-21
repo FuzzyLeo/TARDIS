@@ -80,7 +80,7 @@ end
 hook.Add("HUDPaint", "TARDIS-HUD", function()
     local ply = LocalPlayer()
     if ( GetConVarNumber( "cl_drawhud" ) == 0 ) then return end
-    local tardis = ply:GetTardisData("exterior")
+    local tardis = ply:GetTardisExterior()
     if not IsValid(tardis) then return end
 
     local draw_health = TARDIS:GetSetting("health-enabled")
@@ -119,7 +119,7 @@ list.Set("DesktopWindows", "TardisHUD", {
     title = "TARDIS",
     icon = "materials/vgui/tardis_context_menu.png",
     init = function(icon, window)
-        local ext = LocalPlayer():GetTardisData("exterior")
+        local ext = LocalPlayer():GetTardisExterior()
         if IsValid(ext) then
             TARDIS:HUDScreen(window)
         else

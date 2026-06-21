@@ -69,11 +69,11 @@ function TARDIS:Control(control_id, ply, part)
     if CLIENT then ply = LocalPlayer() end
     if not ply:IsPlayer() then return end
 
-    local ext = ply:GetTardisData("exterior")
+    local ext = ply:GetTardisExterior()
     local control = TARDIS:GetControl(control_id, ext)
 
     if control and IsValid(ext) then
-        local int = ply:GetTardisData("interior")
+        local int = ply:GetTardisInterior()
         if ext:CallCommonHook("CanUseTardisControl", control, ply, part) == false then
             return
         end

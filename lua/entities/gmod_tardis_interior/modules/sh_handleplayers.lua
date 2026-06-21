@@ -2,8 +2,8 @@
 
 if SERVER then
     hook.Add("PlayerSpawn", "tardis-handleplayers", function(ply)
-        local int=ply:GetTardisData("interior")
-        if IsValid(int) and int.TardisInterior and ply == int:GetCreator() then
+        local int=ply:GetTardisInterior()
+        if IsValid(int) and ply == int:GetCreator() then
             local fallback=int.metadata.Interior.Fallback
             if fallback then
                 ply:SetPos(int:LocalToWorld(fallback.pos))
@@ -17,7 +17,7 @@ else
         -- depth). The case left to us: inside but in TARDIS' outside-door view - hide our
         -- interior so the doorway shows the world, unless our exterior is cordoned as a prop.
         if wp.drawing then return end
-        if LocalPlayer().doori == self and LocalPlayer():GetTardisData("outside") and self.props[self.exterior] == nil then
+        if LocalPlayer():GetTardisInterior() == self and LocalPlayer():GetTardisData("outside") and self.props[self.exterior] == nil then
             return false
         end
     end)

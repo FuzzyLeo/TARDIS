@@ -49,7 +49,7 @@ if SERVER then
     end
 
     hook.Add("DoPlayerDeath", "TARDIS_PlayerDeath", function(ply)
-        local ext=ply:GetTardisData("exterior")
+        local ext=ply:GetTardisExterior()
         if IsValid(ext) and ply:GetTardisData("intfallback") then
             ext:PlayerExit(ply, true)
         end
