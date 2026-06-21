@@ -78,10 +78,30 @@ local function postdraw_o(self)
     render.SuppressEngineLighting(false)
 end
 
-ENT:AddHook("PreDraw", "customlighting", predraw_o)
+local function predraw_ply(ply, ent)
+    local int = ply:GetTardisInterior()
+    if int then predraw_o(int, ent) end
+end
 
+local function postdraw_ply(ply)
+    local int = ply:GetTardisInterior()
+    if int then postdraw_o(int) end
+end
+
+ENT:AddHook("PreDraw", "customlighting", predraw_o)
 ENT:AddHook("Draw", "customlighting", postdraw_o)
 
 ENT:AddHook("PreDrawPart", "customlighting", predraw_o)
-
 ENT:AddHook("PostDrawPart", "customlighting", postdraw_o)
+
+ENT:AddHook("PreDrawCordonProp", "customlighting", predraw_o)
+ENT:AddHook("PostDrawCordonProp", "customlighting", postdraw_o)
+
+hook.Add("PreDrawViewModel", "tardis-customlighting", function(vm, ply) predraw_ply(ply, vm) end)
+hook.Add("PostDrawViewModel", "tardis-customlighting", function(_, ply) postdraw_ply(ply) end)
+
+hook.Add("PreDrawPlayerHands", "tardis-customlighting", function(hands, _, ply) predraw_ply(ply, hands) end)
+hook.Add("PostDrawPlayerHands", "tardis-customlighting", function(_, _, ply) postdraw_ply(ply) end)
+
+hook.Add("PrePlayerDraw", "tardis-customlighting", function(ply) predraw_ply(ply, ply) end)
+hook.Add("PostPlayerDraw", "tardis-customlighting", function(ply) postdraw_ply(ply) end)

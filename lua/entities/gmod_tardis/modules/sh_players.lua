@@ -96,6 +96,27 @@ else
     end)
 end
 
+---@class Player
+local meta = FindMetaTable("Player")
+
+---@return gmod_tardis_interior?
+function meta:GetTardisInterior()
+    local int = self.doori
+    if not IsValid(int) then return end
+    ---@cast int gmod_tardis_interior
+    if not int.TardisInterior then return end
+    return int
+end
+
+---@return gmod_tardis?
+function meta:GetTardisExterior()
+    local ext = self.door
+    if not IsValid(ext) then return end
+    ---@cast ext gmod_tardis
+    if not ext.TardisExterior then return end
+    return ext
+end
+
 ENT:AddHook("Initialize", "creatorID", function(self)
     self.CreatorID = self:GetCreator():UserID()
     self.CreatorNick = self:GetCreator():Nick()
