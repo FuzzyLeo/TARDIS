@@ -25,6 +25,7 @@ PART.AnimateOptions = {
 
 if CLIENT then
     PART.Use = function(self, ply)
+        ---@cast self.animation table
         self.animation.stop_anywhere = LocalPlayer():KeyDown(IN_WALK)
     end
 end
