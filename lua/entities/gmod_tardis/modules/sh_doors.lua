@@ -135,40 +135,49 @@ if SERVER then
         end
     end)
 
-    ENT:AddHook("ToggleDoor", "doorcollision",function(self,open)
+    ENT:AddHook("DematStart", "doorcollision", function(self)
         self:UpdateDoorCollision()
     end)
 
-    ENT:AddHook("SlowThink", "doorcollision",function(self,open)
-        if self:DoorOpen(true) then
-            self:UpdateDoorCollision()
-        end
+    ENT:AddHook("StopMat", "doorcollision", function(self)
+        self:UpdateDoorCollision()
+    end)
+
+    ENT:AddHook("ToggleDoorReal", "doorcollision", function(self)
+        self:UpdateDoorCollision()
     end)
 
     function ENT:UpdateDoorCollision()
+        local door_ext = TARDIS:GetPart(self, "door")
+        local door_int = TARDIS:GetPart(self.interior, "door")
+
+        if not IsValid(door_ext) or not IsValid(door_int) then return end
+
         local open = self:DoorOpen(true)
-        local override = self:CallHook("DoorCollisionOverride")
 
-        local door_ext = TARDIS:GetPart(self,"door")
-        local door_int=TARDIS:GetPart(self.interior,"door")
+        local colgroup = self:GetCollisionGroup()
 
-        if (override == nil and open) or override==false then
-            if IsValid(door_ext) then door_ext:SetSolid(SOLID_NONE) end
-            if IsValid(door_int) then door_int:SetCollisionGroup( COLLISION_GROUP_WORLD ) end
-        elseif override or override==nil then
-            if IsValid(door_ext) then door_ext:SetSolid(SOLID_VPHYSICS) end
-            if IsValid(door_int) then door_int:SetCollisionGroup( COLLISION_GROUP_NONE ) end
+        -- If the tardis is teleporting or in the vortex, the interior doors should always
+        -- be solid even if the door is open (e.g. looking at the vortex) to prevent the player
+        -- from phasing through the door. If not teleporting or in the vortex and the doors are
+        -- open then both exterior and interior doors become non-solid to allow passage. Otherwise
+        -- we match the collision group of exterior and interior doors to match the tardis exterior.
+
+        if self:GetData("teleport") or self:GetData("vortex") then
+            if open then
+                door_ext:SetCollisionGroup(COLLISION_GROUP_WORLD)
+            else
+                door_ext:SetCollisionGroup(colgroup)
+            end
+            door_int:SetCollisionGroup(COLLISION_GROUP_NONE)
+        elseif open then
+            door_ext:SetCollisionGroup(COLLISION_GROUP_WORLD)
+            door_int:SetCollisionGroup(COLLISION_GROUP_WORLD)
+        else
+            door_ext:SetCollisionGroup(colgroup)
+            door_int:SetCollisionGroup(colgroup)
         end
     end
-
-    ENT:AddHook("ShouldExteriorDoorCollide", "dooropen", function(self,open)
-        local override = self:CallHook("DoorCollisionOverride")
-        if (override == nil and open) or override==false then
-            return false
-        elseif override or override==nil then
-            return true
-        end
-    end)
 
     ENT:AddHook("ToggleDoorReal", "doors", function(self,open)
         self:SendMessage("ToggleDoorReal", {open})
@@ -186,14 +195,6 @@ if SERVER then
             local callbacks=self:GetData("doorchangecallback")
             runcallbacks(callbacks,false)
             self:SetData("doorchangecallback",nil)
-        end
-        local door = TARDIS:GetPart(self,"door")
-        if IsValid(door) then
-            if self:CallHook("ShouldExteriorDoorCollide",self:GetData("doorstatereal",false)) then
-                door:SetSolid(SOLID_VPHYSICS)
-            else
-                door:SetSolid(SOLID_NONE)
-            end
         end
     end)
 

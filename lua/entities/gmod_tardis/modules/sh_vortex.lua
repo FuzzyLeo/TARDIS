@@ -101,12 +101,6 @@ if SERVER then
         end
     end)
 
-    ENT:AddHook("DoorCollisionOverride","vortex",function(self)
-        if self:GetData("vortex") and self:IsVortexEnabled() then
-            return true -- forces door collision to stay on
-        end
-    end)
-
     ENT:AddHook("CanToggleDoor","vortex",function(self,state)
         if self:GetData("vortex") and (not self:IsVortexEnabled()) then
             return false

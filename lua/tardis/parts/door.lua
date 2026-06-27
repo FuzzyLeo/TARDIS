@@ -44,7 +44,6 @@ function PART:Initialize()
         if self.ExteriorPart then
             -- un-parented: collision follows the shell as a swept shadow (ShadowCollision)
             self.ClientDrawOverride = true
-            self:SetSolid(SOLID_VPHYSICS)
             self:DrawShadow(false)
         elseif self.InteriorPart then
             self.DrawThroughPortal = true

@@ -43,12 +43,6 @@ if SERVER then
         end
     end)
 
-    ENT:AddHook("ShouldExteriorDoorCollide", "teleport", function(self,open)
-        if self:GetData("teleport") or self:GetData("vortex") then
-            return false
-        end
-    end)
-
     ENT:AddHook("CanRepair", "teleport", function(self, ignore_health)
         if self:GetData("teleport") or self:GetData("vortex") then
             return false
