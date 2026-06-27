@@ -47,7 +47,6 @@ function PART:Initialize()
             self:DrawShadow(false)
         elseif self.InteriorPart then
             self.DrawThroughPortal = true
-            self:SetParent(self.parent)
         end
 
         self:SetSkin(self.exterior:GetSkin())
