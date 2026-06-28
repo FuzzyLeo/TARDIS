@@ -24,9 +24,15 @@ if CLIENT then
         end
         if dont then
             return false, black
+        elseif LocalPlayer():GetTardisData("outside") and wp.renderparent ~= self.portals.exterior then
+            -- Don't show the interior portals if the player's view is outside e.g. piloting
+            return false
         elseif (not (self.DoorOpen and self:DoorOpen(false))) and portal==self.portals.interior then
+            -- Don't show the main interior portal (door) if the door is closed
             return false
         elseif (not TARDIS:GetSetting("portals-enabled")) then
+            -- Don't show any portals if they are disabled, show black instead on the main interior
+            -- portal or any portals opted in to be shown as black when disabled
             return false, self.portals.interior==portal or portal.black
         end
     end)
@@ -35,6 +41,8 @@ if CLIENT then
         if portal:GetCustomLink() then
             local part = self:GetPart(portal:GetCustomLink())
             if IsValid(part) and ((part.Animate and part.animation and part.animation.pos==0) or ((not part.Animate) and part:GetOn()==false)) then
+                -- Don't render part-linked custom portals if the part is not active. This is usually
+                -- a physical door opening, so the portals save on performance when the door is closed.
                 return true
             end
         end
