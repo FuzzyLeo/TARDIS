@@ -32,6 +32,8 @@ RT_SIZE_LITERAL = 8
 MATERIAL_RT_DEPTH_SEPARATE = 1
 ---@type CREATERENDERTARGETFLAGS
 CREATERENDERTARGETFLAGS_UNFILTERABLE_OK = 4
+---@type EF
+EF_BONEMERGE = 1
 
 -- glua-api-snippets types debug.getinfo's first param as `function`, but the
 -- runtime accepts a stack-level number too (and that's how TARDIS uses it).
