@@ -43,9 +43,9 @@ CreateConVar("tardis2_selected_interior", "", {FCVAR_REPLICATED}, "TARDIS - sele
 ---@field Parts table<string, table|false>
 ---@field Controls table<string, string>?
 ---@field TextureSets table<string, tardis_texture_set>
----@field CustomPortals table[]?
+---@field CustomPortals table<string, DoorCustomPortal>?
 ---@field FalseWorlds table<string, table>?
----@field FalseWorldWindows { falseworld: string }[]?
+---@field FalseWorldWindows table<string, tardis_false_world_window>?
 ---@field ExitBox tardis_box?
 ---@field UI_Theme string?
 ---@field MatProxy tardis_matproxy?
@@ -157,7 +157,7 @@ CreateConVar("tardis2_selected_interior", "", {FCVAR_REPLICATED}, "TARDIS - sele
 ---@field basebrightness number?
 ---@field nopowerbrightness number?
 ---@field transitionspeed number
----@field basebrightnessRGB Vector|table|nil
+---@field basebrightnessRGB Vector|number[]|nil
 
 ---@class tardis_projected_light
 ---@field brightness number?
@@ -192,11 +192,11 @@ CreateConVar("tardis2_selected_interior", "", {FCVAR_REPLICATED}, "TARDIS - sele
 ---@field ParkingState number
 
 ---@class tardis_teleport
----@field SequenceSpeed number|table
----@field SequenceSpeedWarning number|table
----@field SequenceSpeedFast number|table
----@field SequenceSpeedHads number|table
----@field SequenceSpeedWarnFast number|table
+---@field SequenceSpeed number|{ Demat: number, Mat: number }
+---@field SequenceSpeedWarning number|{ Demat: number, Mat: number }
+---@field SequenceSpeedFast number|{ Demat: number, Mat: number }
+---@field SequenceSpeedHads number|{ Demat: number, Mat: number }
+---@field SequenceSpeedWarnFast number|{ Demat: number, Mat: number }
 ---@field DematInterruptSpeed number
 ---@field PrematDelayFast number
 ---@field PrematDelay number
@@ -392,6 +392,11 @@ CreateConVar("tardis2_selected_interior", "", {FCVAR_REPLICATED}, "TARDIS - sele
 ---@field prefix string?
 ---@field base string?
 ---@field [integer] { [1]: string, [2]: integer, [3]: string }
+
+--- A Doors false-world window (its DoorPortalSide fields) plus the id of the false
+--- world it opens onto.
+---@class tardis_false_world_window : DoorPortalSide
+---@field falseworld string?
 
 function TARDIS:LoadInteriors()
     if TARDIS.InteriorsLoading then return end

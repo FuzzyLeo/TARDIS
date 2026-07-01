@@ -15,7 +15,7 @@
 
 ---@class tardis_setting_convar
 ---@field name string
----@field flags table
+---@field flags integer[]
 ---@field desc string?
 
 ---@type table<string, tardis_setting>
