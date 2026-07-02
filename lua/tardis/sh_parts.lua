@@ -951,6 +951,8 @@ else
             parent=int
         end
         local name = net.ReadString()
+        -- The TARDIS may have been removed before this message arrived, leaving parent a NULL entity.
+        if not IsValid(parent) then return end
         if parent._init then
             TARDIS:SetupPart(e,name,ext,int,parent)
         else
