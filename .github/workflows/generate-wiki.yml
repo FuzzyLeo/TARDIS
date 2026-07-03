@@ -7,6 +7,7 @@ on:
     paths:
     - lua/**
     - scripts/generate-wiki-api.ps1
+    - scripts/wiki-api.config.ps1
     - scripts/bootstrap.ps1
     - scripts/install-tools.ps1
     - .github/workflows/generate-wiki.yml
@@ -27,12 +28,26 @@ jobs:
         with:
           path: TARDIS
 
+      - name: Checkout Doors
+        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7
+        with:
+          repository: AmyJeanes/Doors
+          ref: dev
+          path: Doors
+
+      - name: Checkout world-portals
+        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7
+        with:
+          repository: AmyJeanes/world-portals
+          ref: dev
+          path: world-portals
+
       - name: Checkout gmod-addon-tools
         uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7
         with:
           repository: AmyJeanes/gmod-addon-tools
           # renovate: datasource=github-tags depName=AmyJeanes/gmod-addon-tools
-          ref: v0.1.0
+          ref: v0.2.0
           path: gmod-addon-tools
 
       # The wiki is a separate git repo (<repo>.wiki.git). The default GITHUB_TOKEN

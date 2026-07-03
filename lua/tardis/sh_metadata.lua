@@ -43,8 +43,8 @@ CreateConVar("tardis2_selected_interior", "", {FCVAR_REPLICATED}, "TARDIS - sele
 ---@field Parts table<string, table|false>
 ---@field Controls table<string, string>?
 ---@field TextureSets table<string, tardis_texture_set>
----@field CustomPortals table<string, DoorCustomPortal>?
----@field FalseWorlds table<string, wp.FalseWorld>?
+---@field CustomPortals table<string, doors_custom_portal>?
+---@field FalseWorlds table<string, worldportals_false_world>?
 ---@field FalseWorldWindows table<string, tardis_false_world_window>?
 ---@field ExitBox tardis_box?
 ---@field UI_Theme string?
@@ -399,7 +399,7 @@ CreateConVar("tardis2_selected_interior", "", {FCVAR_REPLICATED}, "TARDIS - sele
 ---@field base string?
 ---@field [integer] { [1]: string, [2]: integer, [3]: string }
 
----@class tardis_false_world_window : DoorPortalSide
+---@class tardis_false_world_window : doors_portal_side
 ---@field falseworld string?
 
 function TARDIS:LoadInteriors()
