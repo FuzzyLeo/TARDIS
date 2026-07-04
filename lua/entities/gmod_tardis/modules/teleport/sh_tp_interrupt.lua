@@ -1,9 +1,11 @@
 -- Teleport interrupting
 
+---@api
 function ENT:GetTeleportInterrupted()
     return self:GetData("teleport-interrupted", false)
 end
 
+---@api
 function ENT:GetTeleportInterruptedTimeRemaining(round)
     local time = CurTime() - self:GetData("teleport-interrupt-time", 0)
     if round then
@@ -13,6 +15,7 @@ function ENT:GetTeleportInterruptedTimeRemaining(round)
 end
 
 if SERVER then
+    ---@api
     function ENT:InterruptTeleport(callback)
         if not self:GetData("teleport", false) and not self:GetData("vortex", false) then return end
 

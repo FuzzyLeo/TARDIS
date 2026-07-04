@@ -1,3 +1,4 @@
+---@api
 function TARDIS:GetCustomSettings(ent)
     return TARDIS:GetSetting("interior_custom_settings", ent) or {} -- nil is never allowed
 end
@@ -28,6 +29,7 @@ local default_custom_setting_values = {
     ["exterior_default"] = "ttcapsule_type40",
 }
 
+---@api
 function TARDIS:GetCustomSetting(int_id, setting_id, ent, default_val)
     int_id = self:GetMainVersionId(int_id)
 
@@ -62,6 +64,7 @@ if CLIENT then
         TARDIS:SetSetting("interior_custom_settings", settings)
     end
 
+    ---@api
     function TARDIS:SetCustomSetting(int_id, setting_id, value)
         int_id = self:GetMainVersionId(int_id)
 
@@ -71,6 +74,7 @@ if CLIENT then
         self:SaveCustomSettings(custom_settings)
     end
 
+    ---@api
     function TARDIS:ResetCustomSettings(int_id)
         int_id = self:GetMainVersionId(int_id)
 
@@ -84,6 +88,7 @@ if CLIENT then
         self:SaveCustomSettings(custom_settings)
     end
 
+    ---@api
     function TARDIS:ToggleCustomSetting(int_id, setting_id)
         local value = TARDIS:GetCustomSetting(int_id, setting_id)
         TARDIS:SetCustomSetting(int_id, setting_id, (not value))
@@ -93,15 +98,18 @@ end
 ----------------------------------------------------------------------------------------------------
 -- Favorites
 
+---@api
 function TARDIS:IsFavoriteInt(id, ent)
     return self:GetCustomSetting(id, "is_favorite", ent, false)
 end
 
 if CLIENT then
+    ---@api
     function TARDIS:SetFavoriteInt(id, favorite)
         self:SetCustomSetting(id, "is_favorite", favorite)
     end
 
+    ---@api
     function TARDIS:ToggleFavoriteInt(id)
         self:ToggleCustomSetting(id, "is_favorite")
     end

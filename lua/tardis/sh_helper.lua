@@ -9,6 +9,7 @@ function TARDIS:Benchmark(name,func)
     cam.End2D()
 end
 
+---@api
 ---@return Vector?
 ---@return Angle?
 function TARDIS:GetLocalPos(ent,ply)
@@ -67,6 +68,7 @@ local pp_trace = {
 }
 
 -- Prop Protection
+---@api
 function TARDIS:CheckPP(ply, ent)
     pp_trace.Entity = ent
     return hook.Call("CanTool", GAMEMODE, ply, pp_trace, "")

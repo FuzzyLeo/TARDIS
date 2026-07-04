@@ -16,15 +16,18 @@ local function UpdateScannerState(self)
     end
 end
 
+---@api
 function ENT:GetScannersOn()
     return self:GetData("scanners_on", false)
 end
 
+---@api
 function ENT:GetScannerOn(id)
     return self:GetData("scanners_on_"..id, false)
 end
 
 if SERVER then
+    ---@api
     function ENT:SetScannersOn(on)
         if not on and self:CallHook("CanTurnOffScanners")==false then
             return false
@@ -40,6 +43,7 @@ if SERVER then
         return true
     end
 
+    ---@api
     function ENT:SetScannerOn(id, on)
         if not on and (self:CallHook("CanTurnOffScanners")==false or self:CallHook("CanTurnOffScanner", id)==false) then
             return false
@@ -53,10 +57,12 @@ if SERVER then
         return true
     end
 
+    ---@api
     function ENT:ToggleScanners()
         return self:SetScannersOn(not self:GetScannersOn())
     end
 
+    ---@api
     function ENT:ToggleScanner(id)
         return self:SetScannerOn(id, not self:GetScannerOn(id))
     end

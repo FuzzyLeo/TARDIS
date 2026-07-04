@@ -29,6 +29,7 @@ local class=string.sub(ENT.Folder,string.find(ENT.Folder, "/[^/]*$")+1) -- only 
 local hooks={}
 
 -- Hook system for modules
+---@api
 ---@param func fun(self: gmod_tardis, ...)
 function ENT:AddHook(name,id,func)
     if not (hooks[name]) then hooks[name]={} end
@@ -37,6 +38,7 @@ function ENT:AddHook(name,id,func)
     hooks[name][id]=func
 end
 
+---@api
 function ENT:RemoveHook(name,id)
     if hooks[name] and hooks[name][id] then
         hooks[name][id]=nil
@@ -55,6 +57,7 @@ function ENT:ListHooks(listInteriorHooks)
     if listInteriorHooks and IsValid(self.interior) then self.interior:ListHooks() end
 end
 
+---@api
 function ENT:CallCommonHook(name, ...)
     local a,b,c,d,e,f
 
@@ -71,6 +74,7 @@ function ENT:CallCommonHook(name, ...)
     end
 end
 
+---@api
 function ENT:CallHook(name,...)
     local a,b,c,d,e,f
     a,b,c,d,e,f=self.BaseClass.CallHook(self,name,...)
@@ -111,6 +115,7 @@ function ENT:CallHook(name,...)
     end
 end
 
+---@api
 function ENT:LoadFolder(folder,addonly,noprefix)
     folder="entities/"..class.."/"..folder.."/"
     local modules = file.Find(folder.."*.lua","LUA")
@@ -143,9 +148,11 @@ end
 ENT:LoadFolder("modules/libraries")
 
 if SERVER then
+    ---@api
     function ENT:CallClientHook(name, ...)
         self:SendMessage("client_hook", {name, ...})
     end
+    ---@api
     function ENT:CallClientCommonHook(name, ...)
         self:SendMessage("client_common_hook", {name, ...})
     end

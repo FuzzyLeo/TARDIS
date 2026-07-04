@@ -50,6 +50,7 @@ TARDIS:AddKeyBind("teleport-mat",{
 })
 
 if SERVER then
+    ---@api
     function ENT:ForceDematState()
         self:SetDestination(self:GetPos(), self:GetAngles())
 
@@ -147,6 +148,7 @@ if SERVER then
         if callback then callback(true) end
     end
 
+    ---@api
     function ENT:FastDemat(pos, ang, callback)
         if self:GetData("vortex") and not self:GetData("fastdemat") then
             self:SetDestination(pos, ang)
@@ -451,10 +453,12 @@ else
     end)
 end
 
+---@api
 function ENT:IsTeleporting()
     return self:GetData("teleport", false)
 end
 
+---@api
 function ENT:IsInVortex()
     return self:GetData("vortex", false)
 end
@@ -575,6 +579,7 @@ ENT:AddHook("Think","teleport",function(self,delta)
 end)
 
 -- returns the progress of the current sequence on a scale from 0 to 1
+---@api
 function ENT:GetSequenceProgress()
     if not self:GetData("teleport") then return 1 end
 

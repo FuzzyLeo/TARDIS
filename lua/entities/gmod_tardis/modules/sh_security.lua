@@ -1,20 +1,24 @@
 -- Security System (Isomorphic)
 
+---@api
 function ENT:GetSecurity()
     return self:GetData("security", false)
 end
 
+---@api
 function ENT:CheckSecurity(ply)
     return (not self:GetSecurity()) or (ply==self:GetCreator()) or (TARDIS:GetSetting("admin_security_bypass") and ply:IsAdmin())
 end
 
 if SERVER then
+    ---@api
     function ENT:SetSecurity(on)
         self:CallHook("SecurityToggled", on)
         self:SetData("security", on, true)
         return true
     end
 
+    ---@api
     function ENT:ToggleSecurity()
         self:SetSecurity(not self:GetSecurity())
         return true

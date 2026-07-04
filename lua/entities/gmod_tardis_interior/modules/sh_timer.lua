@@ -2,10 +2,12 @@ ENT:AddHook("Initialize", "timers", function(self)
     self.timers = {}
 end)
 
+---@api
 function ENT:Timer(id, delay, action)
     self.timers[id] = { CurTime() + delay, action }
 end
 
+---@api
 function ENT:CancelTimer(id)
     self.timers[id] = nil
 end
@@ -14,6 +16,7 @@ function ENT:GetTimers()
     return self.timers
 end
 
+---@api
 function ENT:GetTimer(id)
     return self.timers[id]
 end

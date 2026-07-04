@@ -18,6 +18,7 @@ local saved_data_names = {
 }
 
 if SERVER then
+    ---@api
     function ENT:SetRedecoration(on)
         if self:CallCommonHook("CanToggleRedecoration", on) == false
             or self:CallHook("CanRepair") == false
@@ -56,6 +57,7 @@ if SERVER then
         return true
     end
 
+    ---@api
     function ENT:ToggleRedecoration()
         local on = self:GetData("redecorate", false)
         return self:SetRedecoration(not on)

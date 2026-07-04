@@ -44,6 +44,7 @@ TARDIS:AddKeyBind("tracking-rotation",{
     exterior=true
 })
 
+---@api
 function ENT:GetTracking()
     return self:GetData("tracking-ent")
 end
@@ -67,6 +68,7 @@ local function get_ent_size(ent)
 end
 
 if SERVER then
+    ---@api
     ---@param ent? Entity
     ---@param ply? Player
     function ENT:SetTracking(ent, ply)
@@ -182,10 +184,12 @@ if SERVER then
         return true
     end
 
+    ---@api
     function ENT:GetTrackRotation()
         return self:GetData("tracking-rotation", false)
     end
 
+    ---@api
     function ENT:SetTrackRotation(on)
         if self:GetTrackRotation() == on then return end
 
@@ -209,6 +213,7 @@ if SERVER then
         self:SetData("tracking-offset-yaw", newOffsetYaw)
     end
 
+    ---@api
     function ENT:ToggleTrackRotation()
         self:SetTrackRotation(not self:GetTrackRotation())
     end

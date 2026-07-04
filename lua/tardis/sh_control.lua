@@ -34,11 +34,13 @@ local controls={}
 local control_moves = {}
 
 -- Functionally identical to {} but gives proper type checking for controls
+---@api
 ---@return tardis_control
 function TARDIS:NewControl()
     return {}
 end
 
+---@api
 function TARDIS:AddControl(control)
     if CLIENT or (SERVER and (not control.clientonly)) then
         ---@type tardis_control
@@ -80,14 +82,17 @@ function TARDIS:CallControlMove(ent, hook, ...)
     end
 end
 
+---@api
 function TARDIS:RemoveControl(id)
     controls[id]=nil
 end
 
+---@api
 function TARDIS:GetControls()
     return controls
 end
 
+---@api
 ---@return tardis_control?
 function TARDIS:GetControl(id, ent)
     if ent and ent.metadata.CustomControls and ent.metadata.CustomControls[id] then
@@ -99,10 +104,10 @@ function TARDIS:GetControl(id, ent)
     end
 end
 
+---@api
 ---@param control_id string
 ---@param ply Player
 ---@param part gmod_tardis_part?
----@api
 function TARDIS:Control(control_id, ply, part)
     if CLIENT then ply = LocalPlayer() end
     if not ply:IsPlayer() then return end

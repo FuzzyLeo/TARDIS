@@ -534,17 +534,20 @@ end
 
 local parts={}
 
+---@api
 ---@return Entity
 function TARDIS:GetPart(ent,id)
     return IsValid(ent) and ent.parts and ent.parts[id] or NULL
 end
 
 -- Functionally identical to PART = {} but gives proper type checking for parts
+---@api
 ---@return gmod_tardis_part
 function TARDIS:NewPart()
     return {}
 end
 
+---@api
 function TARDIS:GetParts(ent)
     return IsValid(ent) and ent.parts
 end
@@ -870,6 +873,7 @@ if SERVER then
         end
     end)
 
+    ---@api
     function TARDIS:TogglePart(part)
         local on = part:GetOn()
         if part.PowerOffSound ~= false or part.interior:GetPower() then

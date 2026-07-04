@@ -19,11 +19,13 @@ function TARDIS:ClearExteriorMetadata(id)
 end
 
 -- Functionally identical to E = {} but gives proper type checking for exteriors
+---@api
 ---@return tardis_exterior_metadata
 function TARDIS:NewExterior()
     return {}
 end
 
+---@api
 function TARDIS:AddExterior(t)
     local id = t.ID
     t.Category = t.Category or "Exteriors.Categories.Misc"
@@ -42,6 +44,7 @@ supported import_options:
     category
     modify_func
 ]]
+---@api
 function TARDIS:ImportExterior(int_id, import_options)
     import_options = import_options or {}
 
@@ -96,6 +99,7 @@ function TARDIS:SetupExteriorMetadata(id)
     self.ExteriorsMetadata[id] = self:MergeExteriorMetadata(m_base, t)
 end
 
+---@api
 ---@return tardis_exterior_metadata
 function TARDIS:CreateExteriorMetadata(id)
     self:SetupExteriorMetadata(id)
@@ -111,10 +115,12 @@ function TARDIS:CreateExteriorMetadata(id)
     return metadata
 end
 
+---@api
 function TARDIS:GetExteriors()
     return self.ExteriorsMetadataRaw
 end
 
+---@api
 function TARDIS:GetExteriorCategories()
     return self.ExteriorCategories
 end

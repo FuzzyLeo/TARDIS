@@ -44,10 +44,12 @@ if CLIENT then
     end)
 end
 
+---@api
 function ENT:SetCloisters(on)
     self:SetData("cloisters",on,true)
 end
 
+---@api
 function ENT:ToggleCloisters()
     self:SetCloisters(not self:GetData("cloisters",false))
 end

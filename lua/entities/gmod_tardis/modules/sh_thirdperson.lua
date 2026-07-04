@@ -21,6 +21,7 @@ end)
 
 local defaultdist=210
 
+---@api
 function ENT:GetThirdPersonPos(ply, ang)
     local pos=self:LocalToWorld(Vector(0,0,60))
     local tr = util.TraceLine({
@@ -32,6 +33,7 @@ function ENT:GetThirdPersonPos(ply, ang)
     return tr.HitPos+(ang:Forward()*10), Angle(ang.p,ang.y,0)
 end
 
+---@api
 function ENT:GetThirdPersonTrace(ply,ang)
     local pos,trace_ang=self:GetThirdPersonPos(ply,ang)
     ---@type Entity[]
@@ -45,6 +47,7 @@ function ENT:GetThirdPersonTrace(ply,ang)
 end
 
 if SERVER then
+    ---@api
     function ENT:PlayerThirdPerson(ply, enabled, careful)
 
         if careful and TARDIS:GetSetting("thirdperson_careful_enabled", ply) and not ply:KeyDown(IN_WALK) then

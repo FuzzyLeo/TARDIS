@@ -1,21 +1,25 @@
 -- Hostile Action Displacement System
 
 if SERVER then
+    ---@api
     function ENT:GetHADS()
         return self:GetData("hads",false)
     end
 
+    ---@api
     function ENT:SetHADS(on)
         self:CallCommonHook("HadsToggled", on)
         self:SetData("hads",on,true)
         return true
     end
 
+    ---@api
     function ENT:ToggleHADS()
         local on = not self:GetHADS()
         return self:SetHADS(on)
     end
 
+    ---@api
     function ENT:TriggerHADS()
         if self:CallHook("CanTriggerHads") == false then
             return false

@@ -65,6 +65,7 @@
 ---@field ang3D Angle?
 ---@field RestoreHexLayout function
 
+---@api
 function TARDIS:PopToScreen(name, ply)
     if SERVER then
         if IsValid(ply) and ply:IsPlayer() then
@@ -93,6 +94,7 @@ end
 
 TARDIS.fonts = {}
 TARDIS.fontcache = {}
+---@api
 ---@param screen TardisScreen
 function TARDIS:GetScreenFont(screen, name)
     local scale = screen.res * screen.resscale
@@ -111,6 +113,7 @@ function TARDIS:GetScreenFont(screen, name)
     return fontName
 end
 
+---@api
 function TARDIS:CreateScreenFont(name, font)
     self.fonts[name] = font
 end
@@ -161,6 +164,7 @@ TARDIS:AddKeyBind("tp-openscreen",{
 
 ---@type table<string, {[1]: tardis_screen_options, [2]: function}>
 local screens={}
+---@api
 ---@param func fun(self, ext, int, frame, screen: TardisScreen)
 function TARDIS:AddScreen(name,options,func)
     if options.id == nil then options.id = name end
@@ -172,6 +176,7 @@ function TARDIS:GetScreens()
     return screens
 end
 
+---@api
 function TARDIS:ScreenActive(name)
     local int=TARDIS:GetInteriorEnt()
     local t={}
@@ -285,6 +290,7 @@ function TARDIS:PopScreen(screen,all)
     end
 end
 
+---@api
 function TARDIS:RemoveHUDScreen()
     if IsValid(self.screenpopframe) then
         if self.screenpop and IsValid(self.screenpop.curscreen) and self.screenpop.curscreen.OnCloseScreen then
@@ -307,6 +313,7 @@ function TARDIS:RemoveHUDScreen()
     end
 end
 
+---@api
 function TARDIS:HUDScreen(window)
     if IsValid(self.screenpopframe) then
         self:RemoveHUDScreen()

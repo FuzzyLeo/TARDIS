@@ -1,3 +1,4 @@
+---@api
 function ENT:GetWarning()
     return self:GetData("warning", false)
 end
@@ -7,15 +8,18 @@ if SERVER then
         self:SetData("warning", false, true)
     end)
 
+    ---@api
     function ENT:ToggleWarning()
         return self:SetWarning(not self:GetWarning())
     end
 
+    ---@api
     function ENT:SetWarning(on)
         self:SetData("warning", on, true)
         self:CallCommonHook("WarningToggled", on)
     end
 
+    ---@api
     function ENT:UpdateWarning()
         if (self:CallCommonHook("ShouldWarningBeEnabled") == true) ~= self:GetWarning() then
             self:ToggleWarning()

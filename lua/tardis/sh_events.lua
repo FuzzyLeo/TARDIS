@@ -6,6 +6,7 @@ TARDIS_EVENTS_APRIL_FOOLS = 2
 TARDIS_EVENTS_HALLOWEEN = 3
 TARDIS_EVENTS_CHRISTMAS = 4
 
+---@api
 function TARDIS:GetCurrentEvent(ent, autoonly)
     local setting = TARDIS:GetSetting("events", ent)
     local year = tonumber(os.date("%Y"))
@@ -35,6 +36,7 @@ function TARDIS:GetCurrentEvent(ent, autoonly)
     return event
 end
 
+---@api
 function TARDIS:GetEventName(event, id)
     if not event then event = TARDIS:GetCurrentEvent() end
     local name
@@ -55,6 +57,7 @@ function TARDIS:GetEventName(event, id)
 end
 
 if CLIENT then
+    ---@api
     function TARDIS:SkipEvent()
         local setting = TARDIS:GetSetting("events")
         if setting == TARDIS_EVENTS_DISABLED then

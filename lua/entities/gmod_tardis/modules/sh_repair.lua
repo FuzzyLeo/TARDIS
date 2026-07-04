@@ -1,21 +1,26 @@
+---@api
 function ENT:GetRepairPrimed()
     return self:GetData("repair-primed",false)
 end
 
+---@api
 function ENT:GetRepairing()
     return self:GetData("repairing",false)
 end
 
+---@api
 function ENT:GetRepairTime()
     return self:GetData("repair-time")-CurTime()
 end
 
 if SERVER then
+    ---@api
     function ENT:ToggleRepair()
         local on = not self:GetRepairPrimed()
         return self:SetRepair(on)
     end
 
+    ---@api
     function ENT:SetRepair(on)
         if not TARDIS:GetSetting("health-enabled")
             and self:GetHealth() ~= self:GetHealthMax()

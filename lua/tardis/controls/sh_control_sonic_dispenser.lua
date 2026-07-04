@@ -1,4 +1,5 @@
 
+---@api
 function TARDIS:IsSonicInstalled()
     if SonicSD and file.Exists("autorun/sonicsd.lua", "LUA") then
         return true

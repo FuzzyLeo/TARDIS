@@ -1,14 +1,17 @@
 -- Lock
 
+---@api
 function ENT:Locked()
     return self:GetData("locked",false)
 end
 
+---@api
 function ENT:Locking()
     return self:GetData("locking",false)
 end
 
 if SERVER then
+    ---@api
     function ENT:ToggleLocked(callback, force)
         return self:SetLocked(not self:Locked(), callback, nil, force)
     end
@@ -23,6 +26,7 @@ if SERVER then
         if callback then callback(true) end
     end
 
+    ---@api
     function ENT:SetLocked(locked, callback, silent, force)
         if not self:CallHook("CanLock") then return false end
         if locked then

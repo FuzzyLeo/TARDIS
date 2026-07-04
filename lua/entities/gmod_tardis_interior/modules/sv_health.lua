@@ -4,6 +4,7 @@ ENT:AddHook("OnTakeDamage", "Health", function(self, dmginfo)
     self.exterior:ChangeHealth(newhealth)
 end)
 
+---@api
 function ENT:Explode(f)
     local force = 60
     if f ~= nil then

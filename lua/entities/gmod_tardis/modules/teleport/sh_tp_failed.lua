@@ -91,6 +91,7 @@ if SERVER then
         self:Demat(pos, ang, callback, true)
     end
 
+    ---@api
     function ENT:AutoDemat(pos, ang, callback)
         if self:CallHook("CanDemat", false, true) ~= false then
             self:Demat(pos, ang, callback)

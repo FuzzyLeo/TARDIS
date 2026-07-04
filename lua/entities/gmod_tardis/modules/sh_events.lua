@@ -1,21 +1,26 @@
 -- Events
 
+---@api
 function ENT:IsAprilFoolsEvent()
     return self:GetData("events-aprilfools", false)
 end
 
+---@api
 function ENT:IsHalloweenEvent()
     return self:GetData("events-halloween", false)
 end
 
+---@api
 function ENT:IsChristmasEvent()
     return self:GetData("events-christmas", false)
 end
 
+---@api
 function ENT:GetEvent()
     return self:GetData("event")
 end
 
+---@api
 function ENT:NotifyEvent(force, all)
     local event = self:GetEvent()
     if not event then return end

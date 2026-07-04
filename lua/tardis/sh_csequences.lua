@@ -12,15 +12,18 @@
 TARDIS.CSequences = {}
 
 -- Functionally identical to {} but gives proper type checking for control sequences
+---@api
 ---@return tardis_sequence
 function TARDIS:NewControlSequence()
     return {}
 end
 
+---@api
 function TARDIS:AddControlSequence(cseq)
     self.CSequences[cseq.ID] = cseq
 end
 
+---@api
 ---@return tardis_sequence?
 function TARDIS:GetControlSequence(id)
     if self.CSequences[id] ~= nil then

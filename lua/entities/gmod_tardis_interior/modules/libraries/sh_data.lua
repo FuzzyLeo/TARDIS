@@ -6,10 +6,12 @@ if SERVER then
     end
 end
 
+---@api
 function ENT:SetData(k,v,network)
     return IsValid(self.exterior) and self.exterior:SetData(k, v, network)
 end
 
+---@api
 function ENT:GetData(k,default)
     if IsValid(self.exterior) then
         return self.exterior:GetData(k, default)

@@ -1,5 +1,6 @@
 -- Handbrake
 
+---@api
 function ENT:GetHandbrake()
     return self:GetData("handbrake", false)
 end
@@ -9,10 +10,12 @@ if SERVER then
         self:SetData("handbrake", false, true)
     end)
 
+    ---@api
     function ENT:ToggleHandbrake()
         return self:SetHandbrake(not self:GetHandbrake())
     end
 
+    ---@api
     function ENT:SetHandbrake(on)
         if self:CallCommonHook("CanToggleHandbrake") == false then
             return false

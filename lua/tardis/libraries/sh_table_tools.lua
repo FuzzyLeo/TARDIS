@@ -1,4 +1,5 @@
 -- a modified version of table.Copy() to deal with Vectors / Angles / ...
+---@api
 ---@generic T
 ---@param t T
 ---@param lookup_table table?

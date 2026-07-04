@@ -15,6 +15,7 @@ if SERVER then
         end)
     end
 
+    ---@api
     function ENT:ToggleDoor(callback)
         if not IsValid(self.interior) then return false end
         if not self:GetData("doorchangecallback",false) then
@@ -57,6 +58,7 @@ if SERVER then
         return true
     end
 
+    ---@api
     function ENT:OpenDoor(callback)
         if self:GetData("doorstate",false) then
             delay(callback,true)
@@ -66,6 +68,7 @@ if SERVER then
         end
     end
 
+    ---@api
     function ENT:CloseDoor(callback)
         if self:GetData("doorstate",false) ~= self:GetData("doorstatereal",false) then
             local callbacks=self:GetData("doorchangecallback")
@@ -79,6 +82,7 @@ if SERVER then
         end
     end
 
+    ---@api
     function ENT:DoorOpen(real)
         if real then
             return self:GetData("doorstatereal",false)
@@ -294,6 +298,7 @@ else
         self:CallHook("LockedUse", data[1])
     end)
 
+    ---@api
     function ENT:DoorOpen(real)
         local door=self:GetPart("door")
         if real and IsValid(door) and not self:Locked() then
@@ -303,6 +308,7 @@ else
         end
     end
 
+    ---@api
     function ENT:DoorMoving()
         local door=self:GetPart("door")
         if IsValid(door) then

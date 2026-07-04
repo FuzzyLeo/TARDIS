@@ -39,6 +39,7 @@ if SERVER then
         increase_engine_release = 720 / 144,
     }
 
+    ---@api
     function ENT:SetArtron(value)
         local maxArtron = TARDIS:GetSetting("artron_energy_max")
         value = math.max(0, math.min(value, maxArtron))
@@ -48,6 +49,7 @@ if SERVER then
         end
     end
 
+    ---@api
     function ENT:AddArtron(value)
         local currentArtron = self:GetArtron()
         self:SetArtron(currentArtron + value)
@@ -369,6 +371,7 @@ if SERVER then
     end)
 end
 
+---@api
 function ENT:GetArtron()
     return self:GetData("artron-val", 0)
 end

@@ -234,6 +234,7 @@ hook.Add("PlayerSwitchFlashlight", "tardis-destination", function(ply,enabled)
 end)
 
 if SERVER then
+    ---@api
     function ENT:SetDestination(pos, ang)
         if self:CallCommonHook("CanChangeDestination", pos, ang) == false then
             return false
@@ -250,14 +251,17 @@ if SERVER then
         return true
     end
 
+    ---@api
     function ENT:SetDestinationPos(pos)
         return self:SetDestination(pos, self:GetData("destination_ang"))
     end
 
+    ---@api
     function ENT:SetDestinationAng(ang)
         return self:SetDestination(self:GetData("destination_pos"), ang)
     end
 
+    ---@api
     function ENT:SetRandomDestination(grounded)
         local randomLocation = self:GetRandomLocation(grounded)
         if randomLocation then
@@ -268,6 +272,7 @@ if SERVER then
         end
     end
 
+    ---@api
     function ENT:SelectDestination(ply, enabled)
         if IsValid(ply) and ply:IsPlayer() and self.occupants[ply] then
             if ply:GetTardisData("thirdperson") then
@@ -650,14 +655,17 @@ else
     end)
 end
 
+---@api
 function ENT:GetDestination()
     return self:GetData("destination_pos"), self:GetData("destination_ang")
 end
 
+---@api
 function ENT:GetDestinationPos(auto)
     return self:GetData("destination_pos") or (auto and self:GetPos() or nil)
 end
 
+---@api
 function ENT:GetDestinationAng(auto)
     return self:GetData("destination_ang") or (auto and self:GetAngles() or nil)
 end
@@ -917,6 +925,7 @@ function ENT:FindPosInBox(p1, p2)
     end
 end
 
+---@api
 function ENT:GetRandomLocation(grounded)
     local max = 16384
 

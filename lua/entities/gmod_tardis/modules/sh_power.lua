@@ -20,6 +20,7 @@ ENT:AddHook("Initialize","power-init", function(self)
     self:SetData("power-state",true,true)
 end)
 
+---@api
 function ENT:GetPower()
     return self:GetData("power-state", false)
 end
@@ -32,9 +33,11 @@ ENT:AddHook("CanUseTardisControl", "power", function(self, control, ply)
 end)
 
 if SERVER then
+    ---@api
     function ENT:TogglePower()
         return self:SetPower(not self:GetPower())
     end
+    ---@api
     function ENT:SetPower(on)
         local cantoggle, reason, arg1, arg2 = self:CallCommonHook("CanTogglePower", on)
         if cantoggle == false then return false, reason, arg1, arg2 end

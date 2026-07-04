@@ -1,6 +1,7 @@
 -- Various effects for the TARDIS (smoke, sparks, explosions)
 
 if SERVER then
+    ---@api
     function ENT:Explode(f)
         local force = 60
         if f ~= nil then
@@ -155,6 +156,7 @@ else -- CLIENT
         end
     end
 
+    ---@api
     function ENT:InteriorExplosion()
         if self.effect_pos == nil then
             get_effect_pos(self)
@@ -171,6 +173,7 @@ else -- CLIENT
         util.Effect("ElectricSpark", effect_data)
     end
 
+    ---@api
     function ENT:InteriorSparks(power)
         if self.effect_pos == nil then
             get_effect_pos(self)
@@ -185,6 +188,7 @@ else -- CLIENT
         util.Effect("ElectricSpark", effect_data)
     end
 
+    ---@api
     function ENT:ExteriorSparks(power)
         local effect_data = EffectData()
         effect_data:SetOrigin(self:GetPos())

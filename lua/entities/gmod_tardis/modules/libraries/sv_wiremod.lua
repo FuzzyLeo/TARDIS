@@ -7,6 +7,7 @@ local outputs = {}
 
 --Methods
 
+---@api
 function ENT:AddWireInput(name, desc, type)
     if not WireLib then return end
     local input = {
@@ -17,6 +18,7 @@ function ENT:AddWireInput(name, desc, type)
     table.insert(inputs, input)
 end
 
+---@api
 function ENT:AddWireOutput(name, desc, type)
     if not WireLib then return end
     local output = {
@@ -27,12 +29,14 @@ function ENT:AddWireOutput(name, desc, type)
     table.insert(outputs, output)
 end
 
+---@api
 function ENT:HandleE2(cmd, ...)
     local ret=self:CallHook("HandleE2", cmd, ...)
     if ret==nil then ret=0 end
     return ret
 end
 
+---@api
 function ENT:TriggerWireOutput(name, value)
     if not WireLib then return end
     WireLib.TriggerOutput(self, name, value)
@@ -40,6 +44,7 @@ end
 
 --Hooks
 
+---@api
 function ENT:TriggerInput(name, value)
     if not WireLib then return end
     self:CallHook("OnWireInput", name, value)

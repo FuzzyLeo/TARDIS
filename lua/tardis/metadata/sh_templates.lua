@@ -217,6 +217,7 @@ function TARDIS:MergeTemplates(metadata, ent)
     return metadata
 end
 
+---@api
 function TARDIS:AddInteriorTemplate(id, template)
     if not id or not template then return end
 

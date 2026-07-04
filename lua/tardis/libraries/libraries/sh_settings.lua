@@ -33,6 +33,7 @@ end
 --------------------------------------------------------------------------------
 -- Setup
 
+---@api
 function TARDIS:AddSetting(data)
     self.SettingsData[data.id]=data
     if data.class == "global" and data.convar then
@@ -67,10 +68,12 @@ function TARDIS:AddSetting(data)
     end
 end
 
+---@api
 function TARDIS:GetSettingData(id)
     return self.SettingsData[id]
 end
 
+---@api
 function TARDIS:GetSettingsData()
     return self.SettingsData
 end
@@ -78,6 +81,7 @@ end
 --------------------------------------------------------------------------------
 -- Accessing
 
+---@api
 function TARDIS:SetSetting(id, value, ignore_convar)
     local data = self.SettingsData[id]
     local old_value
@@ -146,6 +150,7 @@ function TARDIS:SetSetting(id, value, ignore_convar)
     return value
 end
 
+---@api
 function TARDIS:GetSetting(id, src, no_default)
     local ply
     if IsValid(src) and not src:IsPlayer() and not src.TardisExterior then

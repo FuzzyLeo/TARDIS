@@ -1,22 +1,27 @@
+---@api
 function ENT:GetShieldsMax()
     local ratio = TARDIS:GetSetting("health_to_shields_ratio")
     return math.max(1, (1 - ratio) * TARDIS:GetSetting("health_max"))
 end
 
+---@api
 function ENT:GetShieldsLevel()
     return self:GetData("shields_val")
 end
 
+---@api
 function ENT:GetShieldsPercent()
     local val = self:GetShieldsLevel()
     local percent = (val * 100)/self:GetShieldsMax()
     return percent
 end
 
+---@api
 function ENT:GetShieldsOn()
     return self:GetData("shields_on")
 end
 
+---@api
 function ENT:GetShields()
     if not self:GetShieldsOn() or self:GetShieldsLevel() <= 0 then
         return false
@@ -25,6 +30,7 @@ function ENT:GetShields()
 end
 
 if SERVER then
+    ---@api
     function ENT:SetShieldsLevel(value, force)
         if not self:GetShieldsOn() and not force then return end
 
@@ -38,6 +44,7 @@ if SERVER then
         self:SetData("shields_val", value, true)
     end
 
+    ---@api
     function ENT:AddShieldsLevel(value, force)
         if not self:GetShieldsOn() and not force then return end
 
@@ -51,6 +58,7 @@ if SERVER then
         self:SetData("shields_on", true, true)
     end)
 
+    ---@api
     function ENT:SetShieldsOn(on)
         if self:CallCommonHook("CanToggleShields", on) == false then
             return false
@@ -60,6 +68,7 @@ if SERVER then
         return true
     end
 
+    ---@api
     function ENT:ToggleShields()
         return self:SetShieldsOn(not self:GetShieldsOn())
     end

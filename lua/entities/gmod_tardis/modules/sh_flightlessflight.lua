@@ -1,10 +1,12 @@
 -- Roleplay
 
+---@api
 function ENT:GetFlightlessFlight()
     return self:GetData("flightless", false)
 end
 
 if SERVER then
+    ---@api
     function ENT:SetFlightlessFlight(on)
         local flightfirst = self:GetData("flight")
         if on then
@@ -23,6 +25,7 @@ if SERVER then
         return true
     end
 
+    ---@api
     function ENT:ToggleFlightlessFlight()
         return self:SetFlightlessFlight(not self:GetFlightlessFlight())
     end

@@ -17,10 +17,12 @@ ENT:AddHook("CanEnableScreens", "power", function(self)
     end
 end)
 
+---@api
 function ENT:GetScreensOn()
     return self:GetData("screens_on", false)
 end
 
+---@api
 function ENT:SetScreensOn(on)
     if not on or self:CallHook("CanEnableScreens") ~= false then
         self:SetData("screens_on", on, true)
@@ -29,6 +31,7 @@ function ENT:SetScreensOn(on)
     return true
 end
 
+---@api
 function ENT:ToggleScreens()
     if self:CallHook("CanToggleScreens") ~= false then
         self:SetScreensOn(not self:GetScreensOn())

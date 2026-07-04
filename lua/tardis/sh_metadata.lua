@@ -580,11 +580,13 @@ hook.Add("InitPostEntity", "TARDIS_FalseWorlds", function()
 end)
 
 -- Functionally identical to T = {} but gives proper type checking for interiors
+---@api
 ---@return tardis_metadata
 function TARDIS:NewInterior()
     return {}
 end
 
+---@api
 function TARDIS:AddInterior(t)
     t = table.Copy(t)
 
@@ -681,14 +683,17 @@ function TARDIS:CreateInteriorMetadata(id, ent)
     return metadata
 end
 
+---@api
 function TARDIS:GetInteriors()
     return self.MetadataRaw
 end
 
+---@api
 function TARDIS:GetInterior(id)
     return self.Metadata[id] or self.MetadataRaw[id]
 end
 
+---@api
 ---@param metadata tardis_metadata
 ---@return string
 function TARDIS:GetTARDISName(metadata)

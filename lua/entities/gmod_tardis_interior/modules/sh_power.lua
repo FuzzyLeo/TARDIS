@@ -1,5 +1,6 @@
 -- Power Interior
 
+---@api
 function ENT:GetPower()
     return self.exterior:GetPower()
 end
@@ -17,6 +18,7 @@ if SERVER then
         return self.exterior:TogglePower()
     end
 
+    ---@api
     function ENT:SetPower(on)
         return self.exterior:SetPower(on)
     end

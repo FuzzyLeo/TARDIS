@@ -1,10 +1,12 @@
 
 -- Base light
 
+---@api
 function ENT:GetCustomBaseLightEnabled()
     return self:GetData("interior_custom_base_light_enabled", false)
 end
 
+---@api
 function ENT:GetCustomBaseLightColor()
     return self:GetData("interior_custom_base_light_color")
 end
@@ -13,24 +15,29 @@ function ENT:GetGetBaseLightColorVector()
     return self:GetData("interior_base_light_color_vec")
 end
 
+---@api
 function ENT:GetCustomBaseLightBrightness()
     return self:GetData("interior_custom_base_light_brightness")
 end
 
 
 if SERVER then
+    ---@api
     function ENT:SetCustomBaseLightEnabled(enabled)
         self:SetData("interior_custom_base_light_enabled", enabled or false, true)
     end
 
+    ---@api
     function ENT:ToggleCustomBaseLightEnabled()
         self:SetCustomBaseLightEnabled(not self:GetCustomBaseLightEnabled())
     end
 
+    ---@api
     function ENT:SetCustomBaseLightColor(color)
         self:SetData("interior_custom_base_light_color", color, true)
     end
 
+    ---@api
     function ENT:SetCustomBaseLightBrightness(brightness)
         self:SetData("interior_custom_base_light_brightness", brightness, true)
     end
@@ -40,6 +47,7 @@ else
         return self:GetData("interior_base_light_color_vec", TARDIS.color_white_vector)
     end
 
+    ---@api
     function ENT:GetBaseLightColor()
         return self:GetBaseLightColorVector():ToColor()
     end

@@ -1,39 +1,48 @@
+---@api
 function ENT:GetConsoleEnabled()
     return self:GetData("console_on", true)
 end
 
+---@api
 function ENT:GetHandbrakeControlEnabled()
     return self:GetData("handbrake_control_on", true)
 end
 
+---@api
 function ENT:GetTeleportControlEnabled()
     return self:GetData("teleport_control_on", true)
 end
 
 if SERVER then
+    ---@api
     function ENT:SetConsoleEnabled(on)
         self:CallHook("ConsoleToggled", on)
         return self:SetData("console_on", on, true)
     end
 
+    ---@api
     function ENT:SetHandbrakeControlEnabled(on)
         self:CallHook("HandbrakeControlToggled", on)
         return self:SetData("handbrake_control_on", on, true)
     end
 
+    ---@api
     function ENT:SetTeleportControlEnabled(on)
         self:CallHook("TeleportControlToggled", on)
         return self:SetData("teleport_control_on", on, true)
     end
 
+    ---@api
     function ENT:ToggleConsole()
         return self:SetConsoleEnabled(not self:GetConsoleEnabled())
     end
 
+    ---@api
     function ENT:ToggleHandbrakeControl()
         return self:SetHandbrakeControlEnabled(not self:GetHandbrakeControlEnabled())
     end
 
+    ---@api
     function ENT:ToggleTeleportControl()
         return self:SetTeleportControlEnabled(not self:GetTeleportControlEnabled())
     end

@@ -7,6 +7,7 @@ function TARDIS:GetButtonOptions()
     return self.ButtonOptions
 end
 
+---@api
 function TARDIS:AddButtonOption(data)
     data.type = "button"
     self.ButtonOptions[data.id] = data

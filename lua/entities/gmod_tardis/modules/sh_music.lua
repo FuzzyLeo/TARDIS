@@ -1,6 +1,7 @@
 -- Music
 
 if SERVER then
+    ---@api
     function ENT:PlayMusic(url, ply)
         if url then
             if ply and (not self:CheckSecurity(ply)) then
@@ -17,6 +18,7 @@ if SERVER then
         end
     end
 
+    ---@api
     function ENT:StopMusic()
         if self.music then
             for ply, _ in pairs(self.occupants) do
@@ -37,6 +39,7 @@ if SERVER then
     return
 end
 
+---@api
 function ENT:StopMusic(network)
     if IsValid(self.music) then
         if self.music:GetState() == GMOD_CHANNEL_PLAYING then
@@ -59,6 +62,7 @@ function ENT:ResolveMusicURL(url)
     end
 end
 
+---@api
 function ENT:PlayMusic(url,resolved)
     if not resolved then
         TARDIS:Message(LocalPlayer(), "Music.Loading")

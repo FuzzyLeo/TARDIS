@@ -30,6 +30,7 @@ if SERVER then
         end
     end
 
+    ---@api
     function TARDIS:SpawnTARDIS(ply, customData, force)
         local entityName = "gmod_tardis"
 

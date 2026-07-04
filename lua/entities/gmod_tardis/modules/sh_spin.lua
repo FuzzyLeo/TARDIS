@@ -1,13 +1,16 @@
 -- Spin
 
+---@api
 function ENT:GetSpin()
     return self:GetData("spin", false)
 end
 
+---@api
 function ENT:GetSpinDir(ignore_enabled)
     return ignore_enabled and self:GetData("spin-dir",-1) or (self:GetSpin() and self:GetData("spin-dir",-1) or 0)
 end
 
+---@api
 function ENT:GetSpinDirText(ignore_enabled)
     local current = self:GetSpinDir(ignore_enabled)
 
@@ -29,11 +32,13 @@ if SERVER then
         self:SetData("spin-dir", -1, true)
     end)
 
+    ---@api
     function ENT:SetSpinDir(dir)
         self:SetData("spin-dir", dir, true)
         self:CallHook("SpinChanged", self:GetSpinDir())
     end
 
+    ---@api
     function ENT:SetSpin(on, dir)
         self:SetData("spin", on, true)
         if dir ~= nil then
@@ -42,10 +47,12 @@ if SERVER then
         self:CallHook("SpinChanged", self:GetSpinDir())
     end
 
+    ---@api
     function ENT:ToggleSpin()
         self:SetSpin(not self:GetSpin())
     end
 
+    ---@api
     function ENT:CycleSpinDir()
         local lastCycle = self:GetData("spin-lastcycle", false)
 
@@ -58,6 +65,7 @@ if SERVER then
         end
     end
 
+    ---@api
     function ENT:SwitchSpinDir()
         self:SetSpinDir(-self:GetSpinDir(true))
     end

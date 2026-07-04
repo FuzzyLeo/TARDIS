@@ -160,6 +160,7 @@ if CLIENT then
     end)
 end
 
+---@api
 function ENT:ChangeExterior(id, animate, ply, retry)
     if CLIENT then
         self:SendMessage("chameleon_change_exterior", {id, animate, ply, retry})
@@ -409,6 +410,7 @@ ENT:AddHook("ShouldDrawPart", "chameleon_door", function(self, part)
     end
 end)
 
+---@api
 function ENT:IsChameleonActive()
     return self:GetData("chameleon_active", false)
 end

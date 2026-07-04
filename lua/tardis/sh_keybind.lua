@@ -26,6 +26,7 @@ if SERVER then
         end
     end)
 
+    ---@api
     function TARDIS:AddKeyBind(id,data)
         if not data.clientonly then
             self.binds[id]=table.Copy(data)
@@ -33,6 +34,7 @@ if SERVER then
         end
     end
 
+    ---@api
     function TARDIS:IsBindDown(ply,id)
         local bind = self.binds[id]
         local b = bind and bind.b
@@ -41,6 +43,7 @@ if SERVER then
         end
     end
 
+    ---@api
     function TARDIS:RemoveKeyBind(id)
         self.binds[id]=nil
     end
@@ -156,6 +159,7 @@ else
         [MOUSE_WHEEL_DOWN]={n="Mouse Wheel Down"},
     }
 
+    ---@api
     function TARDIS:GetKeyName(key)
         if keys[key] then
             return keys[key].n
@@ -181,12 +185,14 @@ else
     TARDIS.bindkeys=TARDIS.bindkeys or {}
     TARDIS.binds=TARDIS.binds or {}
 
+    ---@api
     function TARDIS:GetBindKey(id)
         if self.bindkeys[id] then
             return self.bindkeys[id]
         end
     end
 
+    ---@api
     function TARDIS:AddKeyBind(id,data)
         if self.bindkeys[id]==nil then
             self.bindkeys[id]=data.key
@@ -194,11 +200,13 @@ else
         self.binds[id]=table.Copy(data)
     end
 
+    ---@api
     function TARDIS:RemoveKeyBind(id)
         self.bindkeys[id]=nil
         self.binds[id]=nil
     end
 
+    ---@api
     function TARDIS:SetKeyBind(id,key)
         if self.bindkeys[id] then
             self.bindkeys[id]=key
@@ -206,10 +214,12 @@ else
         self:SaveKeyBinds()
     end
 
+    ---@api
     function TARDIS:GetBinds()
         return self.binds
     end
 
+    ---@api
     function TARDIS:GetBind(id)
         if self.binds[id] then
             return self.binds[id]
@@ -247,6 +257,7 @@ else
         end
     end)
 
+    ---@api
     function TARDIS:IsBindDown(id)
         if self.bindkeys[id] then
             return keys[self.bindkeys[id]].b

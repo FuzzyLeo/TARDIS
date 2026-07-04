@@ -71,6 +71,7 @@ function ENT:SetState(state)
   return self:SetData("state", state, true)
 end
 
+---@api
 function ENT:GetState()
   return self:GetData("state")
 end
@@ -125,6 +126,7 @@ end
 -- "Travelling" generalisation
 --
 
+---@api
 function ENT:IsTravelling()
     return self:CallHook("IsTravelling")
 end

@@ -13,6 +13,7 @@ TARDIS:AddKeyBind("vortex-toggle",{
     exterior=true
 })
 
+---@api
 function ENT:IsVortexEnabled(pilot)
     local hookResult = self:CallHook("VortexEnabled", pilot)
     if hookResult ~= nil then return hookResult end

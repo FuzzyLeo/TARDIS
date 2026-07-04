@@ -1,19 +1,23 @@
 -- Exterior light
 
+---@api
 function ENT:GetFlashLight()
     return self:GetData("flash-light-enabled", false)
 end
 
 if SERVER then
+    ---@api
     function ENT:FlashLight(time)
         self:SendMessage("flash-light", { time })
     end
 
+    ---@api
     function ENT:SetFlashLight(enabled)
         self:SetData("flash-light-enabled", enabled, true)
         return enabled
     end
 
+    ---@api
     function ENT:ToggleFlashLight()
         return self:SetFlashLight(not self:GetFlashLight())
     end

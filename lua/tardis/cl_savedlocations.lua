@@ -24,6 +24,7 @@ function TARDIS:SaveLocations()
     file.Write(LOCATIONS_FILE, TARDIS.von.serialize(TARDIS.Locations))
 end
 
+---@api
 function TARDIS:AddLocation(pos,ang,name,map)
     if TARDIS.Locations and TARDIS.Locations[map] then
 
@@ -74,6 +75,7 @@ function TARDIS:UpdateLocation(pos,ang,name,map,index)
     end
 end
 
+---@api
 function TARDIS:RemoveLocation(map,index)
     table.remove(TARDIS.Locations[map],index)
     TARDIS:SaveLocations()

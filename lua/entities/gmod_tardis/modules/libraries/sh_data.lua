@@ -47,6 +47,7 @@ else
     end)
 end
 
+---@api
 function ENT:SetData(k,v,network)
     if not self.data then self.data = {} end
     self.data[k]=v
@@ -63,6 +64,7 @@ function ENT:SetData(k,v,network)
     return v
 end
 
+---@api
 function ENT:GetData(k,default)
     if self.data and self.data[k] ~= nil then
         return self.data[k]

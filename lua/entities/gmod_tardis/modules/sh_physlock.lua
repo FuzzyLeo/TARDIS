@@ -13,6 +13,7 @@ TARDIS:AddKeyBind("physlock-toggle",{
     exterior=true
 })
 
+---@api
 function ENT:GetPhyslock()
     return self:GetData("physlock",false)
 end
@@ -31,6 +32,7 @@ function ENT:ExplodeIfFast()
     end
 end
 
+---@api
 function ENT:SetPhyslock(on)
     if not on and self:CallHook("CanTurnOffPhyslock") == false then
         return false
@@ -56,6 +58,7 @@ function ENT:SetPhyslock(on)
     return true
 end
 
+---@api
 function ENT:TogglePhyslock()
     local on = not self:GetPhyslock()
     return self:SetPhyslock(on)

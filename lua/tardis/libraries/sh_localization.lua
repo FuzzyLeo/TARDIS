@@ -6,6 +6,7 @@ TARDIS.LanguageCache = TARDIS.LanguageCache or {}
 TARDIS.CurrentLanguage = TARDIS.CurrentLanguage
 TARDIS.DefaultLanguage = "en"
 
+---@api
 function TARDIS:GetPhrase(phrase, ...)
     if not phrase then
         return ""
@@ -34,11 +35,13 @@ function TARDIS:FormatString(str, ...)
     return string.format(str, unpack(args))
 end
 
+---@api
 function TARDIS:PhraseExists(phrase)
     local cache = self.LanguageCache[self.CurrentLanguage]
     return cache[phrase] ~= nil
 end
 
+---@api
 function TARDIS:GetPhraseIfExists(phrase, ...)
     if not phrase then
         return nil
@@ -54,6 +57,7 @@ function TARDIS:GetPhraseIfExists(phrase, ...)
     return string.format(str, ...)
 end
 
+---@api
 function TARDIS:AddLanguage(t)
     if not (t.Code and t.Phrases and t.Name) then
         error("TARDIS:AddLanguage: Invalid language configuration")
@@ -70,6 +74,7 @@ function TARDIS:AddLanguage(t)
     self:UpdateLanguage()
 end
 
+---@api
 function TARDIS:AddLanguageExtension(t)
     if not (t.Code and t.Phrases and t.Extends) then
         error("TARDIS:AddLanguageExtension: Invalid language extension configuration")
@@ -150,6 +155,7 @@ function TARDIS:CompileLanguage(code)
     return phrases
 end
 
+---@api
 function TARDIS:GetLanguage()
     if not TARDIS.CurrentLanguage then
         self:UpdateLanguage()
@@ -157,6 +163,7 @@ function TARDIS:GetLanguage()
     return TARDIS.CurrentLanguage
 end
 
+---@api
 function TARDIS:UpdateLanguage()
     local langCode
     if SERVER then
@@ -212,6 +219,7 @@ cvars.AddChangeCallback("gmod_language", function()
     TARDIS:UpdateLanguage()
 end)
 
+---@api
 function TARDIS:GetLanguages()
     return self.Languages
 end

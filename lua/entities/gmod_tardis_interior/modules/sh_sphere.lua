@@ -1,5 +1,6 @@
 -- Metadata
 
+---@api
 function ENT:GetSphere()
     return self:GetData("sphere-center", Vector(0, 0, 0)), self:GetData("sphere-radius", 0)
 end

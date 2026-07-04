@@ -10,10 +10,12 @@ ENT:AddHook("Initialize","parts",function(self)
     end
 end)
 
+---@api
 function ENT:GetPart(id)
     return self.parts and self.parts[id] or NULL
 end
 
+---@api
 function ENT:GetParts()
     return self.parts
 end
@@ -33,6 +35,7 @@ ENT:AddHook("SetupOwner", "parts", function(self, ply)
 end)
 
 if SERVER then
+    ---@api
     function ENT:SetPartInvisible(id, invisible, nofade)
         local invisible_parts = self:GetData("invisible_int_parts", {})
         invisible_parts[id] = {

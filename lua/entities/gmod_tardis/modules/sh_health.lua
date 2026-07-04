@@ -1,14 +1,17 @@
 -- Health
 
+---@api
 function ENT:GetHealthMax()
     local ratio = TARDIS:GetSetting("health_to_shields_ratio")
     return math.max(1, ratio * TARDIS:GetSetting("health_max"))
 end
 
+---@api
 function ENT:GetHealth()
     return self:GetData("health-val", 0)
 end
 
+---@api
 function ENT:GetHealthPercent()
     local val = self:GetHealth()
     local percent = (val * 100) / self:GetHealthMax()
@@ -18,22 +21,27 @@ end
 ENT.HEALTH_PERCENT_DAMAGED = 40
 ENT.HEALTH_PERCENT_BROKEN = 10
 
+---@api
 function ENT:IsAlive()
     return self:GetHealth() ~= 0
 end
 
+---@api
 function ENT:IsDamaged()
     return not self:IsBroken() and (self:GetHealthPercent() <= self.HEALTH_PERCENT_DAMAGED)
 end
 
+---@api
 function ENT:IsBroken()
     return self:GetHealthPercent() <= self.HEALTH_PERCENT_BROKEN
 end
 
+---@api
 function ENT:IsLowHealth()
     return self:IsBroken() or self:IsDamaged()
 end
 
+---@api
 function ENT:IsDead()
     return self:GetHealth() == 0
 end
@@ -54,6 +62,7 @@ if SERVER then
         end
     end)
 
+    ---@api
     function ENT:AddHealth(value)
         local newhealth = self:GetHealth() + value
         self:ChangeHealth(newhealth)
@@ -71,6 +80,7 @@ if SERVER then
         end
     end
 
+    ---@api
     function ENT:ChangeHealth(new_health)
         if self:GetRepairing() then
             return

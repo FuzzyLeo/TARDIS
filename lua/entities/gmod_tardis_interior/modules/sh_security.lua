@@ -1,18 +1,22 @@
 -- Security System (Isomorphic)
 
+---@api
 function ENT:GetSecurity()
     return self.exterior:GetSecurity()
 end
 
+---@api
 function ENT:CheckSecurity(ply)
     return self.exterior:CheckSecurity(ply)
 end
 
 if SERVER then
+    ---@api
     function ENT:SetSecurity(on)
         return self.exterior:SetSecurity(on)
     end
 
+    ---@api
     function ENT:ToggleSecurity()
         return self.exterior:ToggleSecurity()
     end

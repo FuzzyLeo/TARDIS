@@ -1,3 +1,4 @@
+---@api
 function ENT:ApplyTextureSet(set_id)
     if not self.metadata or not self.metadata.Interior.TextureSets then return end
 
@@ -18,6 +19,7 @@ end
         self:ChangeTexture(id, <material>)
         self:ChangeTexture(id, <skin_no>)
 ]]
+---@api
 function ENT:ChangeTexture(part_id, a, b, prefix)
     local ent = (part_id == "self") and self or self:GetPart(part_id)
     if not IsValid(ent) then return end

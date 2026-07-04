@@ -214,6 +214,7 @@ local function ChangeSingleLightState(light_table, state)
     table.Merge(light_table, new_state)
 end
 
+---@api
 function ENT:ApplyLightState(state)
     self:SetData("light_state", state)
     self:CallHook("LightStateChanged", state)

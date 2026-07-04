@@ -26,11 +26,13 @@ ENT:AddHook("Initialize", "cloak", function(self)
     self:SetData("phase-percent",1)
 end)
 
+---@api
 function ENT:GetCloak()
     return self:GetData("cloak",false)
 end
 
 if SERVER then
+    ---@api
     function ENT:SetCloak(on)
         if self:CallHook("CanToggleCloak")==false then return false end
         self:SetData("cloak", on)
@@ -41,6 +43,7 @@ if SERVER then
         return true
     end
 
+    ---@api
     function ENT:ToggleCloak()
         local on = not self:GetData("cloak", false)
         return self:SetCloak(on)

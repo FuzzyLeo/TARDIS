@@ -15,11 +15,13 @@ TARDIS.gui_themes={}
 local theme_basefolder = "materials/vgui/tardis-themes/"
 
 -- Functionally identical to {} but gives proper type checking for GUI themes
+---@api
 ---@return tardis_gui_theme
 function TARDIS:NewGUITheme()
     return {}
 end
 
+---@api
 function TARDIS:AddGUITheme(theme)
     ---@type tardis_gui_theme
     local copy = table.Copy(theme)
@@ -63,6 +65,7 @@ function TARDIS:GetScreenGUIColor(screen, theme)
     return Color(0,0,0,255)
 end
 
+---@api
 ---@return table<string, tardis_gui_theme>
 function TARDIS:GetGUIThemes()
     return self.gui_themes
@@ -87,6 +90,7 @@ function TARDIS:GetGUIThemeFolder(id)
     return nil
 end
 
+---@api
 function TARDIS:GetGUIThemeElement(theme_id, section, element, no_defaults)
     if element == nil then
         return TARDIS:GetGUIThemeElement(theme_id, section, "default")

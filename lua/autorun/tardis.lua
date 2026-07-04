@@ -2,6 +2,7 @@
 
 ---@class TARDIS
 TARDIS=TARDIS or {}
+---@api
 function TARDIS:LoadFolder(folder,addonly,noprefix)
     if folder then
         folder="tardis/"..folder.."/"
