@@ -157,14 +157,19 @@ end
 
 ---@api
 ---@param id string
+---@param src Entity?
 ---@param no_default boolean?
 function TARDIS:GetSetting(id, src, no_default)
+    ---@type Player?
     local ply
-    if IsValid(src) and not src:IsPlayer() and not src.TardisExterior then
-        src = src.exterior
+    ---@type Entity?
+    local ent = src
+    if IsValid(ent) and not ent:IsPlayer() and not ent.TardisExterior then
+        ent = ent.exterior
     end
-    if IsValid(src) and isentity(src) then
-        ply = (src:IsPlayer() and src) or src:GetCreator()
+    if IsValid(ent) and isentity(ent) then
+        ---@cast ent Entity
+        ply = ent:IsPlayer() and ent --[[@as Player]] or ent:GetCreator()
     end
 
     if not id then error("Requested setting with no id") end
@@ -198,10 +203,10 @@ function TARDIS:GetSetting(id, src, no_default)
             return select_return_val(self.NetworkedSettings[id])
         end
 
-        local user_id = (IsValid(ply) and ply:UserID()) or src.CreatorID
+        local user_id = (IsValid(ply) and ply:UserID()) or (IsValid(ent) and ent.CreatorID) or nil
 
         if not user_id then
-            print("[TARDIS] WARNING: Networked setting " .. id .. " was requested for invalid source " .. tostring(src))
+            print("[TARDIS] WARNING: Networked setting " .. id .. " was requested for invalid source " .. tostring(ent))
         end
 
         if not user_id or not self.ClientSettings[user_id] then

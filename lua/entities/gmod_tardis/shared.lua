@@ -13,6 +13,7 @@
 ---@field LeakedInteriorHums table<any, CSoundPatch>
 ---@field environment sb_resource_environment?
 ---@field environment_old sb_resource_environment?
+---@field music IGModAudioChannel?
 
 ENT.Base="gmod_door_exterior"
 ENT.Spawnable=false

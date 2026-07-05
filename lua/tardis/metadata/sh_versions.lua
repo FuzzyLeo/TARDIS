@@ -41,10 +41,16 @@ function TARDIS:ShouldUseClassicDoors(ent)
 end
 
 ---@api
+---@param id string|tardis_version_entry
 ---@param ent Entity?
 ---@return string?
 function TARDIS:SelectDoorVersionID(id, ent)
-    local version = (istable(id) and id) or self.MetadataVersions[id].main
+    local version
+    if istable(id) then
+        version = id
+    else
+        version = self.MetadataVersions[id].main
+    end
     if not version then return end
 
     if not version.classic_doors_id then return version.id end

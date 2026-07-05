@@ -183,7 +183,7 @@ else
     hook.Add("PrePlayerDraw", "tardis-outside", function(ply)
         if ply:GetTardisData("outside") then
             ply.angtemp=ply:EyeAngles()
-            ply:SetRenderAngles(Angle(0,ply:GetTardisData("outsideang",0).y,0))
+            ply:SetRenderAngles(Angle(0,ply:GetTardisData("outsideang",angle_zero).y,0))
         end
     end)
 

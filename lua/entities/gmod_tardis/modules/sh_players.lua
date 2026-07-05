@@ -26,20 +26,27 @@ if SERVER then
     ---@class Player
     local meta=FindMetaTable("Player")
 
-    function meta:SetTardisData(k,v,network)
+    ---@param key string
+    ---@param value any
+    ---@param network boolean?
+    function meta:SetTardisData(key,value,network)
         if not self.tardis then self.tardis = {} end
-        self.tardis[k]=v
+        self.tardis[key]=value
 
         if network then
             net.Start("TARDIS-PlayerData")
-                net.WriteType(k)
-                net.WriteType(v)
+                net.WriteType(key)
+                net.WriteType(value)
             net.Send(self)
         end
     end
 
-    function meta:GetTardisData(k,default)
-        return (self.tardis and self.tardis[k]~=nil) and self.tardis[k] or default
+    ---@generic T
+    ---@param key string
+    ---@param default? T
+    ---@return T
+    function meta:GetTardisData(key,default)
+        return (self.tardis and self.tardis[key]~=nil) and self.tardis[key] or default
     end
 
     function meta:ClearTardisData()
@@ -58,13 +65,19 @@ else
     ---@class Player
     local meta=FindMetaTable("Player")
 
-    function meta:SetTardisData(k,v)
+    ---@param key string
+    ---@param value any
+    function meta:SetTardisData(key,value)
         if not self.tardis then self.tardis = {} end
-        self.tardis[k]=v
+        self.tardis[key]=value
     end
 
-    function meta:GetTardisData(k,default)
-        return (self.tardis and self.tardis[k]~=nil) and self.tardis[k] or default
+    ---@generic T
+    ---@param key string
+    ---@param default? T
+    ---@return T
+    function meta:GetTardisData(key,default)
+        return (self.tardis and self.tardis[key]~=nil) and self.tardis[key] or default
     end
 
     function meta:ClearTardisData()
@@ -72,9 +85,9 @@ else
     end
 
     net.Receive("TARDIS-PlayerData", function()
-        local k=net.ReadType()
-        local v=net.ReadType()
-        LocalPlayer():SetTardisData(k,v)
+        local key=net.ReadType()
+        local value=net.ReadType()
+        LocalPlayer():SetTardisData(key,value)
     end)
 
     net.Receive("TARDIS-PlayerDataClear", function()

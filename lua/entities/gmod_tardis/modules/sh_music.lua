@@ -2,6 +2,7 @@
 
 if SERVER then
     ---@api
+    ---@param url string?
     ---@param ply Player?
     function ENT:PlayMusic(url, ply)
         if url then
@@ -13,7 +14,7 @@ if SERVER then
                 self:SendMessage("play-music", {url}, occupant)
             end
 
-            self.music = url
+            self.musicurl = url
 
             return true
         end
@@ -21,11 +22,11 @@ if SERVER then
 
     ---@api
     function ENT:StopMusic()
-        if self.music then
+        if self.musicurl then
             for ply, _ in pairs(self.occupants) do
                 self:SendMessage("stop-music", nil, ply)
             end
-            self.music = nil
+            self.musicurl = nil
         end
     end
 
@@ -66,6 +67,7 @@ function ENT:ResolveMusicURL(url)
 end
 
 ---@api
+---@param url string
 ---@param resolved boolean?
 function ENT:PlayMusic(url,resolved)
     if not resolved then
