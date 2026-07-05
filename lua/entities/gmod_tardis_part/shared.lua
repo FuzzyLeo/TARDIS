@@ -42,6 +42,11 @@ hook.Add("CanDrive", "tardis-part", function(ply,ent)
     if ent.TardisPart then return false end
 end)
 
+---@generic T
+---@param key string
+---@param value T
+---@param network? boolean
+---@return T
 function ENT:SetData(key,value,network)
     return IsValid(self.exterior) and self.exterior:SetData(key, value, network)
 end
@@ -69,6 +74,8 @@ hook.Add("BodygroupChanged", "tardis_parts", function(ent,bodygroup,value)
     end
 end)
 
+---@param invisible boolean
+---@param nofade boolean?
 function ENT:SetInvisible(invisible, nofade)
     return self.parent:SetPartInvisible(self.ID, invisible, nofade)
 end
