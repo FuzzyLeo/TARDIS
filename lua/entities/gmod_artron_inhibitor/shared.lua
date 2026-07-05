@@ -1,5 +1,14 @@
 -- Artron Inhibitor by Nova Astral, an edit of the Time Distortion Generator by parar020100 and JEREDEK
 
+---@class gmod_artron_inhibitor : Entity
+---@field Radius number
+---@field EntHealth number
+---@field EntMaxHealth number
+---@field Broken boolean?
+---@field FlyTime number?
+---@field ArtronTick number?
+---@field On boolean?
+---@field LastActivator Player?
 ENT.Type = "anim"
 ENT.Base = "base_gmodentity"
 

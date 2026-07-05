@@ -19,7 +19,7 @@ function TARDIS:NewControlSequence()
 end
 
 ---@api
----@param cseq table
+---@param cseq tardis_sequence
 function TARDIS:AddControlSequence(cseq)
     self.CSequences[cseq.ID] = cseq
 end

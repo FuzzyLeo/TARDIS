@@ -41,7 +41,7 @@ function TARDIS:NewControl()
 end
 
 ---@api
----@param control table
+---@param control tardis_control
 function TARDIS:AddControl(control)
     if CLIENT or (SERVER and (not control.clientonly)) then
         ---@type tardis_control

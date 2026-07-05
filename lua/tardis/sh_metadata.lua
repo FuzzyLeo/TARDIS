@@ -607,7 +607,7 @@ function TARDIS:NewInterior()
 end
 
 ---@api
----@param interior table
+---@param interior tardis_metadata
 function TARDIS:AddInterior(interior)
     interior = table.Copy(interior)
 
