@@ -110,6 +110,7 @@ end
 
 ---@param template_id string
 ---@param id string
+---@param template tardis_interior_template|false|nil
 function TARDIS:HandleMissingTemplate(template_id, id, template)
     local can_print = CLIENT and LocalPlayer() and LocalPlayer().ChatPrint
 
@@ -121,14 +122,14 @@ function TARDIS:HandleMissingTemplate(template_id, id, template)
             ErrorNoHalt("\n" .. err_notification)
         end
     end
-    if template.fail_msg then
+    if template and template.fail_msg then
         if can_print then
             LocalPlayer():ChatPrint(template.fail_msg)
         else
             print("\n" .. template.fail_msg .. "\n")
         end
     end
-    if template.fail then
+    if template and template.fail then
         template.fail()
     end
 end

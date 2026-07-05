@@ -1,4 +1,7 @@
 
+---@class linked_portal_door
+---@field debug_window Panel?
+
 if SERVER then
     util.AddNetworkString("TARDIS-Debug-Portals")
     util.AddNetworkString("TARDIS-Debug-Portals-Update")
@@ -29,6 +32,7 @@ if SERVER then
         end
     end)
 else
+    ---@param p linked_portal_door
     function TARDIS:ShowPortalDebugMenu(p)
         local cmenu = g_ContextMenu --[[@as ContextMenuPanel]]
         if IsValid(p.debug_window) then
@@ -382,7 +386,7 @@ else
     end
 
     net.Receive("TARDIS-Debug-Portals", function()
-        local p = net.ReadEntity()
+        local p = net.ReadEntity() --[[@as linked_portal_door]]
         if not IsValid(p) then return end
         TARDIS:ShowPortalDebugMenu(p)
     end)

@@ -413,17 +413,17 @@ else
     -- Dynamic read/write counts not handled by analyzer.
     ---@diagnostic disable-next-line: gmod-net-read-write-order-mismatch
     net.Receive("TARDIS-ClientSettings",function(len)
-        local ply=net.ReadInt(8)
-        if not TARDIS.ClientSettings[ply] then TARDIS.ClientSettings[ply]={} end
+        local userID=net.ReadInt(8)
+        if not TARDIS.ClientSettings[userID] then TARDIS.ClientSettings[userID]={} end
         local mode=net.ReadBool()
         if mode then
             local id = net.ReadString()
             local value = net.ReadType()
-            local old_value = TARDIS.ClientSettings[ply][id]
-            TARDIS.ClientSettings[ply][id]=value
-            TARDIS:OnSettingChanged(id, value, old_value, ply)
+            local old_value = TARDIS.ClientSettings[userID][id]
+            TARDIS.ClientSettings[userID][id]=value
+            TARDIS:OnSettingChanged(id, value, old_value, Player(userID))
         else
-            TARDIS.ClientSettings[ply]=TARDIS.von.deserialize(net.ReadString())
+            TARDIS.ClientSettings[userID]=TARDIS.von.deserialize(net.ReadString())
         end
     end)
 
@@ -487,6 +487,7 @@ end
 ---@param id string
 ---@param value any
 ---@param old_value any
+---@param ply Player?
 function TARDIS:OnSettingChanged(id,value,old_value,ply)
     hook.Call("TARDIS_SettingChanged", GAMEMODE, id, value, old_value, ply)
     for _,ent in ipairs(TARDIS:GetExteriorEnts()) do

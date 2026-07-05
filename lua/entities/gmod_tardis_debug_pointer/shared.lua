@@ -1,6 +1,8 @@
 -- TARDIS debug pointer
 -- Creators: Brundoob, Parar020100 and RyanM2711
 
+---@class gmod_tardis_debug_pointer : Entity
+---@field debug_window Panel?
 ENT.Type = "anim"
 ENT.Base = "base_gmodentity"
 
@@ -125,6 +127,7 @@ if SERVER then
         pointer:Use(ply,ply)
     end)
 else
+    ---@param p gmod_tardis_debug_pointer
     function TARDIS:ShowPointerDebugMenu(p)
         local cmenu = g_ContextMenu --[[@as ContextMenuPanel]]
         if IsValid(p.debug_window) then
@@ -447,7 +450,7 @@ else
     end
 
     net.Receive("TARDIS-Pointer-Debug", function()
-        local p = net.ReadEntity()
+        local p = net.ReadEntity() --[[@as gmod_tardis_debug_pointer]]
         if not IsValid(p) then return end
         TARDIS:ShowPointerDebugMenu(p)
     end)

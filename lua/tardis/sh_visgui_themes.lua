@@ -52,6 +52,7 @@ function TARDIS:GetScreenGUITheme(screen)
 end
 
 ---@param screen TardisScreen
+---@param theme tardis_gui_theme?
 function TARDIS:GetScreenGUIColor(screen, theme)
     if theme == nil then
         theme = self.gui_themes[TARDIS:GetScreenGUITheme(screen)]
@@ -61,7 +62,7 @@ function TARDIS:GetScreenGUIColor(screen, theme)
         return theme.bgcolor
     end
     if theme.base_id then
-        return TARDIS:GetScreenGUIColor(screen, theme.base_id)
+        return TARDIS:GetScreenGUIColor(screen, self.gui_themes[theme.base_id])
     end
     return Color(0,0,0,255)
 end

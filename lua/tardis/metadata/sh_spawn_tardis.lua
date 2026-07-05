@@ -65,7 +65,6 @@ if SERVER then
         if not SpawnFunction then
             return
         end
-        ---@cast entity gmod_tardis
         local entity = SpawnFunction(sent, ply, tr, entityName, customData)
 
         if IsValid(entity) and IsValid(ply) then

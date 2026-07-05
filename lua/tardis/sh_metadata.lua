@@ -383,6 +383,12 @@ CreateConVar("tardis2_selected_interior", "", {FCVAR_REPLICATED}, "TARDIS - sele
 ---@class tardis_interior_template
 ---@field override boolean?
 ---@field condition function?
+---@field ignore_missing boolean?
+---@field fail_msg string?
+---@field fail function?
+---@field realID string?
+---@field parts_rotation Angle?
+---@field parts_offset Vector?
 
 ---@class tardis_custom_control
 ---@field int_func function
