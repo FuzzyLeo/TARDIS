@@ -1,4 +1,17 @@
 -- Localization
+
+---@class tardis_language
+---@field Code string
+---@field Name string
+---@field Phrases table<string, string>
+---@field Base string?
+---@field Extends string?
+
+---@class tardis_language_extension
+---@field Code string
+---@field Extends string
+---@field Phrases table<string, string>
+
 TARDIS.Languages = TARDIS.Languages or {}
 TARDIS.LanguageExtensions = TARDIS.LanguageExtensions or {}
 ---@type table<string, table<string, string>>
@@ -67,7 +80,7 @@ function TARDIS:GetPhraseIfExists(phrase, ...)
 end
 
 ---@api
----@param language table
+---@param language tardis_language
 function TARDIS:AddLanguage(language)
     if not (language.Code and language.Phrases and language.Name) then
         error("TARDIS:AddLanguage: Invalid language configuration")
@@ -85,7 +98,7 @@ function TARDIS:AddLanguage(language)
 end
 
 ---@api
----@param extension table
+---@param extension tardis_language_extension
 function TARDIS:AddLanguageExtension(extension)
     if not (extension.Code and extension.Phrases and extension.Extends) then
         error("TARDIS:AddLanguageExtension: Invalid language extension configuration")

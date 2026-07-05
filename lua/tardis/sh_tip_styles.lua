@@ -1,8 +1,15 @@
 ---@type table<string, tardis_tip>
 local tip_styles={}
 
+-- Functionally identical to {} but gives proper type checking for tip styles
 ---@api
----@param style table
+---@return tardis_tip
+function TARDIS:NewTipStyle()
+    return {}
+end
+
+---@api
+---@param style tardis_tip
 function TARDIS:AddTipStyle(style)
     if CLIENT then
         tip_styles[style.style_id]=table.Copy(style)

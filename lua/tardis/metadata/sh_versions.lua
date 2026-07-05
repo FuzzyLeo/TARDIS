@@ -141,7 +141,7 @@ end
 ---@api
 ---@param main_id string
 ---@param version_id string
----@param version table
+---@param version tardis_version_entry
 function TARDIS:AddCustomVersion(main_id, version_id, version)
     if version_id == "main" then return end
 
