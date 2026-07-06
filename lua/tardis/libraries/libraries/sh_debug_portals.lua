@@ -146,6 +146,7 @@ else
         local orig_epo_x, orig_epo_y, orig_epo_z = epo_x, epo_y, epo_z
         local orig_eao_p, orig_eao_y, orig_eao_r = eao_p, eao_y, eao_r
 
+        ---@param src_relative boolean?
         local function UpdatePortalPos(src_relative)
 
             if src_relative then
@@ -197,6 +198,9 @@ else
             net.SendToServer()
         end
 
+        ---@param category string
+        ---@param name string
+        ---@param value number
         local function SetupProperty(category, name, value, a, b, c, d)
             local vmin, vmax, update_func
             local vtype = "Float"

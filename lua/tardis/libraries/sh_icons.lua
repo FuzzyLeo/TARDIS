@@ -32,17 +32,20 @@ local EXT_PRIORITY = { vmt = 1, png = 2, jpg = 3 }
 
 TARDIS.iconpack_index = TARDIS.iconpack_index or {}
 
+---@param ext_to_name table<string, string>
 local function pick_best_ext(ext_to_name)
     for _, ext in ipairs(ICON_EXTENSIONS) do
         if ext_to_name[ext] then return ext_to_name[ext] end
     end
 end
 
+---@param rel string
 local function scan_dir(rel)
     local files = file.Find("materials/" .. rel .. "*", "GAME")
     return files or {}
 end
 
+---@param pack tardis_icon_pack
 local function build_pack_index(pack)
     local index = {
         icons   = { spawnicons = {}, exteriors = {}, interiors = {} },
@@ -227,6 +230,8 @@ function TARDIS:GetIconProvider(category, id, config_override)
     return nil
 end
 
+---@param stored_list table?
+---@param category string
 local function build_category_list(self, stored_list, category)
     stored_list = stored_list or {}
     local seen = {}
@@ -254,6 +259,8 @@ local function build_category_list(self, stored_list, category)
     return valid
 end
 
+---@param pack_id string
+---@param category string
 local function lookup_pack_missing(self, pack_id, category)
     local idx = self.iconpack_index[pack_id]
     if not idx then return nil end
@@ -272,6 +279,7 @@ function TARDIS:GetPackMissingIcon(pack_id, category)
     return lookup_pack_missing(self, pack_id, category)
 end
 
+---@param stored table<string, string>?
 local function build_missing_map(self, stored)
     stored = stored or {}
     local out = {}
@@ -305,6 +313,9 @@ function TARDIS:GetDefaultIconPackConfig()
     return result
 end
 
+---@param pack_id string
+---@param category string
+---@param id string
 local function lookup_pack_icon(self, pack_id, category, id)
     local idx = self.iconpack_index[pack_id]
     if not idx then return nil end

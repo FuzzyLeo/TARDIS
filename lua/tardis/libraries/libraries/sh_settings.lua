@@ -255,6 +255,8 @@ end)
 
 function TARDIS:SaveSettings()
 
+    ---@param settings_table table
+    ---@param settings_file string
     local function SaveSettingsToFile(settings_table, settings_file)
         local settings={}
         for k,v in pairs(settings_table) do
@@ -276,6 +278,8 @@ end
 
 function TARDIS:LoadSettings()
 
+    ---@param settings_table table
+    ---@param settings_file string
     local function LoadSettingsFromFile(settings_table, settings_file)
         if file.Exists(settings_file, "DATA") then
             local file_contents = file.Read(settings_file, "DATA")

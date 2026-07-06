@@ -7,6 +7,7 @@
 
 TARDIS.Migrations = TARDIS.Migrations or {}
 
+---@param str string
 local function get_version_from_string(str)
     local major, minor, patch = string.match(str, "^(%d+)%.(%d+)%.(%d+)$")
     if not major then return false end
@@ -17,6 +18,7 @@ local function get_version_from_string(str)
     }
 end
 
+---@param versionFile string
 ---@return tardis_version
 local function get_version_from_file(versionFile)
     local version, success

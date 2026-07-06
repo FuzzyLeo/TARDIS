@@ -55,6 +55,8 @@ end
 
 local convar_update_funcs = {}
 
+---@param name string
+---@param desc string
 local function CreateBoolDebugConVar(name, desc)
     local id = "tardis2_" .. name
     CreateConVar(id, 0, {FCVAR_ARCHIVE, FCVAR_REPLICATED}, desc)
@@ -128,8 +130,10 @@ TARDIS.DebugTipsFunction = function(self, ply, ...)
     local ent = trace_res.Entity
     local id = IsValid(ent) and ent.TardisPart and ent.ID or nil
 
+    ---@param x number
     local function sm(x) return math.Round(x,2) end
 
+    ---@param pos Vector
     local function add_tip_text(pos)
         local tip_string = "{ pos = Vector(" .. sm(pos.x) .. ", " .. sm(pos.y) .. ", " .. sm(pos.z)
         tip_string = tip_string .. "), right = true, down = true, },"
@@ -241,6 +245,7 @@ concommand.Add("tardis2_debug_minmax", function(ply,cmd,args)
     }
     ply:ChatPrint("ExitDistance/Box disabled")
 
+    ---@param pos Vector
     local function create_pointer(pos)
         local p = ents.Create("gmod_tardis_debug_pointer")
         p:SetCreator(ply)
@@ -282,6 +287,7 @@ if SERVER then
     util.AddNetworkString("TARDIS-Debug")
 end
 
+---@param text string
 local function chat_print(text)
     if SERVER then
         net.Start("TARDIS-Debug")

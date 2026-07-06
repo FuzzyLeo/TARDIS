@@ -1,10 +1,13 @@
 -- VGUI overrides
 
+---@param pnl Panel
+---@param text string
 local function number_ok(pnl, text)
     return (not pnl:GetNumeric()) or (text == "") or (tonumber(text) ~= nil)
 end
 
 local textpnl
+---@param pnl Panel
 local function RequestInput( pnl )
     if not textpnl then
         textpnl=pnl
@@ -46,6 +49,8 @@ vgui.Register( "DTextEntry3D2D", tbl, "DTextEntry" )
 
 local dmodel_tbl={}
 
+---@param w number
+---@param h number
 local function ensure_rt(self, w, h)
     w = math.max(math.floor(w or 0), 1)
     h = math.max(math.floor(h or 0), 1)
