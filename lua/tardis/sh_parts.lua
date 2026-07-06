@@ -529,6 +529,7 @@ local overrides={
     end, CLIENT},
 }
 
+---@param e gmod_tardis_part
 function SetupOverrides(e)
     local name=e.ClassName
     if not e.o then
@@ -618,6 +619,8 @@ hook.Add("InitPostEntity", "tardis-parts", function()
     postinit=true
 end)
 
+---@param e gmod_tardis_part
+---@param id string
 local function GetData(self,e,id)
     local data={}
     if self.TardisExterior then
@@ -711,6 +714,8 @@ function TARDIS:UpdatePartShadow(part)
     part.LastShadowTarget = tpos
 end
 
+---@param e gmod_tardis_part
+---@param id string
 local function AutoSetup(self,e,id)
     local data=GetData(self,e,id)
     if not data then return end

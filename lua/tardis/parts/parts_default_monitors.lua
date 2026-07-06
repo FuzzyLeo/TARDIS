@@ -39,6 +39,7 @@ function PART:GetOther()
     return self.interior:GetPart(self.OtherID)
 end
 
+---@param r number
 local function rotation_get_other(r)
     r = r + 0.5
     return (r > 1) and (r - 1) or r
@@ -134,6 +135,8 @@ end
 
 -- Monitor position (all values between 0 and 1)
 
+---@param int gmod_tardis_interior
+---@param ply Player
 local function trace_console_angle(int, ply)
     local origin = ply:EyePos()
     local aim = ply:GetAimVector()
@@ -154,6 +157,8 @@ local function trace_console_angle(int, ply)
     return ang.y, point.z
 end
 
+---@param ply Player
+---@param part gmod_tardis_part
 local function trace_monitor_pos(ply, part)
     local ang_y, down_pos = trace_console_angle(part.interior, ply)
     if not ang_y or not down_pos then return end
@@ -165,6 +170,8 @@ local function trace_monitor_pos(ply, part)
 end
 
 
+---@param r1 number
+---@param r2 number
 local function rotations_colliding (r1, r2)
     local border = 0.11
     if math.abs(r1 - r2) < border then
@@ -179,6 +186,8 @@ local function rotations_colliding (r1, r2)
     return false
 end
 
+---@param r1 number
+---@param r2 number
 local function rotations_distance(r1, r2)
     local d1 = math.abs(r1 - r2)
     local d2 = r1 + math.abs(1 - r2)
@@ -212,6 +221,8 @@ if SERVER then
     function PART:UpdateHitboxCollision()
         local static = self:IsStatic()
 
+        ---@param part gmod_tardis_part
+        ---@param collide boolean
         local function do_collision(part, collide)
             if not IsValid(part) then return end
             if collide then
@@ -548,6 +559,7 @@ TARDIS:AddPart(PART)
 
 -- Hitbox use functions
 
+---@param ply Player
 local function UseScreen(self,ply)
     local monitor = self:GetMonitor()
     if not IsValid(monitor) then return end
@@ -557,6 +569,7 @@ local function UseScreen(self,ply)
     end
 end
 
+---@param ply Player
 local function UseHandle(self,ply)
     local monitor = self:GetMonitor()
     if not IsValid(monitor) then return end
@@ -570,6 +583,7 @@ local function UseHandle(self,ply)
     end
 end
 
+---@param ply Player
 local function UseStatic(self,ply)
     local monitor = self:GetMonitor()
     if not IsValid(monitor) then return end
@@ -581,6 +595,7 @@ end
 
 -- Hitbox parts
 
+---@param MonitorID string
 local function Setup_Hitbox_Parts(MonitorID)
     -- Default monitor hitboxes
     PART = TARDIS:NewPart() --[[@as part_default_monitors]]
@@ -613,6 +628,8 @@ local function Setup_Hitbox_Parts(MonitorID)
     -- moving
 
     if SERVER then
+        ---@param pos Vector
+        ---@param ang Angle
         PART.Move = function(self, pos, ang)
             self:SetPos(pos)
             self:SetAngles(ang)

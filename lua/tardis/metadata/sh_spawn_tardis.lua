@@ -13,6 +13,7 @@ if SERVER then
         local winter = entity.metadata.Exterior.WinterSkins
         local winter_ok = TARDIS:GetSetting("winter_skins", entity)
 
+        ---@param skin integer
         local function cannot_use_skin(skin)
             local is_excluded = table.HasValue(excluded, skin)
             return is_excluded or (not winter_ok and winter and table.HasValue(winter, skin) )
@@ -119,6 +120,8 @@ if SERVER then
     end)
 else -- CLIENT
 
+    ---@param id string
+    ---@param is_spawn boolean
     local function GetSpawnDeleteSound(id, is_spawn)
         local snd_name = is_spawn and "Spawn" or "Delete"
 

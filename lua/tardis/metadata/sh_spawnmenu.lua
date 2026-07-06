@@ -198,6 +198,8 @@ if CLIENT then
 
             local option_versions = {}
 
+            ---@param option_name string
+            ---@param order integer
             local function add_version_option(option_name, option_id, order)
                 local prefixes = { "  ", "  ", "  ", "  " } -- spaces are different symbols
                 option_versions[option_id] = prefixes[order] .. TARDIS:GetPhrase(option_name)
@@ -239,6 +241,8 @@ if CLIENT then
             TARDIS.Spawnmenu.AddListSetting(dmenu, int_id, "preferred_version", "Spawnmenu.PreferredVersion", option_versions, versions_compare)
         end
 
+        ---@param version_list table
+        ---@param current_val boolean
         local function search_for_double_versions(version_list, current_val)
             if current_val then return true end
             for _,v in pairs(version_list) do
@@ -300,6 +304,7 @@ if CLIENT then
     -- missing icon without trying the other type. Hover modes fall through
     -- to the other type first, since both faces are part of the experience,
     -- and only resort to the missing icon when neither real icon exists.
+    ---@param mode integer
     local function get_primary(v, mode)
         if mode == MODE.InteriorOnly then
             return v.interior_icon or v.missing_interior
@@ -317,6 +322,7 @@ if CLIENT then
     -- Hover face: only the icon type the mode swaps to, no fallback. If that
     -- icon doesn't exist for this entity, hover does nothing (caller treats
     -- nil as "leave material alone").
+    ---@param mode integer
     local function get_hover(v, mode)
         if mode == MODE.InteriorOnHover then return v.interior_icon end
         if mode == MODE.SpawniconOnHover then return v.spawn_icon end

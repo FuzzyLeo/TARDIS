@@ -156,6 +156,8 @@ function TARDIS:MergeTemplates(metadata, ent)
         ent.templates = {}
         local added_already = {}
 
+        ---@param template_id string
+        ---@param template tardis_interior_template?
         local function add_to_list(template_id, template)
             if not template then return end
             if not istable(template) then return end
@@ -262,6 +264,7 @@ function TARDIS:GetMergedTextureSets(texture_sets_table)
     ---@type table<string, table>
     local texture_sets_merged = {}
 
+    ---@param id string
     local function merge_texture_set(id)
         local ts = texture_sets_table[id]
 
