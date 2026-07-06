@@ -20,6 +20,7 @@
 ---@field style_name string?
 ---@field SetHighlight fun(self: tardis_tip, on: boolean)
 ---@field GetHighlight fun(self: tardis_tip): boolean
+---@field ToggleHighlight fun(self: tardis_tip)
 
 ---@class tardis_tip_colors
 ---@field normal tardis_tip_colorset
@@ -114,7 +115,6 @@ function ENT:InitializeTips(style_name)
                     self.colors.current = self.colors.normal
                 end
             end
-            ---@param self tardis_tip
             tip.ToggleHighlight = function(self)
                 self:SetHighlight(not tip.highlighted)
             end
