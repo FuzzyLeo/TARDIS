@@ -366,6 +366,7 @@ function TARDIS:HUDScreen(window)
     screen.ext=TARDIS:GetExteriorEnt()
     screen.int=TARDIS:GetInteriorEnt()
 
+    ---@param self Panel
     screen.Think = function(self)
         if not IsValid(screen.ext) then
             TARDIS:RemoveHUDScreen()
@@ -430,6 +431,7 @@ function TARDIS:LoadScreenUI(screen)
         pagename:SetTextColor(Color(0,0,0))
     end
     pagename:SetFont(TARDIS:GetScreenFont(screen, "PageName"))
+    ---@param self Panel
     pagename.DoLayout = function(self)
         pagename:SizeToContents()
         pagename:SetPos((titlebar:GetWide()*0.5)-(pagename:GetWide()*0.5), (titlebar:GetTall()*0.5)-(pagename:GetTall()*0.5))
@@ -539,6 +541,7 @@ function TARDIS:LoadScreenUI(screen)
 
     menubutton:SetText(TARDIS:GetPhrase("Screens.Common.Menu"))
     menubutton:SetFont(TARDIS:GetScreenFont(screen, "Default"))
+    ---@param self Panel
     menubutton.DoClick = function(self)
         if IsValid(screen.curscreen) or not mmenu:IsVisible() then
             mmenu:SetVisible(not mmenu:IsVisible())
@@ -802,6 +805,7 @@ function TARDIS:LoadButtons(screen, frame, func, isvgui)
             back:SetPos(screen.gap,frame:GetTall()-back:GetTall()-screen.gap)
             back:SetText("<")
             back:SetFont(TARDIS:GetScreenFont(screen, "Default"))
+            ---@param self Panel
             back.DoClick = function(self)
                 if pages[curpage-1] then
                     pages[curpage]:SetVisible(false)
@@ -821,6 +825,7 @@ function TARDIS:LoadButtons(screen, frame, func, isvgui)
             nxt:SetPos(frame:GetWide()-nxt:GetWide()-screen.gap,frame:GetTall()-nxt:GetTall()-screen.gap)
             nxt:SetText(">")
             nxt:SetFont(TARDIS:GetScreenFont(screen, "Default"))
+            ---@param self Panel
             nxt.DoClick = function(self)
                 if pages[curpage+1] then
                     pages[curpage]:SetVisible(false)
@@ -874,6 +879,7 @@ function TARDIS:LoadScreen(id, options)
     frame:SetPos(screen.gap,screen.gap)
     frame:SetAlpha(230)
 
+    ---@param self Panel
     screen.Think = function(self)
         local int = self.int
         if not IsValid(int) then return end

@@ -126,6 +126,7 @@ local function old_virtual_console(self,ext,int,frame,screen)
     vortex_flight:SetPos(frame:GetWide()*0.13 - vortex_flight:GetWide()*0.5,frame:GetTall()*0.4 - vortex_flight:GetTall()*0.5)
     vortex_flight:SetText(TARDIS:GetPhrase("Screens.VirtualConsole.Old.FastRemat").." "..TARDIS:GetPhrase(ext:GetFastRemat() and "Common.Enabled.Lower" or "Common.Disabled.Lower"))
     vortex_flight:SetFont(TARDIS:GetScreenFont(screen, "Default"))
+    ---@param self Panel
     vortex_flight.DoClick = function(self)
         TARDIS:Control("vortex_flight", LocalPlayer())
     end

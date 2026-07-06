@@ -123,6 +123,7 @@ TARDIS:AddScreen("Destination", {id="coordinates", text="Screens.Coordinates", m
         return tostring(math.random(-99999999, 99999999) * 0.0001)
     end
 
+    ---@param self Panel
     position_panel.Think = function(self)
         if not IsValid(ext) then return end
         local vortex = ext:GetData("vortex")
@@ -230,6 +231,7 @@ TARDIS:AddScreen("Destination", {id="coordinates", text="Screens.Coordinates", m
 
 
 
+    ---@param self Panel
     destination_panel.Think = function(self)
         if not IsValid(ext) then return end
 
@@ -258,6 +260,7 @@ TARDIS:AddScreen("Destination", {id="coordinates", text="Screens.Coordinates", m
         dst_roll:SetText(tostring(math.Round(dst_ang.r, round_digits)))
     end
 
+    ---@param self Panel
     dst_progress.UpdateState = function(self)
         local teleport = ext:GetData("teleport")
         local vortex = ext:GetData("vortex")
@@ -382,6 +385,7 @@ TARDIS:AddScreen("Destination", {id="coordinates", text="Screens.Coordinates", m
     input_set:SetText(TARDIS:GetPhrase("Screens.Coordinates.Set"))
     input_set:SetFont(font)
 
+    ---@param self Panel
     input_panel.Think = function(self)
         local line = llist:GetSelectedLine()
         local loc = TARDIS.Locations[map]
@@ -587,6 +591,7 @@ TARDIS:AddScreen("Destination", {id="coordinates", text="Screens.Coordinates", m
         cleartextinputs()
     end
 
+    ---@param self Panel
     local clr = function(self)
         llist:ClearSelection()
     end

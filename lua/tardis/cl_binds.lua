@@ -82,6 +82,7 @@ end
 ---@param data table
 function TARDIS:CreateBindOptionInterface(id, data)
     local button = vgui.Create("DButton")
+    ---@param self Panel
     button.DoClick = function(self)
         TARDIS:ChangeKeyBind(id,data, function(saved)
             if saved then
@@ -91,6 +92,7 @@ function TARDIS:CreateBindOptionInterface(id, data)
             end
         end)
     end
+    ---@param self Panel
     button.UpdateText = function(self)
         local section = data.section or "Other"
         local name = TARDIS:GetPhrase("Binds.Sections."..section.."."..data.name or id)

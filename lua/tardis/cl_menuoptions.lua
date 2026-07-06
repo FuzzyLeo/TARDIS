@@ -97,6 +97,7 @@ hook.Add("PopulateToolMenu", "TARDIS2-PopulateToolMenu", function()
                         -- save the subsection state for more convenience
                         subsection:SetExpanded(expanded)
 
+                        ---@param self Panel
                         subsection.OnToggle = function(self, is_expanded)
                             local unfolded_setting = TARDIS:GetSetting("options-unfolded-subsections")
                             unfolded_setting[section] = unfolded_setting[section] or {}
@@ -128,6 +129,7 @@ hook.Add("PopulateToolMenu", "TARDIS2-PopulateToolMenu", function()
 
             local reset_button = vgui.Create("DButton")
             reset_button:SetText(TARDIS:GetPhrase("MenuOptions.SectionResetThisSection"))
+            ---@param self Panel
             reset_button.DoClick = function(self)
                 Derma_Query(
                     TARDIS:GetPhrase("MenuOptions.ConfirmSectionReset", "Settings.Sections."..section),
@@ -171,6 +173,7 @@ hook.Add("PopulateToolMenu", "TARDIS2-PopulateToolMenu", function()
 
             local reset_button = vgui.Create("DButton")
             reset_button:SetText(TARDIS:GetPhrase("MenuOptions.SectionResetThisSection"))
+            ---@param self Panel
             reset_button.DoClick = function(self)
                 Derma_Query(
                     TARDIS:GetPhrase("MenuOptions.ConfirmSectionReset", "Settings.Sections.Other"),

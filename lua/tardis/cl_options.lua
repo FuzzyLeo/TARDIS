@@ -23,6 +23,7 @@ function TARDIS:CreateOptionInterface(id, data)
             TARDIS:SetSetting(id, val)
             self.lastchange = CurTime()
         end
+        ---@param self Panel
         elem.Think = function(self)
             if self.lastchange and CurTime() - self.lastchange > 0.2 then
                 self.lastchange = nil
@@ -30,6 +31,7 @@ function TARDIS:CreateOptionInterface(id, data)
             end
         end
 
+        ---@param self Panel
         elem.RefreshVal = function(self)
             local setting = TARDIS:GetSetting(id)
             elem:SetChecked(setting)
@@ -58,12 +60,14 @@ function TARDIS:CreateOptionInterface(id, data)
             elem.Scratch:SetDecimals(0)
         end
 
+        ---@param self Panel
         elem2.OnValueChanged = function(self, val)
             self.lastchange = CurTime()
             self.lastchange_val = val
         end
+        ---@param self Panel
         elem2.Think = function(self)
-            if self.lastchange_val and CurTime() - self.lastchange > 0.1 then
+            if self.lastchange_val and self.lastchange and CurTime() - self.lastchange > 0.1 then
                 TARDIS:SetSetting(id, self.lastchange_val)
                 self.lastchange_val = nil
             end
@@ -74,6 +78,7 @@ function TARDIS:CreateOptionInterface(id, data)
             end
         end
 
+        ---@param self Panel
         elem.RefreshVal = function(self)
             local setting = TARDIS:GetSetting(id)
             elem2:SetValue(setting)
@@ -94,10 +99,12 @@ function TARDIS:CreateOptionInterface(id, data)
         mixer:SetAlphaBar(false)
         mixer:SetWangs(true)
 
+        ---@param self Panel
         mixer.ValueChanged = function(self, val)
             TARDIS:SetSetting(id, val)
             self.lastchange = CurTime()
         end
+        ---@param self Panel
         elem.Think = function(self)
             if self.lastchange and CurTime() - self.lastchange > 0.2 then
                 self.lastchange = nil
@@ -111,6 +118,7 @@ function TARDIS:CreateOptionInterface(id, data)
         spacer:SetTall(2)
         elem:AddItem(spacer)
 
+        ---@param self Panel
         elem.RefreshVal = function(self)
             local setting = TARDIS:GetSetting(id)
             mixer:SetColor(setting)
@@ -135,10 +143,12 @@ function TARDIS:CreateOptionInterface(id, data)
 
         tooltip = tooltip .. " (\"" .. elem2:GetOptionTextByData(data.value) .. "\")"
 
+        ---@param self Panel
         elem2.OnSelect = function(self, index, value, selected_data)
             TARDIS:SetSetting(id, selected_data)
             self.lastchange = CurTime()
         end
+        ---@param self Panel
         elem2.Think = function(self)
             if self.lastchange and CurTime() - self.lastchange > 0.2 then
                 self.lastchange = nil
@@ -147,6 +157,7 @@ function TARDIS:CreateOptionInterface(id, data)
             end
         end
 
+        ---@param self Panel
         elem.RefreshVal = function(self)
             local setting = TARDIS:GetSetting(id)
             elem2:SetText(elem2:GetOptionTextByData(setting))
@@ -155,14 +166,17 @@ function TARDIS:CreateOptionInterface(id, data)
     elseif data.type=="button" then
         elem = vgui.Create("DButton")
         elem:SetText(text)
+        ---@param self Panel
         elem.DoClick = function(self)
             if data.func then
                 data.func(TARDIS)
             end
         end
+        ---@param self Panel
         elem.RefreshVal = function(self) end
     else
         elem = vgui.Create("DLabel")
+        ---@param self Panel
         elem.RefreshVal = function(self) end
     end
 

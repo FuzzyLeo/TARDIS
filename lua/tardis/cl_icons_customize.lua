@@ -215,6 +215,7 @@ function TARDIS:CustomizeIconPack()
     end
 
     local original_close = frame.Close
+    ---@param self Panel
     frame.Close = function(self)
         if not is_dirty() then
             return original_close(self)
@@ -261,6 +262,7 @@ function TARDIS:CustomizeIconPack()
     sidebar:Dock(RIGHT)
     sidebar:SetWide(sidebar_w)
     sidebar:DockMargin(0, 4, 0, 0)
+    ---@param self Panel
     sidebar.Paint = function(self, w, h)
         derma.SkinHook("Paint", "Panel", self, w, h)
     end
@@ -275,11 +277,13 @@ function TARDIS:CustomizeIconPack()
     splitter:SetCursor("sizewe")
     splitter.Paint = function() end
     local split_drag ---@type {x: integer, w: integer}?
+    ---@param self Panel
     splitter.OnMousePressed = function(self, mc)
         if mc ~= MOUSE_LEFT then return end
         split_drag = { x = gui.MouseX(), w = sidebar:GetWide() }
         self:MouseCapture(true)
     end
+    ---@param self Panel
     splitter.OnMouseReleased = function(self, mc)
         if mc ~= MOUSE_LEFT or not split_drag then return end
         split_drag = nil
@@ -490,6 +494,7 @@ function TARDIS:CustomizeIconPack()
     local order_section = vgui.Create("DPanel", list_wrapper)
     order_section:Dock(TOP)
     order_section:DockPadding(SECTION_PAD, SECTION_PAD, SECTION_PAD, SECTION_PAD)
+    ---@param self Panel
     order_section.Paint = function(self, w, h)
         derma.SkinHook("Paint", "Panel", self, w, h)
     end
@@ -504,6 +509,7 @@ function TARDIS:CustomizeIconPack()
     missing_section:Dock(FILL)
     missing_section:DockMargin(0, SECTION_GAP, 0, 0)
     missing_section:DockPadding(SECTION_PAD, SECTION_PAD, SECTION_PAD, SECTION_PAD)
+    ---@param self Panel
     missing_section.Paint = function(self, w, h)
         derma.SkinHook("Paint", "Panel", self, w, h)
     end
@@ -577,6 +583,7 @@ function TARDIS:CustomizeIconPack()
                 cell:SetSize(CELL_SIZE, CELL_SIZE)
                 cell:SetCursor("hand")
                 cell:SetTooltip(pack_display_name(pack))
+                ---@param self Panel
                 cell.Paint = function(self, w, h)
                     surface.SetDrawColor(0, 0, 0, 25)
                     surface.DrawRect(0, 0, w, h)
@@ -767,6 +774,7 @@ function TARDIS:CustomizeIconPack()
                 surface.SetDrawColor(0, 0, 0, 110)
                 surface.DrawOutlinedRect(0, 0, w, h, 1)
             end
+            ---@param self Panel
             row.OnMousePressed = function(self, mouse_code)
                 if mouse_code == MOUSE_RIGHT and entry.id ~= "base" then
                     local dmenu = DermaMenu()
@@ -786,6 +794,7 @@ function TARDIS:CustomizeIconPack()
                 self:MouseCapture(true)
             end
 
+            ---@param self Panel
             row.OnMouseReleased = function(self, mouse_code)
                 if mouse_code == MOUSE_LEFT and pressed_row == self and press_x then
                     -- Treat as a click (not drag) if cursor barely moved.
@@ -817,9 +826,12 @@ function TARDIS:CustomizeIconPack()
             number_label:SetWide(28)
             number_label:DockMargin(2, 0, 0, 0)
             number_label.display_num = index
+            ---@param self Panel
             number_label.Paint = function(self, w, h)
+                local colours = self:GetSkin().Colours
+                if not colours then return end
                 draw.SimpleText("#" .. self.display_num, "DermaDefaultBold", w / 2, h / 2 - 1,
-                    self:GetSkin().Colours.Label.Dark, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
+                    colours.Label.Dark, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
             end
             row.number_label = number_label
 
@@ -961,9 +973,11 @@ function TARDIS:CustomizeIconPack()
                 end
             end
             icon.DoClick = function() end
+            ---@param self Panel
             icon.OnMousePressed = function(self, mc)
                 if mc == MOUSE_RIGHT then self:OpenMenu() end
             end
+            ---@param self Panel
             icon.OpenMenu = function(self)
                 local dmenu = DermaMenu()
                 local copy = dmenu:AddOption(TARDIS:GetPhrase("Spawnmenu.CopyID"), function()
