@@ -32,6 +32,7 @@ end
 function TARDIS:AddLocation(pos,ang,name,map)
     if TARDIS.Locations and TARDIS.Locations[map] then
 
+        ---@param l_name string
         local function location_exists(l_name)
             for _,v in ipairs(TARDIS.Locations[map]) do
                 if v.name == l_name then
@@ -40,6 +41,8 @@ function TARDIS:AddLocation(pos,ang,name,map)
             end
             return false
         end
+        ---@param l_name string
+        ---@param number number
         local function name_copy(l_name, number)
             return name .. "(" .. number .. ")"
         end

@@ -2,6 +2,7 @@ if SERVER then
     -- Routes a TARDIS kill to a interior/exterior specific kill feed icon and interior name:
     --   materials/killfeed/tardis/interiors/<interior_id>.vmt  (native skin)
     --   materials/killfeed/tardis/exteriors/<exterior_id>.vmt  (chameleon-applied exterior)
+    ---@param inflictor Entity
     local function resolve(inflictor)
         if not IsValid(inflictor) then return end
         ---@cast inflictor gmod_tardis

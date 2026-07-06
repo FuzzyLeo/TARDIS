@@ -1,5 +1,6 @@
 -- Icon pack customize menu
 
+---@param list table
 local function clone_list(list)
     local out = {}
     for i, entry in ipairs(list) do
@@ -8,12 +9,14 @@ local function clone_list(list)
     return out
 end
 
+---@param missing table<string, string>
 local function clone_missing(missing)
     local out = {}
     for k, v in pairs(missing) do out[k] = v end
     return out
 end
 
+---@param config table
 ---@return table<string, table>
 local function clone_config(config)
     local out = {}
@@ -27,6 +30,7 @@ local function clone_config(config)
     return out
 end
 
+---@param a table
 local function lists_equal(a, b)
     if #a ~= #b then return false end
     for i = 1, #a do
@@ -36,6 +40,8 @@ local function lists_equal(a, b)
     return true
 end
 
+---@param a table<string, string>
+---@param b table<string, string>
 local function maps_equal(a, b)
     for k, v in pairs(a) do
         if b[k] ~= v then return false end
@@ -46,6 +52,8 @@ local function maps_equal(a, b)
     return true
 end
 
+---@param a table
+---@param b table
 local function configs_equal(a, b)
     for key, value in pairs(a) do
         if b[key] == nil then return false end
@@ -63,6 +71,7 @@ end
 
 -- Ensure at least one pack is always enabled in the given list. If nothing is
 -- enabled, fall back to base.
+---@param list table
 local function ensure_any_enabled(list)
     for _, entry in ipairs(list) do
         if entry.enabled then return false end
@@ -163,6 +172,7 @@ function TARDIS:CustomizeIconPack()
         if refresh_grid then refresh_grid() end
     end
 
+    ---@param id string
     local function toggle_selection(id)
         if selected_pack_id == id then
             selected_pack_id = nil
@@ -177,6 +187,7 @@ function TARDIS:CustomizeIconPack()
     -- selected-pack highlight. Children with their own OnMousePressed (rows,
     -- icons, buttons) intercept first; this only fires for clicks that
     -- otherwise fall through.
+    ---@param panel Panel
     local function clear_on_blank_click(panel)
         panel.OnMousePressed = function(_, mc)
             if mc == MOUSE_LEFT then clear_selection() end
@@ -601,6 +612,9 @@ function TARDIS:CustomizeIconPack()
     local ROW_GAP = 4
     local ROW_PITCH = ROW_H + ROW_GAP  -- 28; vertical space one row occupies
 
+    ---@param receiver Panel
+    ---@param my number
+    ---@param ignore_row Panel
     local function compute_target_index(receiver, my, ignore_row)
         local target = #active_list() + 1
         for _, child in ipairs(receiver:GetChildren()) do

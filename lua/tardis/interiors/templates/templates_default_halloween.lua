@@ -68,6 +68,7 @@ local function debug_print(...)
     end
 end
 
+---@param ext gmod_tardis
 local function can_be_outside(ext)
     local isteleporting = ext:IsTeleporting()
     local invortex = ext:IsInVortex()

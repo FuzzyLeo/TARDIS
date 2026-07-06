@@ -44,6 +44,13 @@ local health_icon = Material("vgui/tardis_health.png")
 local energy_icon = Material("vgui/tardis_energy.png")
 local shields_icon = Material("vgui/tardis_shields.png")
 
+---@param icon_mat IMaterial
+---@param value number
+---@param draw_x number
+---@param draw_y number
+---@param bad_level number?
+---@param very_bad_level number?
+---@param dead_level number?
 local function DrawNumber(icon_mat, value, draw_x, draw_y, bad_level, very_bad_level, dead_level)
     local dead = (dead_level ~= nil) and (value <= dead_level)
 

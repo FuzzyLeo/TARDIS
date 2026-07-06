@@ -108,6 +108,7 @@ TARDIS:AddInteriorTemplate("default_dynamic_color", TARDIS:NewInteriorTemplate({
     },
 }))
 
+---@param ply Player
 local function get_color_setting_k(ply)
     local st = TARDIS:GetCustomSetting("default", "color", ply)
 
@@ -142,6 +143,7 @@ TARDIS:AddInteriorTemplate("default_fixed_color", TARDIS:NewInteriorTemplate({
     },
 }))
 
+---@param col Color
 local function change_light_color(lt, col)
     if lt and lt.brightness and col then
         lt.color = col
@@ -150,6 +152,7 @@ local function change_light_color(lt, col)
     end
 end
 
+---@param k number
 local function set_interior_color_smith(int, k)
     if not int.light_data then return end
 
@@ -196,6 +199,7 @@ TARDIS:AddInteriorTemplate("default_color_update_smith", TARDIS:NewInteriorTempl
     },
 }))
 
+---@param k number
 local function set_interior_color_capaldi(int, k)
     if not int.light_data then return end
 

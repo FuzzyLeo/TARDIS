@@ -643,6 +643,8 @@ T.CustomHooks = {
 }
 
 
+---@param ply Player
+---@param no integer
 local function screen_toggle_func(self, ply, no)
     if self:GetScreensOn() then
         local data = "default_screen_enabled_" .. no

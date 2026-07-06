@@ -752,6 +752,7 @@ function TARDIS:LoadButtons(screen, frame, func, isvgui)
             spaceh=page:GetTall()-screen.gap
             table.insert(pages,page)
         end
+        ---@param button Panel
         local function movebutton(button)
             local w=page:GetWide()-spacew
             local h=page:GetTall()-spaceh
