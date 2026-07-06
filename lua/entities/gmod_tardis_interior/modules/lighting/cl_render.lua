@@ -1,6 +1,7 @@
 -- Rendering override
 
 ---@param self gmod_tardis_interior
+---@param part gmod_tardis_part?
 local function predraw_o(self, part)
     if not TARDIS:GetSetting("lightoverride-enabled") then return end
     if part and part.AllowThroughPortals and not self.props[part] then return end
@@ -130,8 +131,19 @@ hook.Add("PostDrawPlayerHands", "tardis-customlighting", function(_, _, ply) pos
 
 local meta = assert(FindMetaTable("Entity"))
 
+---@class tardis_weapon_clone
+---@field draw Entity
+---@field pose Entity
+---@field interior gmod_tardis_interior
+---@field ply Player
+---@field model string
+---@field skin number
+---@field override function?
+---@field base function?
+
 -- Use a weak table (__mode = "k") so that when the weapon is removed, the clone is automatically garbage collected.
-local weaponClones = setmetatable({}, { __mode = "k" }) -- [weapon] = { draw, pose, override, base, interior, ply, model, skin }
+---@type table<Entity, tardis_weapon_clone>
+local weaponClones = setmetatable({}, { __mode = "k" })
 
 ---@param wep Entity
 local function releaseWeaponClone(wep)
@@ -168,6 +180,7 @@ end
 -- it matches the real weapon as closely as possible. The owner is important for some weapons
 -- that use the owner to determine how to draw themselves, e.g. the Physgun for player weapon
 -- colour or the Sonic Screwdriver to show the lighting effects when the player is holding it.
+---@param rec tardis_weapon_clone
 ---@param wep Entity
 local function syncWeaponDrawClone(rec, wep)
     local draw = rec.draw

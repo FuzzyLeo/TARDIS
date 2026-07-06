@@ -406,6 +406,7 @@ TARDIS:AddScreen("Destination", {id="coordinates", text="Screens.Coordinates", m
 
 
     ---@param pos Vector
+    ---@param ang Angle
     ---@param name string
     local function updatetextinputs(pos,ang,name)
         pitch:SetText(tostring(ang.p or 0.0))
@@ -482,7 +483,7 @@ TARDIS:AddScreen("Destination", {id="coordinates", text="Screens.Coordinates", m
             local current_ext = LocalPlayer():GetTardisExterior()
             if not IsValid(current_ext) then return end
             pos = current_ext:GetRandomLocation(ground) or current_ext:GetPos()
-            ang = {p = 0, y = 0, r = 0}
+            ang = Angle(0, 0, 0)
             if ground then
                 name = TARDIS:GetPhrase("Screens.Coordinates.RandomLocationGround")
             else

@@ -30,7 +30,8 @@ local function clone_config(config)
     return out
 end
 
----@param a table
+---@param a table[]
+---@param b table[]
 local function lists_equal(a, b)
     if #a ~= #b then return false end
     for i = 1, #a do
