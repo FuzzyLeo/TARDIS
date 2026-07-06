@@ -37,6 +37,7 @@ local function resolvePlayer(steamid)
     return players[1]
 end
 
+---@param label string
 ---@return number[]? values, string? err
 local function parseTriple(t, label)
     if type(t) ~= "table" or #t ~= 3 then
@@ -50,15 +51,19 @@ local function parseTriple(t, label)
     return { t[1], t[2], t[3] }
 end
 
+---@param v Vector
 local function vec3(v) return { v.x, v.y, v.z } end
+---@param a Angle
 local function ang3(a) return { a.p, a.y, a.r } end
 
+---@param ent Entity
 local function ownerInfo(ent)
     local creator = ent:GetCreator()
     if not IsValid(creator) then return nil end
     return { name = creator:Nick(), steamid = creator:SteamID() }
 end
 
+---@param ent gmod_tardis
 local function tardisSummary(ent)
     return {
         entindex = ent:EntIndex(),
@@ -73,6 +78,7 @@ end
 
 -- Summarise the demat -> vortex -> mat lifecycle. `landed` is the reliable idle gate: `teleport`
 -- spans the whole cycle and `vortex` covers the between-phase, so neither set means fully landed.
+---@param ext gmod_tardis
 local function materialization(ext)
     local demat = ext:GetData("demat", false)
     local mat = ext:GetData("mat", false)
@@ -109,6 +115,7 @@ end
 
 -- Census the interior's cordoned props (int.props) instead of the hand-rolled walk: a count and a
 -- class -> count tally, plus an optional per-entity list (index/class/pos).
+---@param includeEntities boolean
 local function cordonCensus(ext, includeEntities)
     local int = ext.interior
     if not IsValid(int) or not istable(int.props) then return nil end
@@ -129,12 +136,14 @@ local function cordonCensus(ext, includeEntities)
     return census
 end
 
+---@param ext gmod_tardis
 local function interiorName(ext)
     local meta = ext.metadataID and TARDIS:GetInterior(ext.metadataID)
     if meta and meta.Name then return TARDIS:GetPhrase(meta.Name) end
     return nil
 end
 
+---@param ext gmod_tardis
 local function chameleonInfo(ext)
     if not ext.IsChameleonActive then return nil end
     return {

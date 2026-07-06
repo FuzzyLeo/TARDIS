@@ -3,6 +3,9 @@ fallbackcol = Color(fallbackcol.r, fallbackcol.g, fallbackcol.b):ToVector()
 
 TARDIS.DynamicProxyVars = TARDIS.DynamicProxyVars or {}
 
+---@param ent gmod_tardis
+---@param mat IMaterial
+---@param name string
 local function getdynamicproxyvars(ent, mat, name, default)
     if not TARDIS.DynamicProxyVars[ent] then
         TARDIS.DynamicProxyVars[ent] = {}
@@ -101,6 +104,8 @@ matproxy.Add({
     end
 })
 
+---@param mat IMaterial
+---@param values table
 local function matproxy_tardis_power_init(self, mat, values)
     self.ResultTo = values.resultvar
     self.on_var = values.onvar
@@ -110,6 +115,7 @@ local function matproxy_tardis_power_init(self, mat, values)
     self.TransitionSpeedOff = values.transitionspeedoff or 0
 end
 
+---@param mat IMaterial
 local function matproxy_tardis_power_bind(self, mat, ent)
     if not IsValid(ent) then return end
 
@@ -251,12 +257,15 @@ matproxy.Add({
     end
 })
 
+---@param mat IMaterial
+---@param values table
 local function matproxy_tardis_warning_init(self, mat, values)
     self.ResultTo = values.resultvar
     self.on_var = values.onvar
     self.off_var = values.offvar
 end
 
+---@param mat IMaterial
 local function matproxy_tardis_warning_bind(self, mat, ent)
     if not IsValid(ent) then return end
 
@@ -287,12 +296,15 @@ matproxy.Add({
 })
 
 
+---@param mat IMaterial
+---@param values table
 local function matproxy_tardis_HDR_init(self, mat, values)
     self.ResultTo = values.resultvar
     self.on_var = values.onvar
     self.off_var = values.offvar
 end
 
+---@param mat IMaterial
 local function matproxy_tardis_HDR_bind(self, mat, ent)
     if not IsValid(ent) or not IsValid(ent.exterior) or not ent.TardisPart then return end
 
