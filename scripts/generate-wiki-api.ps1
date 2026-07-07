@@ -1,8 +1,7 @@
 [CmdletBinding()]
 param(
     [string] $WikiPath,
-    [switch] $Check,
-    [switch] $Strict
+    [switch] $Check
 )
 
 $ErrorActionPreference = 'Stop'
@@ -45,5 +44,4 @@ Invoke-WikiGen `
     -OwnedPrefix $WikiConfig['OwnedPrefix'] `
     -DefaultsProvider $DefaultsProvider `
     -IdentityFields $IdentityFields `
-    -Check:$Check `
-    -Strict:$Strict
+    -Check:$Check
