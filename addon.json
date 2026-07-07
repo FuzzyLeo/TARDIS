@@ -19,6 +19,7 @@
         ".luatypes/*",
         ".luarc.json",
         ".tools/*",
+        "types/*",
         "i18n/*",
         "assets/*",
         "scripts/*",
