@@ -56,13 +56,14 @@ local function dopredraw(self,part)
             self:DrawModel()
             render.OverrideColorWriteEnable(false, false)
 
-            render.OverrideColorWriteEnable(true, false)
+            -- reset per part: a part's material (e.g. a refract shader) can re-enable colour writes mid-loop, drawing later parts opaque
             for _,v in pairs(self.parts) do
                 if v.ExteriorPart then
+                    render.OverrideColorWriteEnable(true, false)
                     v:DrawModel()
+                    render.OverrideColorWriteEnable(false, false)
                 end
             end
-            render.OverrideColorWriteEnable(false, false)
         end
         
         render.SetBlend(target)
