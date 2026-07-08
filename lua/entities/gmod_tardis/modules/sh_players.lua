@@ -94,7 +94,8 @@ else
         LocalPlayer():ClearTardisData()
     end)
 
-    ENT:AddHook("PlayerExit", "players", function(self)
+    ENT:AddHook("PlayerExit", "players", function(self, ply)
+        if ply ~= LocalPlayer() then return end
         TARDIS:RemoveHUDScreen() -- force close hud screen if exit tardis
     end)
 

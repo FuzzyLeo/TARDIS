@@ -15,7 +15,8 @@ ENT:AddHook("OnRemove", "idlesound", function(self)
     end
 end)
 
-ENT:AddHook("PlayerEnter", "idlesound", function(self)
+ENT:AddHook("PlayerEnter", "idlesound", function(self, ply)
+    if ply ~= LocalPlayer() then return end
     local sounds = self.metadata.Interior.Sounds.Idle or self.metadata.Interior.IdleSound
     if not sounds or not self.idlesounds then return end
     local vol_setting = TARDIS:GetSetting("interior_hum_leakage") and (TARDIS:GetSetting("interior_hum_leakage_volume") / 100) or 0

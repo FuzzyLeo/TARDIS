@@ -117,7 +117,8 @@ ENT:AddHook("OnRemove", "music", function(self)
     end
 end)
 
-ENT:AddHook("PlayerExit", "stop-music-on-exit", function(self)
+ENT:AddHook("PlayerExit", "stop-music-on-exit", function(self, ply)
+    if ply ~= LocalPlayer() then return end
     if self.music and TARDIS:GetSetting("music-exit") then
         self:StopMusic(false)
     end

@@ -50,7 +50,8 @@ ENT:AddHook("ExteriorChanged", "externalhum", function(self)
 end)
 
 -- Fade out the interior hums to the configured volume when the player exits
-ENT:AddHook("PlayerExit", "externalhum", function(self)
+ENT:AddHook("PlayerExit", "externalhum", function(self, ply)
+    if ply ~= LocalPlayer() then return end
     if not TARDIS:GetSetting("interior_hum_leakage") then return end
     local sounds = self.metadata.Interior.Sounds.Idle or self.metadata.Interior.IdleSound
     if not sounds then return end

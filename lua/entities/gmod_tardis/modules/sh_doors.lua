@@ -383,6 +383,7 @@ if CLIENT then
     end)
 
     ENT:AddHook("PlayerEnter", "classic_doors_intdoor_sound", function(self,ply,notp)
+        if ply ~= LocalPlayer() then return end
         if not IsValid(self.interior) then return end
         if self.metadata.EnableClassicDoors ~= true then return end
         if self.metadata.NoSoundOnEnter == true then return end
