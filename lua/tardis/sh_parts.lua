@@ -620,6 +620,12 @@ hook.Add("InitPostEntity", "tardis-parts", function()
     postinit=true
 end)
 
+---@param portal linked_portal_door
+---@param ent Entity
+hook.Add("wp-shouldghost", "tardis-parts", function(portal, ent)
+    if ent.TardisPart and not ent.AllowThroughPortals then return false end
+end)
+
 ---@param self gmod_tardis|gmod_tardis_interior
 ---@param e gmod_tardis_part
 ---@param id string
