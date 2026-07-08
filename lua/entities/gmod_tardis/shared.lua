@@ -43,7 +43,7 @@ local hooks={}
 ---@overload fun(self: gmod_tardis, name: "CanChangeDestination", id: string, func: fun(self: gmod_tardis, pos: Vector?, ang: Angle?, ...))
 ---@overload fun(self: gmod_tardis, name: "CanChangeExterior", id: string, func: fun(self: gmod_tardis, target: false, arg2: boolean, ...))
 ---@overload fun(self: gmod_tardis, name: "CanChangePilot", id: string, func: fun(self: gmod_tardis, ply: Player, ...))
----@overload fun(self: gmod_tardis, name: "CanDemat", id: string, func: fun(self: gmod_tardis, force: boolean, arg2: boolean, ...))
+---@overload fun(self: gmod_tardis, name: "CanDemat", id: string, func: fun(self: gmod_tardis, force: boolean?, arg2: boolean, ...))
 ---@overload fun(self: gmod_tardis, name: "CanIncreaseArtron", id: string, func: fun(self: gmod_tardis, ...))
 ---@overload fun(self: gmod_tardis, name: "CanLock", id: string, func: fun(self: gmod_tardis, ...))
 ---@overload fun(self: gmod_tardis, name: "CanMat", id: string, func: fun(self: gmod_tardis, pos: Vector?, ang: Angle?, arg3: boolean, ...))
