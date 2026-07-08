@@ -5,7 +5,7 @@
 ---@param eventName string
 ---@param identifier any
 ---@param func function
----@overload fun(eventName: "TARDIS_LanguageChanged", identifier: any, func: fun(langCode: any, oldLangCode: any, ...))
+---@overload fun(eventName: "TARDIS_LanguageChanged", identifier: any, func: fun(langCode: any, oldLangCode: string, ...))
 ---@overload fun(eventName: "TARDIS_MetadataLoaded", identifier: any, func: fun(...))
 ---@overload fun(eventName: "TARDIS_PostMetadataLoaded", identifier: any, func: fun(...))
 ---@overload fun(eventName: "TARDIS_SettingChanged", identifier: any, func: fun(id: string, value: any, old_value: any, ply: Player, ...))
