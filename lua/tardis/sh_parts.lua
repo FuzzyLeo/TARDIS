@@ -384,7 +384,9 @@ local overrides={
             self.init_ang = self:GetAngles()
         end
     end, CLIENT or SERVER},
-    ["Think"]={function(self)
+    ["Think"]={
+        ---@param self gmod_tardis_part
+        function(self)
         local int=self.interior
         local ext=self.exterior
         if self._init and IsValid(ext) then
