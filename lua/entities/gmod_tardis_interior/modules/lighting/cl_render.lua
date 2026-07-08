@@ -1,72 +1,110 @@
 -- Rendering override
 
+---@class gmod_tardis_interior
+---@field _lightcacheframe integer?
+---@field _lightcache tardis_light_cache?
+
+---@class tardis_light_cache
+---@field tab table[]?
+---@field colvec Vector
+---@field power boolean?
+---@field parts_table table?
+
+-- Shared empty light slot: an off/vetoed light contributes nothing. Reused so building the
+-- render-table list doesn't allocate a throwaway table per off light.
+local EMPTY = {}
+
+---@param self gmod_tardis_interior
+---@param lt tardis_interior_light_state_complete
+---@param power boolean?
+---@param warning any
+---@return table
+local function selectLightTable(self, lt, power, warning)
+    if self:CallHook("ShouldDrawLight", nil, lt) == false then
+        return EMPTY
+    end
+    if (not power) and warning then
+        return lt.off_warn_render_table
+    elseif not power then
+        return lt.off_render_table
+    elseif warning then
+        return lt.warn_render_table
+    end
+    return lt.render_table
+end
+
+-- The light-override state is identical for every part in a frame - it depends on
+-- power/warning/light_data/settings, not the part - yet the draw gate fires per part per
+-- render pass. Build it once per frame: the SetLocalModelLights table, the base colour and
+-- the per-part brightness table. Returns nil when the override is off.
+---@param self gmod_tardis_interior
+---@return tardis_light_cache?
+local function getLightCache(self)
+    local fc = Doors.FrameNum
+    if self._lightcacheframe == fc then return self._lightcache end
+    self._lightcacheframe = fc
+
+    local lo = TARDIS:GetSetting("lightoverride-enabled") and self.metadata.Interior.LightOverride
+    if not lo then
+        self._lightcache = nil
+        return nil
+    end
+
+    local power = self:GetPower()
+    local c = self._lightcache or {}
+    c.power = power
+    c.colvec = self:GetBaseLightColorVector()
+    c.parts_table = power and lo.parts or lo.parts_nopower
+
+    local ld = self.light_data
+    if ld then
+        local warning = self:GetData("warning", false)
+        local extra = TARDIS:GetSetting("extra-lights")
+        local tab = {}
+        table.insert(tab, selectLightTable(self, ld.main, power, warning))
+        local lights = ld.extra
+        if lights then
+            for _, l in pairs(lights) do
+                if not extra then
+                    table.insert(tab, EMPTY)
+                else
+                    table.insert(tab, selectLightTable(self, l, power, warning) or EMPTY)
+                end
+            end
+        end
+        c.tab = tab
+    else
+        c.tab = nil
+    end
+
+    self._lightcache = c
+    return c
+end
+
 ---@param self gmod_tardis_interior
 ---@param part gmod_tardis_part?
 local function predraw_o(self, part)
-    if not TARDIS:GetSetting("lightoverride-enabled") then return end
     if part and part.AllowThroughPortals and not self.props[part] then return end
-    local lo = self.metadata.Interior.LightOverride
-    if not lo then return end
-
-    local power = self:GetPower()
+    local c = getLightCache(self)
+    if not c then return end
 
     render.SuppressEngineLighting(true)
 
-    local colvec = self:GetBaseLightColorVector()
-
-    local parts_table = power and lo.parts or lo.parts_nopower
-
-    if part and parts_table and parts_table[part.ID] then
-        local part_br = parts_table[part.ID]
+    local part_br = part and c.parts_table and c.parts_table[part.ID]
+    if part_br then
         if istable(part_br) then
             render.ResetModelLighting(part_br[1], part_br[2], part_br[3])
         else
             render.ResetModelLighting(part_br, part_br, part_br)
         end
     else
+        local colvec = c.colvec
         render.ResetModelLighting(colvec[1], colvec[2], colvec[3])
     end
 
-    --render.SetLightingMode(1)
-    local ld = self.light_data
-    if not ld then return end
-    local light = ld.main
-    local lights = ld.extra
-    local warning = self:GetData("warning", false)
-
-    local tab={}
-
-    ---@param lt tardis_interior_light_state_complete
-    local function SelectLightRenderTable(lt)
-        if self:CallHook("ShouldDrawLight",nil,lt) == false then
-            return {}
-        end
-
-        if (not power) and warning then
-            return lt.off_warn_render_table
-        elseif not power then
-            return lt.off_render_table
-        elseif warning then
-            return lt.warn_render_table
-        end
-        -- power and no warning
-        return lt.render_table
-
-    end
-
-    table.insert(tab, SelectLightRenderTable(light))
-
-    if lights then
-        for _,l in pairs(lights) do
-            if not TARDIS:GetSetting("extra-lights") then
-                table.insert(tab, {})
-            else
-                table.insert(tab, SelectLightRenderTable(l) or {})
-            end
-        end
-    end
-
-    if #tab==0 then
+    local tab = c.tab
+    if not tab then return end
+    if #tab == 0 then
         render.SetLocalModelLights()
     else
         render.SetLocalModelLights(tab)
@@ -75,8 +113,7 @@ end
 
 ---@param self gmod_tardis_interior
 local function postdraw_o(self)
-    if not TARDIS:GetSetting("lightoverride-enabled") then return end
-    if not self.metadata.Interior.LightOverride then return end
+    if not getLightCache(self) then return end
     render.SuppressEngineLighting(false)
 end
 
