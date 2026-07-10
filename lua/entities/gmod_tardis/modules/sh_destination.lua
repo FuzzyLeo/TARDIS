@@ -337,8 +337,8 @@ if SERVER then
             self:SelectDestination(ply, false)
         end
 
-        self:SetData("chameleon_planned_exterior", ext, true)
         if ext then
+            self:SetData("chameleon_planned_exterior", ext, true)
             TARDIS:Message(ply, "Chameleon.ExteriorPlanned")
         end
 
@@ -516,6 +516,7 @@ else
 
     ENT:AddHook("Destination", "destination", function(self, enabled)
         if enabled then
+            self:SetData("destination_chameleon", nil)
             self:CreateDestinationProp()
         else
             self:RemoveDestinationProp()
