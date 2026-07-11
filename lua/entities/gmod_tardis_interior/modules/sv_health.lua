@@ -44,3 +44,7 @@ end)
 ENT:AddHook("ShouldTakeDamage", "DamageOff", function(self, dmginfo)
     if not TARDIS:GetSetting("health-enabled") then return false end
 end)
+
+ENT:AddHook("ShouldTakeDamage", "fire", function(self, dmginfo)
+    if TARDIS:IsFireDamage(dmginfo) then return false end
+end)

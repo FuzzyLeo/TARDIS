@@ -116,16 +116,15 @@ if SERVER then
         if not TARDIS:GetSetting("health-enabled") then return false end
     end)
 
+    ENT:AddHook("ShouldTakeDamage", "fire", function(self, dmginfo)
+        if TARDIS:IsFireDamage(dmginfo) then return false end
+    end)
+
     ---------------------------------
     --Damage calculation and sounds--
     ---------------------------------
 
     ENT:AddHook("OnTakeDamage", "Health", function(self, dmginfo)
-        if IsValid(dmginfo:GetInflictor())
-            and dmginfo:GetInflictor():GetClass() == "env_fire"
-        then
-            return
-        end
         if dmginfo:GetDamage() <= 0 then return end
         self:ApplyDamage(dmginfo:GetDamage() / 2)
         if not IsValid(self.interior) then return end

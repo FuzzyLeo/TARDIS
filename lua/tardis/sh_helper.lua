@@ -84,6 +84,18 @@ function TARDIS:CheckPP(ply, ent)
     return hook.Call("CanTool", GAMEMODE, ply, pp_trace, "")
 end
 
+---@param dmginfo CTakeDamageInfo
+---@return boolean
+function TARDIS:IsFireDamage(dmginfo)
+    if dmginfo:IsDamageType(DMG_BURN) or dmginfo:IsDamageType(DMG_SLOWBURN) then
+        return true
+    end
+    if not dmginfo:IsDamageType(DMG_DIRECT) then return false end
+    local inflictor = dmginfo:GetInflictor()
+    if not IsValid(inflictor) then return false end
+    return inflictor.TardisExterior or inflictor.TardisInterior or inflictor.TardisPart or false
+end
+
 TARDIS.color_white_vector = Vector(1,1,1)
 
 --[[
