@@ -91,34 +91,35 @@ jobs:
           checkout_path: ${{ github.workspace }}/TARDIS
           category: glua_check
 
-  build:
-    name: Build
+  setup:
+    name: Resolve workshop target
     runs-on: ubuntu-latest
     if: (github.event_name == 'push' && contains(fromJSON('["refs/heads/dev", "refs/heads/alpha"]'), github.ref)) || github.event.inputs.publish == 'true'
+    outputs:
+      id: ${{ steps.pick.outputs.id }}
     steps:
-      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7
-
-      - name: Set workshop addon id
-        id: workshop_id
+      - name: Pick workshop id
+        id: pick
         run: |
           if [[ "${{ github.event.inputs.addon }}" == "beta" || "${{ github.ref }}" == "refs/heads/dev" ]]; then
-            WORKSHOP_ID=${{ vars.BETA_WORKSHOP_ID }}
+            echo "id=${{ vars.BETA_WORKSHOP_ID }}" >> "$GITHUB_OUTPUT"
           elif [[ "${{ github.event.inputs.addon }}" == "alpha" || "${{ github.ref }}" == "refs/heads/alpha" ]]; then
-            WORKSHOP_ID=${{ vars.ALPHA_WORKSHOP_ID }}
+            echo "id=${{ vars.ALPHA_WORKSHOP_ID }}" >> "$GITHUB_OUTPUT"
           else
             echo "Unknown workshop ID" 1>&2
             exit 1
           fi
 
-          echo "Publishing to workshop ID $WORKSHOP_ID"
-          echo "WORKSHOP_ID=$WORKSHOP_ID" >> $GITHUB_OUTPUT
-
-      - uses: AmyJeanes/gmod-upload@c660f7674019f7f19246ab87b69124d209f74665 # main
-        name: Publish to workshop
-        with:
-          id: ${{ steps.workshop_id.outputs.WORKSHOP_ID }}
-          changelog: "${{ github.server_url }}/${{ github.repository }}/commit/${{ github.sha }}"
-          dry-run: ${{ steps.workshop_id.outputs.WORKSHOP_ID == '' }}
-        env:
-          STEAM_USERNAME: ${{ vars.STEAM_USERNAME }}
-          STEAM_PASSWORD: ${{ secrets.STEAM_PASSWORD }}
+  publish:
+    name: Publish to workshop
+    needs: setup
+    uses: AmyJeanes/gmod-addon-tools/.github/workflows/publish-workshop.yml@v0.23.0
+    with:
+      addon: TARDIS
+      workshop_id: ${{ needs.setup.outputs.id }}
+      mfa: false
+      dry_run: ${{ needs.setup.outputs.id == '' }}
+    secrets:
+      STEAM_USERNAME: ${{ vars.STEAM_USERNAME }}
+      STEAM_PASSWORD: ${{ secrets.STEAM_PASSWORD }}
+      HA_WEBHOOK_URL: ${{ secrets.HA_WEBHOOK_URL }}
