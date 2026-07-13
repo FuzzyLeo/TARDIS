@@ -358,7 +358,10 @@ if CLIENT then
 
             for _,v in pairs(container.tardis_icons) do
                 if v.is_tardis_icon then
-                    v:SetMaterial(get_primary(v, mode))
+                    -- nil when even the missing icon isn't mounted (client has
+                    -- the Lua but not the materials) - keep the existing icon.
+                    local mat = get_primary(v, mode)
+                    if mat then v:SetMaterial(mat) end
                 end
             end
 
@@ -372,7 +375,8 @@ if CLIENT then
         if hovered == container.hovered and not update_current then return end
 
         if container.hovered then
-            container.hovered:SetMaterial(get_primary(container.hovered, mode))
+            local mat = get_primary(container.hovered, mode)
+            if mat then container.hovered:SetMaterial(mat) end
         end
 
         local hover_mat = hovered and hovered.is_tardis_icon and get_hover(hovered, mode) or nil
