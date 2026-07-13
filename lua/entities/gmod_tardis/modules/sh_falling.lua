@@ -1,4 +1,9 @@
 if SERVER then
+    -- how close the base must be to a surface to count as grounded, and how long
+    -- after leaving the ground a contact still reads as a landing
+    local LANDING_CLEARANCE = 16
+    local LANDING_GRACE = 0.25
+
     ---@param collision_data CollisionData
     function ENT:IsVerticalLanding(collision_data)
         local ang = self:GetAngles()
@@ -14,16 +19,21 @@ if SERVER then
 
     ENT:AddHook("PhysicsCollide", "falling", function(self, data, collider)
 
-        if self:IsVerticalLanding(data) then
-            if (self:CallHook("ShouldNotPlayLandingSound") ~= true or self:CallHook("ShouldPlayLandingSound")) and data.OurOldVelocity.z < -100 then
-                self:SendMessage((data.OurOldVelocity.z < -1500) and "fall_crashing_sound" or "fall_landing_sound")
-            end
+        if not self:IsVerticalLanding(data) then return end
 
-            self:SetData("vertbrakes", true)
-            self:Timer("vertbrakes", 0.3, function()
-                self:SetData("vertbrakes", false)
-            end)
+        -- a moving floor under a landed TARDIS re-collides every tick but never
+        -- leaves the ground; only a contact soon after being airborne is a landing
+        local last_airborne = self:GetData("last_airborne")
+        if not last_airborne or (CurTime() - last_airborne) > LANDING_GRACE then return end
+
+        if (self:CallHook("ShouldNotPlayLandingSound") ~= true or self:CallHook("ShouldPlayLandingSound")) and data.OurOldVelocity.z < -100 then
+            self:SendMessage((data.OurOldVelocity.z < -1500) and "fall_crashing_sound" or "fall_landing_sound")
         end
+
+        self:SetData("vertbrakes", true)
+        self:Timer("vertbrakes", 0.3, function()
+            self:SetData("vertbrakes", false)
+        end)
 
     end)
 
@@ -42,6 +52,17 @@ if SERVER then
         end
 
         if not self:IsAlive() then return end
+
+        -- only look for ground contact when moving vertically: a resting or level-riding
+        -- TARDIS isn't leaving the ground, so skip the trace. Trace the world-space
+        -- underside so a tipped-over TARDIS still reads grounded.
+        if math.abs(ph:GetVelocity().z) > 16 then
+            local amin, amax = self:WorldSpaceAABB()
+            local foot = Vector((amin.x + amax.x) * 0.5, (amin.y + amax.y) * 0.5, amin.z + 1)
+            if not util.QuickTrace(foot, Vector(0, 0, -LANDING_CLEARANCE), self).Hit then
+                self:SetData("last_airborne", CurTime())
+            end
+        end
 
         local phm=FrameTime()*66
         local up=self:GetUp()
