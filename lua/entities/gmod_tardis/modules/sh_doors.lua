@@ -184,8 +184,8 @@ if SERVER then
         if IsValid(self.interior) and self.interior.portals then
             local portals = self.interior.portals
             local frame_enabled = open and not teleporting
-            if IsValid(portals.exterior) then portals.exterior:SetCollisionEnabled(frame_enabled) end
-            if IsValid(portals.interior) then portals.interior:SetCollisionEnabled(frame_enabled) end
+            if IsValid(portals.exterior) then portals.exterior:SetEnableCollision(frame_enabled) end
+            if IsValid(portals.interior) then portals.interior:SetEnableCollision(frame_enabled) end
         end
 
         if not IsValid(door_ext) then return end
