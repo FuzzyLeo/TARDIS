@@ -394,6 +394,13 @@ else
                 print("\tinverted = " .. tostring(inverted) .. ",")
             end
 
+            if epo_x ~= 0 or epo_y ~= 0 or epo_z ~= 0 or eao_p ~= 0 or eao_y ~= 0 or eao_r ~= 0 then
+                print("\texit_point_offset = {")
+                print("\t\tpos = Vector(" .. epo_x .. ", " .. epo_y .. ", " .. epo_z .. "),")
+                print("\t\tang = Angle(" .. eao_p .. ", " .. eao_y .. ", " .. eao_r .. "),")
+                print("\t},")
+            end
+
             print("},")
         end
     end
