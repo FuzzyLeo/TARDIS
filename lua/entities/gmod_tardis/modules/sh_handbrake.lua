@@ -39,9 +39,8 @@ if SERVER then
 
         if self:GetData("teleport") or self:GetData("vortex") then
             self:InterruptTeleport()
-        else
-            self:InterruptFlight()
         end
+        self:InterruptFlight()
     end)
 
     ENT:AddHook("CanTurnOnFlight", "handbrake", function(self)
