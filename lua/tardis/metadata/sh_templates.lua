@@ -148,7 +148,7 @@ function TARDIS:MergeTemplates(metadata, ent)
     if not ent or not IsValid(ent) then
         templates_todo = {}
         for template_id, template in pairs(metadata.Templates) do
-            if not template.condition then
+            if istable(template) and not template.condition then
                 table.insert(templates_todo, template_id)
             end
         end
