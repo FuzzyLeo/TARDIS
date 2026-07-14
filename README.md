@@ -2,6 +2,10 @@ TARDIS
 =
 A functioning version of the TARDIS for Garry's Mod.
 
+Documentation
+=
+[Wiki](https://github.com/AmyJeanes/TARDIS/wiki)
+
 Requirements
 =
 This addon requires the following:
