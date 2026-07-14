@@ -116,6 +116,7 @@ function TARDIS:SelectSpawnID(id, ent)
 
     version = TARDIS:SelectDoorVersionID(version, ent)
 
+    -- MetadataRaw, not Metadata: the latter is a lazy per-interior cache, so un-spawned variants are absent from it
     if not self.MetadataRaw[version] then
         version = TARDIS:SelectDoorVersionID(versions.main, ent)
     end

@@ -85,7 +85,8 @@ if SERVER then
         return true
     end
 
-    -- Makes sure the TARDIS doesn't fall through interiors when demat/matting
+    -- Makes sure the TARDIS doesn't fall through interiors when demat/matting.
+    -- DEBRIS is the one group that rests on a prop/shell floor yet still passes through players.
     ---@param pos Vector
     ---@return COLLISION_GROUP
     function ENT:TeleportCollisionGroup(pos)
