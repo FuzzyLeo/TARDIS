@@ -3,7 +3,7 @@ name: Generate Files
 on:
   pull_request_target:
     branches:
-    - dev
+    - main
     paths:
     - i18n/languages/*.json
     - version.json
@@ -12,7 +12,7 @@ on:
     - .github/workflows/generate-files.yml
   push:
     branches:
-    - dev
+    - main
     paths:
     - i18n/languages/*.json
     - version.json

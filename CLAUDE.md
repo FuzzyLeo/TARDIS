@@ -119,6 +119,18 @@ When enabling a previously-disabled rule, prefer source-side type annotations ov
 
 The `disable` list is empty and every rule is enforced; this section is now the reference for keeping it that way, not a migration to finish.
 
+## Build / publish
+
+No local build step - GMod loads `lua/` in place. CI publishes to three Steam Workshop items via the shared `gmod-addon-tools/publish-workshop.yml` reusable workflow:
+
+- **Beta (`2649683927`)** - every push to `main` (after GLua Check passes) republishes the beta item from `ci.yml`'s `publish` job: silent login, `mfa: false`. The "latest `main`" channel.
+- **Alpha (`2650203837`)** - pushes to the long-lived `alpha` branch publish the alpha item through the *same* `publish` job the same silent way (`mfa: false`); the `setup` job just resolves `vars.ALPHA_WORKSHOP_ID` instead of beta. Also reachable via `ci.yml`'s `workflow_dispatch` (`addon: alpha`, `publish: true`).
+- **Stable (`307175678`)** - publishing a full GitHub **release** fires `release.yml` (same reusable workflow, `mfa: true`, phone-gated Steam Guard). A **bare tag ships nothing** (the trigger is `release: published`, not the tag) - cut a release to publish stable.
+
+**Change notes.** The Steam note for a stable release is composed from the release body: the **first paragraph** of a `## Summary` section becomes the note (Steam is BBCode, not Markdown - keep it plain prose), under an automatic version link. Beta/alpha builds get a commit link instead (no `## Summary`). Draft releases from `RELEASE_TEMPLATE.md`.
+
+Test without shipping via `release.yml`'s `workflow_dispatch`: `dry_run: true` (real pack + Steam login, skip upload) or `tag: <version>` (preview - log the composed note only, no login). Note `dry_run` still fires the phone (the Steam Guard step gates on `mfa`, not `dry_run`); use `tag:` for a phone-free note preview.
+
 <!-- >>> GENERATED shared conventions (gmod-addon-tools) - do not edit; regen: scripts/generate-claude-md.ps1 >>> -->
 
 _Shared conventions for my GMod addons - generated from [`gmod-addon-tools/docs/gmod-addon-conventions.md`](https://github.com/AmyJeanes/gmod-addon-tools/blob/main/docs/gmod-addon-conventions.md). Edit it there, not in this file; the block below is overwritten by CI. Addon-specific guidance lives outside the markers._

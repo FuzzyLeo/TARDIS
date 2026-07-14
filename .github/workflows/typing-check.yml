@@ -3,11 +3,11 @@ name: Typing Check
 on:
   pull_request:
     branches:
-      - dev
+      - main
       - alpha
   push:
     branches:
-      - dev
+      - main
       - alpha
       - renovate/*
   workflow_dispatch:
@@ -26,21 +26,21 @@ jobs:
         uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7
         with:
           repository: AmyJeanes/Doors
-          ref: dev
+          ref: main
           path: Doors
 
       - name: Checkout world-portals
         uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7
         with:
           repository: AmyJeanes/world-portals
-          ref: dev
+          ref: main
           path: world-portals
 
       - name: Checkout Sonic-Screwdriver
         uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7
         with:
           repository: AmyJeanes/Sonic-Screwdriver
-          ref: dev
+          ref: main
           path: Sonic-Screwdriver
 
       - name: Checkout wire
