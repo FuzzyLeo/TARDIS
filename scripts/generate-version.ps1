@@ -17,6 +17,11 @@ finally {
     Pop-Location
 }
 
+# The describe calls above are probes and are meant to fail (no exact tag, or no tags at all in a
+# shallow CI checkout). A failed native command leaves $LASTEXITCODE set, which callers such as
+# glua-check.ps1 read as this script having failed.
+$global:LASTEXITCODE = 0
+
 $inCI = [bool]$env:GITHUB_ACTIONS
 
 # A local checkout is always "source" even when it happens to sit on a release tag - it is not
