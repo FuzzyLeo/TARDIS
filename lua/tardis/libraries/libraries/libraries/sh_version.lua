@@ -5,6 +5,11 @@
 ---@field Minor number
 ---@field Patch number
 
+---@class tardis_build
+---@field Channel "release"|"beta"|"alpha"|"source"
+---@field Commits number?
+---@field Sha string?
+
 ---@class tardis_migration
 ---@field date string
 ---@field func fun(self: TARDIS)
@@ -56,6 +61,12 @@ TARDIS.PreviousVersion = TARDIS.PreviousVersion or get_version_from_file(VERSION
 ---@type tardis_version
 TARDIS.LastUsedVersion = TARDIS.LastUsedVersion or get_version_from_file(VERSION_LAST_USED_FILE)
 
+-- sh_version_generated.lua is a build artifact; it loads after this file and overwrites these.
+---@type tardis_version
+TARDIS.Version = TARDIS.Version or { Major = 0, Minor = 0, Patch = 0 }
+---@type tardis_build
+TARDIS.Build = TARDIS.Build or { Channel = "source" }
+
 ---@api
 ---@return tardis_version
 function TARDIS:GetVersion()
@@ -71,6 +82,9 @@ function TARDIS:GetLastUsedVersion()
 end
 
 function TARDIS:SetLastUsedVersion()
+    -- Recording a source build's version would misreport the next Workshop launch as an upgrade.
+    if self.Build.Channel == "source" then return end
+
     if self:IsVersionEqualTo(self:GetVersion(), self.LastUsedVersion) then
         return
     end
@@ -79,6 +93,8 @@ function TARDIS:SetLastUsedVersion()
 end
 
 function TARDIS:IsNewVersion()
+    if self.Build.Channel == "source" then return false end
+
     if self.LastUsedVersion.Major == 0
         and self.LastUsedVersion.Minor == 0
         and self.LastUsedVersion.Patch == 0
@@ -99,6 +115,22 @@ end
 function TARDIS:GetVersionString(version)
     version = version or self.Version
     return string.format("%d.%d.%d", version.Major, version.Minor, version.Patch)
+end
+
+---@api
+---@return string
+function TARDIS:GetBuildString()
+    local build = self.Build
+    if build.Channel == "release" then
+        return self:GetVersionString()
+    end
+
+    local version = self:GetVersionString()
+    if version == "0.0.0" then
+        return build.Channel
+    end
+
+    return string.format("%s-%s.%d+g%s", version, build.Channel, build.Commits or 0, build.Sha or "unknown")
 end
 
 -- Typed `any` because istable narrowing can't drop the class from a string|table union, cascading false nil-flags into callers.
