@@ -209,7 +209,6 @@ hook.Add("HUDPaint", "TARDIS-DrawTips", function()
     local should_randomize = (interior:CallCommonHook("RandomizeTips") == true)
     for _,tip in ipairs(interior.tips)
     do
-        ---@cast tip tardis_tip -- glua_ls reads ipairs loop-var fields as nilable
         local view_range_min = tip.view_range_min
         local view_range_max = tip.view_range_max
 

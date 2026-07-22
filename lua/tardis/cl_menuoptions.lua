@@ -72,7 +72,6 @@ hook.Add("PopulateToolMenu", "TARDIS2-PopulateToolMenu", function()
 
         spawnmenu.AddToolMenuOption("Options", TARDIS:GetPhrase("Common.TARDIS"), section_id, section_text, "", "", function(panel)
             for _,b in ipairs(options) do
-                ---@cast b tardis_option_entry -- glua_ls reads ipairs loop-var fields as nilable
                 local id,data=b.id,b.data
                 if data.section == section then
                     if not data.subsection then
@@ -106,7 +105,6 @@ hook.Add("PopulateToolMenu", "TARDIS2-PopulateToolMenu", function()
                         end
 
                         for _,b2 in ipairs(options) do
-                            ---@cast b2 tardis_option_entry -- glua_ls reads ipairs loop-var fields as nilable
                             local id2,data2 = b2.id,b2.data
                             if data2.section == section and data2.subsection == data.subsection then
                                 local el1,el2 = TARDIS:CreateOptionInterface(id2, data2)
@@ -163,7 +161,6 @@ hook.Add("PopulateToolMenu", "TARDIS2-PopulateToolMenu", function()
     if others_exist then
         spawnmenu.AddToolMenuOption("Options", TARDIS:GetPhrase("Common.TARDIS"), "TARDIS2_Options_Other", " ".. TARDIS:GetPhrase("Settings.Sections.Other"), "", "", function(panel)
             for _,b in ipairs(options) do
-                ---@cast b tardis_option_entry -- glua_ls reads ipairs loop-var fields as nilable
                 local id,data=b.id,b.data
                 if not data.section then
                     local option_changer = TARDIS:CreateOptionInterface(id, data)
@@ -211,7 +208,6 @@ hook.Add("PopulateToolMenu", "TARDIS2-PopulateToolMenu", function()
             category:SetExpanded(false)
 
             for _,b in ipairs(keybinds) do
-                ---@cast b tardis_option_entry -- glua_ls reads ipairs loop-var fields as nilable
                 local id,data=b.id,b.data
                 if data.section == v then
                     local keybind_changer = TARDIS:CreateBindOptionInterface(id, data)
@@ -236,7 +232,6 @@ hook.Add("PopulateToolMenu", "TARDIS2-PopulateToolMenu", function()
             other_category:SetExpanded(false)
 
             for _,b in ipairs(keybinds) do
-                ---@cast b tardis_option_entry -- glua_ls reads ipairs loop-var fields as nilable
                 local id,data=b.id,b.data
                 if not data.section then
                     local keybind_changer = TARDIS:CreateBindOptionInterface(id, data)

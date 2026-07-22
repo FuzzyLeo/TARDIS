@@ -2,7 +2,7 @@
 ---@param offset Vector
 function TARDIS:AddInteriorPartsOffset(template, offset)
     ---@type tardis_metadata
-    local moved = table.Copy(template) -- table.Copy returns a bare table, dropping the class
+    local moved = table.Copy(template)
 
     if istable(moved.Interior.Parts) then
         for _,v in pairs(moved.Interior.Parts) do
@@ -46,7 +46,7 @@ end
 ---@param rotate_ang Angle
 function TARDIS:AddInteriorPartsRotation(template, rotate_ang)
     ---@type tardis_metadata
-    local rotated = table.Copy(template) -- table.Copy returns a bare table, dropping the class
+    local rotated = table.Copy(template)
 
     if istable(rotated.Interior.Parts) then
         for _,v in pairs(rotated.Interior.Parts) do

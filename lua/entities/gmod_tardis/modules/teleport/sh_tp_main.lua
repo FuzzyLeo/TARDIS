@@ -586,7 +586,8 @@ ENT:AddHook("Think","teleport",function(self,delta)
         sequencespeed = teleport_md.SequenceSpeedHads
     end
     if istable(sequencespeed) then
-        sequencespeed = demat and sequencespeed.Demat or sequencespeed.Mat
+        local speeds = sequencespeed
+        sequencespeed = demat and speeds.Demat or speeds.Mat
     end
     alpha=math.Approach(alpha,target,delta*66*sequencespeed)
     self:SetData("alpha",alpha)

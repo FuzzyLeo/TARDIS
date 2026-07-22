@@ -245,12 +245,14 @@ CreateConVar("tardis2_selected_interior", "", {FCVAR_REPLICATED}, "TARDIS - sele
 ---@field TakeOffState number
 ---@field ParkingState number
 
+---@alias tardis_sequence_speed number|{ Demat: number, Mat: number }
+
 ---@class tardis_teleport
----@field SequenceSpeed number|{ Demat: number, Mat: number }
----@field SequenceSpeedWarning number|{ Demat: number, Mat: number }
----@field SequenceSpeedFast number|{ Demat: number, Mat: number }
----@field SequenceSpeedHads number|{ Demat: number, Mat: number }
----@field SequenceSpeedWarnFast number|{ Demat: number, Mat: number }
+---@field SequenceSpeed tardis_sequence_speed
+---@field SequenceSpeedWarning tardis_sequence_speed
+---@field SequenceSpeedFast tardis_sequence_speed
+---@field SequenceSpeedHads tardis_sequence_speed
+---@field SequenceSpeedWarnFast tardis_sequence_speed
 ---@field DematInterruptSpeed number
 ---@field PrematDelayFast number
 ---@field PrematDelay number
@@ -580,7 +582,7 @@ end
 ---@return tardis_metadata
 function TARDIS:MergeMetadata(base, override)
     ---@type tardis_metadata
-    local copy=table.Copy(base) -- table.Copy returns a bare table, dropping the class
+    local copy=table.Copy(base)
     self:PreMergeExteriorMetadata(override.Exterior)
     table.Merge(copy,override)
     self:PostMergeExteriorMetadata(copy.Exterior)
