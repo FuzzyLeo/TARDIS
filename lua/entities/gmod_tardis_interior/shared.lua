@@ -39,7 +39,7 @@ local hooks={}
 -- >>> GENERATED hook overloads - do not edit; regen: scripts/generate-hook-types.ps1 >>>
 ---@overload fun(self: gmod_tardis_interior, name: "AllowInteriorPos", id: string, func: fun(self: gmod_tardis_interior, arg1: any, saved_pos: any, arg3: any, arg4: any, ...))
 ---@overload fun(self: gmod_tardis_interior, name: "CanChangeDestination", id: string, func: fun(self: gmod_tardis_interior, pos: Vector?, ang: Angle?, ...))
----@overload fun(self: gmod_tardis_interior, name: "CanChangeExterior", id: string, func: fun(self: gmod_tardis_interior, target: false, arg2: boolean, ...))
+---@overload fun(self: gmod_tardis_interior, name: "CanChangeExterior", id: string, func: fun(self: gmod_tardis_interior, target: any, arg2: boolean, ...))
 ---@overload fun(self: gmod_tardis_interior, name: "CanEnableScreens", id: string, func: fun(self: gmod_tardis_interior, ...))
 ---@overload fun(self: gmod_tardis_interior, name: "CanStartControlSequence", id: string, func: fun(self: gmod_tardis_interior, id: string?, ...))
 ---@overload fun(self: gmod_tardis_interior, name: "CanToggleHandbrake", id: string, func: fun(self: gmod_tardis_interior, ...))
@@ -59,7 +59,7 @@ local hooks={}
 ---@overload fun(self: gmod_tardis_interior, name: "DematFailStopped", id: string, func: fun(self: gmod_tardis_interior, ...))
 ---@overload fun(self: gmod_tardis_interior, name: "DematInterrupted", id: string, func: fun(self: gmod_tardis_interior, ...))
 ---@overload fun(self: gmod_tardis_interior, name: "DematStart", id: string, func: fun(self: gmod_tardis_interior, ...))
----@overload fun(self: gmod_tardis_interior, name: "DestinationChanged", id: string, func: fun(self: gmod_tardis_interior, pos: Vector?, ang: Angle?, ...))
+---@overload fun(self: gmod_tardis_interior, name: "DestinationChanged", id: string, func: fun(self: gmod_tardis_interior, pos: Vector, ang: Angle, ...))
 ---@overload fun(self: gmod_tardis_interior, name: "DestinationOverride", id: string, func: fun(self: gmod_tardis_interior, pos: Vector?, ang: Angle?, ...))
 ---@overload fun(self: gmod_tardis_interior, name: "ExteriorChanged", id: string, func: fun(self: gmod_tardis_interior, id: any, ...))
 ---@overload fun(self: gmod_tardis_interior, name: "FlightInterrupted", id: string, func: fun(self: gmod_tardis_interior, ...))
