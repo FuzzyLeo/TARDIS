@@ -158,8 +158,7 @@ TARDIS.DebugTipsFunction = function(self, ply, ...)
     end
 
     local p = ents.Create("gmod_tardis_debug_pointer")
-    -- Creation only fails on edict exhaustion, where spawning is already broken.
-    ---@cast p gmod_tardis_debug_pointer
+    if not IsValid(p) then error("entity creation failed: gmod_tardis_debug_pointer") end
     p:SetCreator(ply)
     p:SetPos(p_pos)
     ---@param ptr gmod_tardis_debug_pointer
@@ -252,8 +251,7 @@ concommand.Add("tardis2_debug_minmax", function(ply,cmd,args)
     ---@return gmod_tardis_debug_pointer
     local function create_pointer(pos)
         local p = ents.Create("gmod_tardis_debug_pointer")
-        -- Creation only fails on edict exhaustion, where spawning is already broken.
-        ---@cast p gmod_tardis_debug_pointer
+        if not IsValid(p) then error("entity creation failed: gmod_tardis_debug_pointer") end
         p:SetCreator(ply)
         p:SetPos(int:LocalToWorld(pos))
         int:DeleteOnRemove(p)

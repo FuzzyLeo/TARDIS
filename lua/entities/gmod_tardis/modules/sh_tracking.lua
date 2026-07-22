@@ -438,8 +438,7 @@ if SERVER then
         if TRACKING_DEBUG then
             if not IsValid(self.trackingdebugprop) then
                 local prop = ents.Create("prop_physics")
-                -- Creation only fails on edict exhaustion, where spawning is already broken.
-                ---@cast prop Entity
+                if not IsValid(prop) then error("entity creation failed: prop_physics") end
                 self.trackingdebugprop = prop
                 prop:SetModel("models/hunter/blocks/cube05x05x05.mdl")
                 prop:SetColor(Color(255,0,0))

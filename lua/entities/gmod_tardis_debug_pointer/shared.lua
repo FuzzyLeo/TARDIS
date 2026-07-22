@@ -37,8 +37,7 @@ concommand.Add("tardis2_debug_pointer", function(ply,cmd,args)
     if not (ply:IsAdmin() and gamemode.Call("PlayerSpawnSENT", ply, "gmod_tardis_debug_pointer")) then return end
 
     local ent = ents.Create("gmod_tardis_debug_pointer")
-    -- Creation only fails on edict exhaustion, where spawning is already broken.
-    ---@cast ent gmod_tardis_debug_pointer
+    if not IsValid(ent) then error("entity creation failed: gmod_tardis_debug_pointer") end
     ent:SetCreator(ply)
 
     local tr = util.TraceLine({

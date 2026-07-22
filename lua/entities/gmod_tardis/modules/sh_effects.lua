@@ -9,8 +9,7 @@ if SERVER then
             force = tostring(magnitude)
         end
         local explode = ents.Create("env_explosion")
-        -- Creation only fails on edict exhaustion, where spawning is already broken.
-        ---@cast explode Entity
+        if not IsValid(explode) then error("entity creation failed: env_explosion") end
         explode:SetPos( self:LocalToWorld(Vector(0,0,50)) )
         explode:SetOwner( self )
         explode:Spawn()
@@ -40,8 +39,7 @@ if SERVER then
 
     function ENT:StartSmoke()
         local smoke = ents.Create("env_smokestack")
-        -- Creation only fails on edict exhaustion, where spawning is already broken.
-        ---@cast smoke Entity
+        if not IsValid(smoke) then error("entity creation failed: env_smokestack") end
         smoke:SetPos(self:LocalToWorld(Vector(0,0,80)))
         smoke:SetAngles(self:GetAngles()+Angle(90,0,0))
         smoke:SetKeyValue("InitialState", "1")
@@ -76,8 +74,7 @@ if SERVER then
 
     function ENT:StartFire()
         local fire = ents.Create("env_fire")
-        -- Creation only fails on edict exhaustion, where spawning is already broken.
-        ---@cast fire Entity
+        if not IsValid(fire) then error("entity creation failed: env_fire") end
         self.fire = fire
         fire:SetKeyValue("firesize", "500")
         fire:SetKeyValue("spawnflags", "29")
@@ -120,8 +117,7 @@ if SERVER then
     function ENT:CreateRotorWash()
         if IsValid(self.rotorwash) then return end
         local rotorwash = ents.Create("env_rotorwash_emitter")
-        -- Creation only fails on edict exhaustion, where spawning is already broken.
-        ---@cast rotorwash Entity
+        if not IsValid(rotorwash) then error("entity creation failed: env_rotorwash_emitter") end
         self.rotorwash = rotorwash
         rotorwash:SetPos(self:GetPos())
         rotorwash:SetParent(self)
