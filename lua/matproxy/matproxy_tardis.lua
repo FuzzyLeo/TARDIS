@@ -99,6 +99,7 @@ matproxy.Add({
 
             if mat:GetTexture(self.Texture):GetName() ~= self.Textures[s] then
                 -- SetTexture accepts a texture name string as well as an ITexture
+                -- Fixed on the wiki (2026-07-22); removable once the annotations re-scrape it.
                 ---@diagnostic disable-next-line: param-type-mismatch
                 mat:SetTexture(self.Texture, self.Textures[s])
             end
