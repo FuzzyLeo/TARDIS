@@ -18,6 +18,16 @@ function debug.getinfo(funcOrStackLevel, fields) end
 ---@param matProxyData { name: string, init: (fun(self: table, mat: IMaterial, values: table)), bind: fun(self: table, mat: IMaterial, ent: Entity?) }
 function matproxy.Add(matProxyData) end
 
+-- Engine entity classes we spawn or look up by literal classname; declared so
+-- the classname templates resolve explicit types instead of hinting about
+-- auto-created ones (the hint fires on Linux CI only).
+---@class env_explosion : Entity
+---@class env_smokestack : Entity
+---@class env_fire : Entity
+---@class env_rotorwash_emitter : Entity
+---@class prop_physics : Entity
+---@class sky_camera : Entity
+
 -- DModelPanel internal fields/methods that GMod sets at runtime but
 -- glua-api-snippets only exposes via getter/setter pairs. We rely on
 -- direct field access in cl_vgui.lua's RT-based DModelPanel3D2D wrapper.

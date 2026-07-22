@@ -39,3 +39,6 @@
 ---@field GetNPercentage fun(self: sb_resource_environment): number
 ---@field GetHPercentage fun(self: sb_resource_environment): number
 ---@field GetEmptyAirPercentage fun(self: sb_resource_environment): number
+
+-- The spacebuild environment SENT we spawn by classname.
+---@class base_cube_environment : Entity
