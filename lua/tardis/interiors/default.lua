@@ -532,7 +532,7 @@ T.Exterior = {
     },
     Parts = {
         vortex = {
-            matrixScale = Vector(0.25, 1, 1),
+            MatrixScale = Vector(0.25, 1, 1),
             ang = Angle(180, 0, 0),
             scale = 5
         },

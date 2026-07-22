@@ -63,13 +63,20 @@
 ---@field parent gmod_tardis|gmod_tardis_interior
 ---@field o tardis_part_original
 ---@field Control string
----@field pos Vector
----@field ang Angle
+---@field Pos Vector
+---@field Ang Angle
 ---@field static boolean?
+---@field Invisible boolean?
+---@field Enabled boolean?
+---@field MatrixScale Vector?
+---@field Exteriors table<string, table>?
+---@field Interiors table<string, table>?
+---@field UseTransparencyFix boolean?
 ---@field Use fun(self: gmod_tardis_part, activator: Player, caller?: Entity, useType?: number, value?: number)?
 ---@field UseBasic fun(self: gmod_tardis_part, activator: Player)?
 ---@field PreDraw fun(self: gmod_tardis_part)?
 ---@field PostDraw fun(self: gmod_tardis_part)?
+---@field OnBodygroupChanged fun(self: gmod_tardis_part, bodygroup: number, value: number)?
 
 ---@class tardis_part_animation
 ---@field Type string?
@@ -100,6 +107,47 @@
 ---@field speed_override_func function?
 ---@field condition_func function?
 ---@field custom_func function?
+
+-- List all part fields for casing normalisation e.g. soundon -> SoundOn so interior
+-- part field overrides can be written in any casing without causing issues.
+local PART_FIELDS = {
+    "ID", "Name", "Model", "AutoSetup", "AutoPosition", "Collision", "CollisionUse",
+    "PortalNoCollide", "NoStrictUse", "ShouldTakeDamage", "BypassIsomorphic", "Motion",
+    "StartFrozen", "ResetPositionOnUse", "UnfreezeHint", "EnabledOnStart", "PowerOffUse",
+    "Animate", "AnimateSpeed", "AnimateOptions", "ExtraAnimations", "Sound", "SoundOn",
+    "SoundOff", "SoundNoPower", "SoundOnNoPower", "SoundOffNoPower", "SoundLoop",
+    "SoundLoopVolume", "SoundStop", "SoundPos", "PowerOffSound", "ClientThinkOverride",
+    "ClientDrawOverride", "ShouldDrawOverride", "Translucent", "CustomAlpha", "NoShadow",
+    "NoShadowCopy", "NoCloak", "NoDraw", "InvisibleFade", "InvisibleCollision", "FadeSpeed",
+    "Scale", "AllowThroughPortals", "DrawThroughPortal", "ShadowCollision", "Pos", "Ang",
+    "Invisible", "Enabled", "MatrixScale", "Exteriors", "Interiors", "UseTransparencyFix",
+}
+
+local PART_FIELDS_NORMALIZED = {}
+for _, name in ipairs(PART_FIELDS) do
+    PART_FIELDS_NORMALIZED[string.lower(name)] = name
+end
+
+---@param tbl table
+local function NormalizePartFields(tbl)
+    local remaps
+    for k in pairs(tbl) do
+        if isstring(k) then
+            local canon = PART_FIELDS_NORMALIZED[k:lower()]
+            if canon and canon ~= k then
+                remaps = remaps or {}
+                remaps[k] = canon
+            end
+        end
+    end
+    if not remaps then return end
+    for k, canon in pairs(remaps) do
+        if tbl[canon] == nil then
+            tbl[canon] = tbl[k]
+        end
+        tbl[k] = nil
+    end
+end
 
 if SERVER then
     util.AddNetworkString("TARDIS-SetupPart")
@@ -731,37 +779,6 @@ local function AutoSetup(self,e,id)
     local data=GetData(self,e,id)
     if not data then return end
 
-    if e.model then
-        e.Model = e.model
-    end
-    if e.motion then
-        e.Motion = e.motion
-    end
-    if e.pos then
-        e.Pos = e.pos
-    end
-    if e.ang then
-        e.Ang = e.ang
-    end
-    if e.scale then
-        e.Scale = e.scale
-    end
-    if e.invisible then
-        e.Invisible = e.invisible
-    end
-    if e.invisiblefade then
-        e.InvisibleFade = e.invisiblefade
-    end
-    if e.fadespeed then
-        e.FadeSpeed = e.fadespeed
-    end
-    if e.resetpositiononuse then
-        e.ResetPositionOnUse = e.resetpositiononuse
-    end
-    if e.startfrozen then
-        e.StartFrozen = e.startfrozen
-    end
-
     e:SetModel(e.Model)
     e:PhysicsInit( SOLID_VPHYSICS )
     e:SetMoveType( MOVETYPE_VPHYSICS )
@@ -870,26 +887,24 @@ if SERVER then
         end
         ent.controlparts = {}
         for k,v in pairs(tempparts) do
-            local e=ents.Create(v)
-            Doors:SetupOwner(e,ent:GetCreator())
-            e.exterior=(ent.TardisExterior and ent or ent.exterior)
-            e.interior=(ent.TardisInterior and ent or ent.interior)
-            e.parent=ent
-            e.ExteriorPart=(e.parent==e.exterior)
-            e.InteriorPart=(e.parent==e.interior)
-            local part_data=GetData(ent,e,k)
-            if type(part_data)=="table" then
+            local part_data = table.Copy(GetData(ent, scripted_ents.GetStored(v).t, k))
+            NormalizePartFields(part_data)
+
+            if part_data.Enabled ~= false then
+                local e=ents.Create(v)
+                Doors:SetupOwner(e,ent:GetCreator())
+                e.exterior=(ent.TardisExterior and ent or ent.exterior)
+                e.interior=(ent.TardisInterior and ent or ent.interior)
+                e.parent=ent
+                e.ExteriorPart=(e.parent==e.exterior)
+                e.InteriorPart=(e.parent==e.interior)
                 table.Merge(e,part_data)
-            end
 
-            SetupPartControl(e)
-            if e.EnabledOnStart then
-                e:SetOn(true)
-            end
+                SetupPartControl(e)
+                if e.EnabledOnStart then
+                    e:SetOn(true)
+                end
 
-            if e.enabled==false then
-                e:Remove()
-            else
                 ent.parts[k]=e
                 if e.AutoSetup then
                     AutoSetup(ent,e,k)
@@ -962,10 +977,9 @@ else
             ent.parent=parent
             ent.ExteriorPart=(parent==ext)
             ent.InteriorPart=(parent==int)
-            local data=GetData(parent,ent,name)
-            if type(data)=="table" then
-                table.Merge(ent,data)
-            end
+            local data=table.Copy(GetData(parent,ent,name))
+            NormalizePartFields(data)
+            table.Merge(ent,data)
 
             if ent.Translucent then
                 ent.RenderGroup = RENDERGROUP_TRANSLUCENT
@@ -979,9 +993,9 @@ else
 
             if not parent.parts then parent.parts={} end
             parent.parts[name]=ent
-            if ent.matrixScale then
+            if ent.MatrixScale then
                 local matrix = Matrix()
-                matrix:Scale(ent.matrixScale)
+                matrix:Scale(ent.MatrixScale)
                 ent:EnableMatrix("RenderMultiply",matrix)
             end
             local o = ent.o

@@ -12,6 +12,10 @@
 ---@field convar tardis_setting_convar?
 ---@field min number?
 ---@field max number?
+---@field round_func (fun(value: number): number)?
+---@field get_values_func (fun(): table[])?
+---@field sort boolean?
+---@field func (fun(self: TARDIS))?
 
 ---@class tardis_setting_convar
 ---@field name string

@@ -20,7 +20,9 @@ CreateConVar("tardis2_selected_interior", "", {FCVAR_REPLICATED}, "TARDIS - sele
 ---@field CustomSettings table<string, tardis_custom_setting>?
 ---@field CustomMessages table<string, function>?
 ---@field SyncExteriorBodygroupToDoors boolean?
+---@field SyncDoorBodygroups boolean?
 ---@field EnableClassicDoors boolean?
+---@field NoSoundOnEnter boolean?
 ---@field Hidden boolean?
 
 ---@class tardis_interior_metadata
@@ -90,6 +92,10 @@ CreateConVar("tardis2_selected_interior", "", {FCVAR_REPLICATED}, "TARDIS - sele
 ---@field Name string?
 ---@field Category string?
 
+---@class tardis_portal_point
+---@field pos Vector
+---@field ang Angle
+
 ---@class tardis_interior_portal
 ---@field pos Vector
 ---@field ang Angle
@@ -97,6 +103,8 @@ CreateConVar("tardis2_selected_interior", "", {FCVAR_REPLICATED}, "TARDIS - sele
 ---@field height number
 ---@field thickness number?
 ---@field inverted boolean?
+---@field exit_point_offset tardis_portal_point?
+---@field exit_point tardis_portal_point?
 
 ---@class tardis_exterior_portal
 ---@field pos Vector
@@ -107,6 +115,8 @@ CreateConVar("tardis2_selected_interior", "", {FCVAR_REPLICATED}, "TARDIS - sele
 ---@field model_offset tardis_model_offset
 ---@field thickness number?
 ---@field inverted boolean?
+---@field exit_point_offset tardis_portal_point?
+---@field exit_point tardis_portal_point?
 
 ---@class tardis_box
 ---@field Min Vector
@@ -124,6 +134,7 @@ CreateConVar("tardis2_selected_interior", "", {FCVAR_REPLICATED}, "TARDIS - sele
 ---@field enabled boolean?
 ---@field pos Vector?
 ---@field color Color?
+---@field warncolor Color?
 ---@field dynamicpos Vector?
 ---@field dynamicbrightness number?
 ---@field dynamicsize number
@@ -197,6 +208,9 @@ CreateConVar("tardis2_selected_interior", "", {FCVAR_REPLICATED}, "TARDIS - sele
 ---@field nopowerbrightness number
 ---@field transitionspeed number
 ---@field basebrightnessRGB Vector|number[]|nil
+---@field nopowerbrightnessRGB Vector|number[]|nil
+---@field parts table<string, number>?
+---@field parts_nopower table<string, number>?
 
 ---@class tardis_projected_light
 ---@field brightness number?
@@ -216,6 +230,7 @@ CreateConVar("tardis2_selected_interior", "", {FCVAR_REPLICATED}, "TARDIS - sele
 ---@class tardis_locked_door
 ---@field AnimPos number
 ---@field AnimTime number
+---@field AnimEnabled boolean?
 
 ---@class tardis_tip_settings
 ---@field style string?
@@ -262,6 +277,13 @@ CreateConVar("tardis2_selected_interior", "", {FCVAR_REPLICATED}, "TARDIS - sele
 ---@field Unlock string?
 ---@field Idle tardis_sound_entry[]?
 ---@field Hum string?
+---@field Door tardis_sound_door?
+---@field Chameleon string?
+---@field FlightLoop string?
+---@field FlightLoopDamaged string?
+---@field FlightLoopBroken string?
+---@field FlightLand string?
+---@field FlightFall string?
 
 ---@class tardis_exterior_sound_metadata
 ---@field Teleport tardis_exterior_sound_teleport
