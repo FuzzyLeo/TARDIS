@@ -124,14 +124,15 @@ function ENT:ShouldRenderScreen(screen)
     return true, pos, ang
 end
 
+local COL_CLEAR = Color(0, 0, 0, 0)
+
 ENT:AddHook("PreDrawTranslucentRenderables", "screens", function(self)
     if self.screens3D then
         for _,v in pairs(self.screens3D) do
             local should,pos,ang = self:ShouldRenderScreen(v)
             if should then
-                local col=Color(0,0,0,0)
                 vgui.Start3D2D(pos,ang,0.0624*(1/v.res))
-                    draw.RoundedBox(0,0,0,v.width,v.height,col)
+                    draw.RoundedBox(0,0,0,v.width,v.height,COL_CLEAR)
                     v:Paint3D2D()
                 vgui.End3D2D()
             end
