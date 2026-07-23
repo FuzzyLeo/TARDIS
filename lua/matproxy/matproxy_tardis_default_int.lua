@@ -1,3 +1,9 @@
+-- GetData evaluates its default every call, so an inline Color() below would
+-- allocate one per material bind whether or not the default is used.
+local DEFAULT_ENV_COL = Color(0, 200, 255)
+local DEFAULT_FLOOR_COL = Color(230, 230, 210)
+local DEFAULT_ROTOR_COL = Color(255, 255, 255)
+
 matproxy.Add({
     name = "TARDIS_DefaultInt_EnvColor",
 
@@ -14,7 +20,7 @@ matproxy.Add({
     bind = function(self, mat, ent)
         if not IsValid(ent) or not ent.TardisPart then return end
 
-        local col = ent:GetData("default_int_env_color", Color(0,200,255))
+        local col = ent:GetData("default_int_env_color", DEFAULT_ENV_COL)
         local power = ent.exterior and ent.exterior:GetPower()
 
         if self.lastcol ~= col or self.lastpower ~= power then
@@ -47,7 +53,7 @@ matproxy.Add({
     bind = function(self, mat, ent)
         if not IsValid(ent) or not ent.TardisPart then return end
 
-        local col = ent:GetData("default_int_floor_lights_color", Color(230,230,210))
+        local col = ent:GetData("default_int_floor_lights_color", DEFAULT_FLOOR_COL)
 
         if self.lastcol ~= col then
             self.lastcol = col
@@ -74,7 +80,7 @@ matproxy.Add({
     bind = function(self, mat, ent)
         if not IsValid(ent) or not ent.TardisPart then return end
 
-        local col = ent:GetData("default_int_rotor_color", Color(255,255,255))
+        local col = ent:GetData("default_int_rotor_color", DEFAULT_ROTOR_COL)
 
         if self.lastcol ~= col then
             self.lastcol = col
