@@ -42,6 +42,9 @@
 ---@field gap number
 ---@field gap2 number
 ---@field gui_rows number?
+---@field worldpos Vector? cached world anchor; the screens render hook drops it when the interior moves
+---@field worldang Angle?
+---@field worldup Vector?
 ---@field scannerang Angle?
 ---@field scannerfov number?
 ---@field scanner ITexture?

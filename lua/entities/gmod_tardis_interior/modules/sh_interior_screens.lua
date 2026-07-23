@@ -45,6 +45,9 @@ if SERVER then
     return
 end
 
+---@class gmod_tardis_interior
+---@field screensWorldOrigin Vector?
+
 function ENT:RemoveScreens()
     if self.screens3D then
         for _,v in pairs(self.screens3D) do
@@ -113,12 +116,20 @@ function ENT:ShouldRenderScreen(screen)
     local ang3D = screen.ang3D
     if not pos3D or not ang3D then return false end
 
-    local camOrigin = EyePos()
-    local pos = self:LocalToWorld(pos3D)
-    local ang = self:LocalToWorldAngles(ang3D)
+    -- The interior doesn't move, so the world transform is cached per screen;
+    -- the render hook drops the caches if it ever does.
+    local pos, ang, up = screen.worldpos, screen.worldang, screen.worldup
+    if pos == nil or ang == nil or up == nil then
+        pos = self:LocalToWorld(pos3D)
+        ang = self:LocalToWorldAngles(ang3D)
+        up = ang:Up()
+        screen.worldpos = pos
+        screen.worldang = ang
+        screen.worldup = up
+    end
 
     --don't render if the view is behind the portal
-    local behind = TARDIS:IsBehind( camOrigin, pos, ang:Up() )
+    local behind = TARDIS:IsBehind( EyePos(), pos, up )
     if behind then return false end
 
     return true, pos, ang
@@ -128,6 +139,13 @@ local COL_CLEAR = Color(0, 0, 0, 0)
 
 ENT:AddHook("PreDrawTranslucentRenderables", "screens", function(self)
     if self.screens3D then
+        local int_pos = self:GetPos()
+        if self.screensWorldOrigin ~= int_pos then
+            self.screensWorldOrigin = int_pos
+            for _,v in pairs(self.screens3D) do
+                v.worldpos = nil
+            end
+        end
         for _,v in pairs(self.screens3D) do
             local should,pos,ang = self:ShouldRenderScreen(v)
             if should then

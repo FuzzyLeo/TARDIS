@@ -18,9 +18,13 @@
 ---@field view_range_max number
 ---@field style_id string?
 ---@field style_name string?
+---@field worldpos Vector? per-tip cached world anchor, dropped when the interior moves
 ---@field SetHighlight fun(self: tardis_tip, on: boolean)
 ---@field GetHighlight fun(self: tardis_tip): boolean
 ---@field ToggleHighlight fun(self: tardis_tip)
+
+---@class gmod_tardis_interior
+---@field tipWorldOrigin Vector?
 
 ---@class tardis_tip_colors
 ---@field normal tardis_tip_colorset
@@ -207,15 +211,28 @@ hook.Add("HUDPaint", "TARDIS-DrawTips", function()
 
     local player_pos = LocalPlayer():EyePos()
     local should_randomize = (interior:CallCommonHook("RandomizeTips") == true)
+
+    -- The interior doesn't move, so each tip's world anchor is cached; drop
+    -- them as one batch if it ever does.
+    local int_pos = interior:GetPos()
+    if interior.tipWorldOrigin ~= int_pos then
+        interior.tipWorldOrigin = int_pos
+        for _,tip in ipairs(interior.tips) do
+            tip.worldpos = nil
+        end
+    end
+
     for _,tip in ipairs(interior.tips)
     do
         local view_range_min = tip.view_range_min
         local view_range_max = tip.view_range_max
 
-        local cseq_canstart = cseq_enabled and interior:CallHook("CanStartControlSequence",tip.part)~=false
-
         if not cseq_active then
-            tip:SetHighlight(cseq_enabled and cseq_sequences ~= nil and cseq_sequences[tip.part] ~= nil and cseq_canstart)
+            local highlight = cseq_enabled and cseq_sequences ~= nil and cseq_sequences[tip.part] ~= nil
+            if highlight then
+                highlight = interior:CallHook("CanStartControlSequence",tip.part)~=false
+            end
+            tip:SetHighlight(highlight)
         else
             tip:SetHighlight(cseq_enabled and tip.part == cseq_next)
         end
@@ -225,7 +242,15 @@ hook.Add("HUDPaint", "TARDIS-DrawTips", function()
         local shoulddraw = tip:GetHighlight() or TARDIS:GetSetting("tips_show_all") or untraceable
         local lookedat = part and IsValid(part) and part:BeingLookedAtByLocalPlayer()
 
-        local pos = interior:LocalToWorld(tip.pos or (IsValid(part) and part.Pos) or Vector(0,0,0))
+        local pos = tip.worldpos
+        if pos == nil then
+            pos = interior:LocalToWorld(tip.pos or (IsValid(part) and part.Pos) or Vector(0,0,0))
+            -- A part-anchored tip computed before its part exists resolves to the
+            -- interior origin; don't cache that placeholder.
+            if tip.pos or (part and IsValid(part)) then
+                tip.worldpos = pos
+            end
+        end
         local dist = pos:Distance(player_pos)
 
         if (shoulddraw and dist <= view_range_max) or lookedat then
